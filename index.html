@@ -500,7 +500,7 @@ nav button.activa .ni{transform:translateY(-3px) scale(1.15);filter:none;opacity
 <header>
   <div class="fila-top">
     <div class="titulo-app"><span class="kanji">使命</span> <b class="glitch" data-txt="MISIÓN DIARIA">MISIÓN DIARIA</b> <span class="est">✦</span></div>
-    <div class="fecha" id="fechaHoy"></div>
+    <div class="fecha"><span id="syncIndicador" style="margin-right:8px;font-family:'Orbitron',monospace;font-size:14px;cursor:pointer;color:var(--texto2)" onclick="irA('vistaAjustes',document.querySelector('nav button[data-v=vistaAjustes]'))" title="Toca para configurar sync">○</span><span id="fechaHoy"></span></div>
   </div>
 
   <div class="panel-heroe chip-cut matrix-lines hud">
@@ -692,7 +692,27 @@ nav button.activa .ni{transform:translateY(-3px) scale(1.15);filter:none;opacity
     <div class="nota-info">Misiones cortas listas para activar con un toque.</div>
     <div class="lib-grid" id="libGrid"></div>
 
-    <div class="seccion-titulo pix">💾 Datos y respaldo</div>
+    <div class="seccion-titulo pix">☁︎ Sync en la nube (GitHub Gist)</div>
+    <div class="nota-info">Guarda tus datos automáticamente en un Gist secreto de tu GitHub. Al abrir en otro dispositivo con la misma config, todo sincroniza solo. Sin bajar respaldos manuales.</div>
+    <div class="campo"><label>Token de GitHub (permiso: gist)</label>
+      <input type="password" id="syncToken" placeholder="ghp_... (secreto, no lo compartas)" autocomplete="off">
+    </div>
+    <div class="campo"><label>ID del Gist</label>
+      <input type="text" id="syncGistId" placeholder="Ej: a3f7e2d1b4c5..." autocomplete="off">
+    </div>
+    <button class="btn-primario" onclick="activarSync()">☁︎ Activar sync</button>
+    <button class="btn-sec" onclick="probarSync()">🔍 Probar conexión</button>
+    <button class="btn-sec btn-peligro" onclick="desactivarSync()">Desactivar sync</button>
+    <div class="nota-info" style="margin-top:10px;font-size:11.5px">
+      <b>Setup (una sola vez):</b><br>
+      1. <b>github.com/settings/tokens</b> → Generate new token (classic) → nombre "Misión Diaria" → expiration <b>No expiration</b> → marca solo <b>gist</b> → Generate → copia el token.<br>
+      2. <b>gist.github.com</b> → New gist → filename <b>mision-diaria.json</b> → contenido: <code>{}</code> → <b>Create secret gist</b>.<br>
+      3. Copia el ID del Gist de la URL (parte después de tu usuario).<br>
+      4. Pega token e ID arriba → Activar sync.<br>
+      5. En otros dispositivos: repite paso 4 con los mismos valores.
+    </div>
+
+    <div class="seccion-titulo pix">💾 Datos y respaldo local</div>
     <div class="nota-info" style="border-left:3px solid var(--rojo);background:rgba(255,46,76,.08);padding:10px 12px;border-radius:8px">
       <b>⚠️ Importante:</b> Tus datos viven en el navegador de tu iPhone. Si borras la app o cambias de URL, se pierden. <b>Descarga tu respaldo cada semana</b> como archivo y guárdalo en iCloud o Files para no perder tu racha.
     </div>
@@ -892,7 +912,123 @@ const setHTML=(id,v)=>{const el=$(id);if(el)el.innerHTML=v;else console.warn('se
 const setStyle=(id,prop,v)=>{const el=$(id);if(el)el.style[prop]=v;};
 const setVal=(id,v)=>{const el=$(id);if(el)el.value=v;};
 
-/* ═══════════════ TEMA / SKIN ═══════════════ */
+/* ═══════════════ SYNC CON GITHUB GIST ═══════════════ */
+const SYNC_CLAVE='mision-sync-config';
+let syncEstado='idle', pushTimeout=null;
+
+function leerSync(){try{return JSON.parse(localStorage.getItem(SYNC_CLAVE)||'{}');}catch(e){return {};}}
+function guardarConfigSync(cfg){try{localStorage.setItem(SYNC_CLAVE,JSON.stringify(cfg));}catch(e){}}
+function tieneSyncConfig(){const c=leerSync();return !!(c.token&&c.gistId);}
+
+function setSyncEstado(e,msg){
+  syncEstado=e;
+  const el=$('syncIndicador');if(!el)return;
+  const iconos={idle:'☁︎',pushing:'☁︎↑',pulling:'☁︎↓',ok:'☁︎✓',error:'☁︎!',off:'○'};
+  const colores={idle:'var(--texto2)',pushing:'var(--cian)',pulling:'var(--cian)',ok:'var(--verde)',error:'var(--rojo)',off:'var(--texto2)'};
+  el.textContent=iconos[e]||iconos.idle;
+  el.style.color=colores[e]||colores.idle;
+  el.title=msg||{idle:'Esperando',pushing:'Subiendo cambios',pulling:'Descargando cambios',ok:'Sincronizado ✓',error:'Error de sync',off:'Sync desactivado'}[e];
+}
+
+async function pullDesdeGist(){
+  const cfg=leerSync();
+  if(!cfg.token||!cfg.gistId)return null;
+  setSyncEstado('pulling');
+  try{
+    const r=await fetch('https://api.github.com/gists/'+cfg.gistId,{
+      headers:{Authorization:'Bearer '+cfg.token,Accept:'application/vnd.github+json'}
+    });
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const g=await r.json();
+    const file=(g.files&&(g.files['mision-diaria.json']||Object.values(g.files)[0]));
+    if(!file||!file.content){setSyncEstado('ok','Gist vacío');return null;}
+    const remoto=JSON.parse(file.content);
+    setSyncEstado('ok','Descargado ✓');
+    return remoto;
+  }catch(e){
+    setSyncEstado('error',e.message);
+    console.warn('pullDesdeGist:',e);
+    return null;
+  }
+}
+
+async function pushAGistAhora(){
+  const cfg=leerSync();
+  if(!cfg.token||!cfg.gistId)return;
+  setSyncEstado('pushing');
+  try{
+    D._lastModified=Date.now();
+    const r=await fetch('https://api.github.com/gists/'+cfg.gistId,{
+      method:'PATCH',
+      headers:{Authorization:'Bearer '+cfg.token,Accept:'application/vnd.github+json','Content-Type':'application/json'},
+      body:JSON.stringify({files:{'mision-diaria.json':{content:JSON.stringify(D)}}})
+    });
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    setSyncEstado('ok','Sincronizado ✓');
+  }catch(e){
+    setSyncEstado('error',e.message);
+    console.warn('pushAGist:',e);
+  }
+}
+
+function pushAGist(){
+  if(!tieneSyncConfig())return;
+  clearTimeout(pushTimeout);
+  pushTimeout=setTimeout(pushAGistAhora,1500);
+}
+
+async function activarSync(){
+  const token=(($('syncToken')||{}).value||'').trim();
+  const gistId=(($('syncGistId')||{}).value||'').trim();
+  if(!token||!gistId){mostrarToast('⚠️','Faltan datos','Ingresa token y ID del Gist');return;}
+  guardarConfigSync({token,gistId});
+  mostrarToast('☁︎','Probando conexión...','Un momento');
+  const remoto=await pullDesdeGist();
+  if(syncEstado==='error'){
+    mostrarToast('❌','Error','Revisa el token y el ID · ¿son correctos?');
+    guardarConfigSync({});
+    return;
+  }
+  // Si el Gist tiene datos válidos y son más nuevos, importarlos
+  if(remoto&&remoto.habitos&&Array.isArray(remoto.habitos)){
+    const localTime=D._lastModified||0;
+    const remotoTime=remoto._lastModified||0;
+    if(remotoTime>localTime){
+      if(confirm('El Gist tiene datos más recientes. ¿Reemplazar los locales?')){
+        D=remoto;
+        D.xp=D.xp||0;D.habitos=D.habitos||[];D.dias=D.dias||{};D.logros=D.logros||[];
+        D.config=D.config||{};D.campanas=D.campanas||[];D.recompensas=D.recompensas||[];D.canjes=D.canjes||[];
+        await guardarLocal();
+        render();
+      }
+    }else{
+      await pushAGistAhora();
+    }
+  }else{
+    // Gist vacío: subir los datos locales por primera vez
+    await pushAGistAhora();
+  }
+  mostrarToast('✅','Sync activado','Todo se guarda solo en tu Gist');
+  render();
+}
+
+function desactivarSync(){
+  if(!confirm('¿Desactivar sync? Tus datos locales se conservan pero ya no se sincronizarán a GitHub.'))return;
+  guardarConfigSync({});
+  setSyncEstado('off');
+  setVal('syncToken','');
+  setVal('syncGistId','');
+  mostrarToast('○','Sync desactivado','Solo guardado local');
+  render();
+}
+
+async function probarSync(){
+  if(!tieneSyncConfig()){mostrarToast('⚠️','Configura primero','Ingresa token e ID');return;}
+  mostrarToast('☁︎','Probando...','Un momento');
+  const r=await pullDesdeGist();
+  if(syncEstado==='ok')mostrarToast('✅','Conexión OK','Sync funcionando');
+  else mostrarToast('❌','Sin conexión','Revisa token e ID');
+}
 function aplicarPreferenciasVisuales(){
   const tema=(D&&D.config&&D.config.tema)||'noche';
   const skin=(D&&D.config&&D.config.skin)||'default';
@@ -1254,11 +1390,15 @@ async function leerClave(k){
   try{if(window.storage){const r=await window.storage.get(k);return r&&r.value?JSON.parse(r.value):null;}}catch(e){}
   return null;
 }
-async function guardar(){
+async function guardarLocal(){
   const s=JSON.stringify(D);
   try{localStorage.setItem(CLAVE,s);}catch(e){console.warn('localStorage:',e);}
   try{if(window.storage)await window.storage.set(CLAVE,s);}catch(e){}
   memoria=D;
+}
+async function guardar(){
+  await guardarLocal();
+  pushAGist();
 }
 
 function calcularMetaAgua(){
@@ -1440,6 +1580,10 @@ function render(){
   setVal('horaNoche',(D.config&&D.config.horaNoche)||'20:30');
   setVal('mQbank',(D.objetivos&&D.objetivos.qbankTotal)||5000);
   setVal('mFechaLimite',(D.objetivos&&D.objetivos.fechaPesoLim)||(new Date().getFullYear()+'-12-31'));
+  // Sync config
+  const scfg=leerSync();
+  setVal('syncToken',scfg.token||'');
+  setVal('syncGistId',scfg.gistId||'');
   const hPeso=D.habitos.find(x=>x.id==='peso');
   if(hPeso){setVal('mPesoIni',hPeso.pesoInicial||85);setVal('mPesoMeta',hPeso.metaPeso||72.5);}
 }
@@ -2281,6 +2425,26 @@ async function iniciar(){
   try{cielo();}catch(e){console.warn('cielo:',e);}
   await cargar();
   try{aplicarPreferenciasVisuales();}catch(e){console.warn('preferencias:',e);}
+  // Sync: si hay config, hacer pull antes de renderizar
+  if(tieneSyncConfig()){
+    try{
+      const remoto=await pullDesdeGist();
+      if(remoto&&remoto.habitos&&Array.isArray(remoto.habitos)){
+        const localTime=D._lastModified||0;
+        const remotoTime=remoto._lastModified||0;
+        if(remotoTime>localTime){
+          D=remoto;
+          D.xp=D.xp||0;D.habitos=D.habitos||[];D.dias=D.dias||{};D.logros=D.logros||[];
+          D.config=D.config||{};D.campanas=D.campanas||[];D.recompensas=D.recompensas||[];D.canjes=D.canjes||[];
+          await guardarLocal();
+        }else if(remotoTime<localTime){
+          pushAGistAhora();
+        }
+      }
+    }catch(e){console.warn('sync init:',e);}
+  }else{
+    setSyncEstado('off');
+  }
   try{if('Notification'in window&&Notification.permission==='granted')setText('notifEstado','✅ Activadas · 3 avisos al día');}catch(e){}
   try{actualizarEstadoPWA();}catch(e){}
   render();
