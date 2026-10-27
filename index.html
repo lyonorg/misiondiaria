@@ -2,11 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Misión Diaria</title>
 <meta name="description" content="Tu día, tus misiones, tus metas.">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" id="metaTheme">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -39,13 +38,25 @@
   --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.06);
   color-scheme:light;
 }
-[data-acento="carmesi"]{--a1:#ffb199;--a2:#ff6a5b;--a3:#ff2e4c;--a4:#c70039;--a5:#7a0022;--accent:#ff2e4c;--accent2:#c70039}
-[data-acento="madrid"]{--a1:#fff6d5;--a2:#ffe08a;--a3:#febe10;--a4:#d89900;--a5:#8a6400;--accent:#febe10;--accent2:#d89900;--on-accent:#111}
-[data-acento="oceano"]{--a1:#a8ffe0;--a2:#4ee2c8;--a3:#18b4e8;--a4:#3a6cf4;--a5:#5b3df5;--accent:#18b4e8;--accent2:#3a6cf4}
+/* ── skins: cada uno con modo noche (por defecto) y modo día ── */
+[data-skin="carmesi"]{--bg:#0b0618;--bg2:#110a24;--surface:#160d2b;--surface2:#21143d;--surface3:#2d1c52;--line:rgba(170,130,255,.14);--line2:rgba(170,130,255,.24);--text:#f0f4ff;--text2:#a4a8cc;--text3:#6f6a96;
+  --a1:#00e5ff;--a2:#b39aff;--a3:#ff7aa8;--a4:#ff2e4c;--a5:#b7002a;--accent:#ff2e4c;--accent2:#ff7aa8}
+[data-skin="carmesi"][data-tema="claro"]{--bg:#f6f0ff;--bg2:#fbf8ff;--surface:#ffffff;--surface2:#f0e8ff;--surface3:#e2d6fb;--line:rgba(80,40,160,.10);--line2:rgba(80,40,160,.18);--text:#1a0b33;--text2:#5b4a80;--text3:#8f80b0;--accent:#e01f45}
+[data-skin="madrid"]{--bg:#050505;--bg2:#0c0c0c;--surface:#131313;--surface2:#1d1d1d;--surface3:#2a2a2a;--line:rgba(254,190,16,.12);--line2:rgba(254,190,16,.22);--text:#ffffff;--text2:#b9b9b9;--text3:#777;
+  --a1:#ffffff;--a2:#fff1b8;--a3:#febe10;--a4:#d89900;--a5:#8a6400;--accent:#febe10;--accent2:#d89900;--on-accent:#111}
+[data-skin="madrid"][data-tema="claro"]{--bg:#f7f6f1;--bg2:#ffffff;--surface:#ffffff;--surface2:#f1efe6;--surface3:#e6e2d2;--line:rgba(140,100,0,.12);--line2:rgba(140,100,0,.2);--text:#111;--text2:#5d5a4f;--text3:#9a9585;--accent:#c99300;--accent2:#8a6400;--a1:#ffe9a6;--a2:#ffd24a}
+[data-skin="oceano"]{--bg:#03121a;--bg2:#061a24;--surface:#0a1f2b;--surface2:#10303f;--surface3:#174053;--line:rgba(120,220,255,.12);--line2:rgba(120,220,255,.2);--text:#e9f7ff;--text2:#94b8c7;--text3:#5f8292;
+  --a1:#a8ffe0;--a2:#4ee2c8;--a3:#18b4e8;--a4:#3a6cf4;--a5:#5b3df5;--accent:#18b4e8;--accent2:#3a6cf4}
+[data-skin="oceano"][data-tema="claro"]{--bg:#eef8fb;--bg2:#f7fcfd;--surface:#ffffff;--surface2:#e2f1f6;--surface3:#cfe6ee;--line:rgba(0,90,120,.10);--line2:rgba(0,90,120,.18);--text:#06202b;--text2:#456776;--text3:#7f9ca8;--accent:#0a8fc4}
+[data-skin="sakura"]{--bg:#140910;--bg2:#1b0d16;--surface:#22101b;--surface2:#301827;--surface3:#432236;--line:rgba(255,140,190,.13);--line2:rgba(255,140,190,.22);--text:#fff0f6;--text2:#c9a3b6;--text3:#8c6a7b;
+  --a1:#fff4c7;--a2:#ffb8d0;--a3:#ff7aa8;--a4:#e64986;--a5:#9d8cff;--accent:#ff7aa8;--accent2:#e64986;--on-accent:#2a0f1c}
+[data-skin="sakura"][data-tema="claro"]{--bg:#fff3f7;--bg2:#fff9fb;--surface:#ffffff;--surface2:#ffe6ef;--surface3:#ffd1e1;--line:rgba(200,40,110,.10);--line2:rgba(200,40,110,.18);--text:#2a0f1c;--text2:#7a4a60;--text3:#b08598;--accent:#e64986;--on-accent:#fff}
+
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
-html{background:var(--bg);-webkit-text-size-adjust:100%}
+html{background:var(--bg);-webkit-text-size-adjust:100%;touch-action:pan-x pan-y}
+body,button,.tile,.m{touch-action:manipulation}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
   background:var(--bg);color:var(--text);min-height:100dvh;font-size:15px;line-height:1.35;
@@ -228,7 +239,7 @@ main{max-width:620px;margin:0 auto;padding:0 16px}
 .item .tx small{display:block;color:var(--text2);font-size:12.5px;margin-top:1px}
 .item.tap{transition:background .15s}.item.tap:active{background:var(--surface2)}
 .item .chev{color:var(--text3);font-size:20px}
-.item input[type=time],.item input[type=number],.item input[type=date],.item select{background:var(--surface2);border:0;border-radius:9px;padding:7px 10px;font-size:15px;color:var(--text);max-width:128px}
+.item input[type=time],.item input[type=number],.item input[type=date],.item select{background:var(--surface2);border:0;border-radius:9px;padding:7px 10px;font-size:16px;color:var(--text);max-width:132px}
 .grupo-tit{font-size:12.5px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:24px 16px 7px;font-weight:600}
 
 /* interruptor */
@@ -296,8 +307,11 @@ svg.linea{width:100%;height:150px;overflow:visible}
 .lg{background:var(--surface);border:.5px solid var(--line);border-radius:var(--r-m);padding:14px 8px 12px;text-align:center;transition:transform .3s var(--spring)}
 .lg:active{transform:scale(.95)}
 .lg .med{width:54px;height:54px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;font-size:27px;background:var(--surface2);position:relative}
-.lg.ok .med{background:var(--grad)}
-.lg.ok.legendario .med{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--a3),0 0 22px var(--a3)}
+.lg.ok .med{background:color-mix(in srgb,var(--accent) 20%,var(--surface2));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--accent) 45%,transparent)}
+.lg.ok.raro .med{background:color-mix(in srgb,var(--a4) 38%,var(--surface2));box-shadow:inset 0 0 0 1.5px var(--a4)}
+.lg.ok.epico .med{background:linear-gradient(135deg,var(--a2),var(--a4))}
+.lg.ok.legendario .med{background:var(--grad);box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--a3),0 0 22px color-mix(in srgb,var(--a3) 70%,transparent)}
+.lg .lr.raro{color:var(--a4)}.lg .lr.epico{color:var(--a3)}.lg .lr.legendario{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .lg.bloq{opacity:.45}
 .lg.bloq .med{filter:grayscale(1)}
 .lg .ln{font-size:12px;font-weight:700;line-height:1.2}
@@ -359,7 +373,7 @@ svg.linea{width:100%;height:150px;overflow:visible}
 .dos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tres{display:grid;grid-template-columns:.9fr 1.2fr 1.2fr;gap:8px}
 .campo input,.campo select{min-width:0}
-.tres .campo input,.tres .campo select{padding:12px 8px;font-size:15px}
+.tres .campo input,.tres .campo select{padding:12px 8px;font-size:16px}
 .tres .campo select{padding-right:24px;background-position:right 8px center}
 .dias7{display:flex;gap:5px}
 .dias7 button{flex:1;aspect-ratio:1;max-width:44px;border-radius:50%;background:var(--surface);border:.5px solid var(--line);font-weight:700;font-size:13px;transition:all .25s var(--spring)}
@@ -399,9 +413,95 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 @media (min-width:700px){.logros{grid-template-columns:repeat(4,1fr)}.lib{grid-template-columns:repeat(3,1fr)}}
 
+/* ═══════════ v4.1 · Hoy visual, racha tipo Duolingo ═══════════ */
+.hoy-top{display:flex;align-items:flex-start;gap:12px;margin:8px 2px 14px}
+.hoy-top .tx{flex:1;min-width:0}
+.hoy-top .h-titulo{margin:0;font-size:27px}
+.hoy-top .h-sub{margin:2px 0 0}
+.fuego{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;width:74px;height:74px;border-radius:22px;background:var(--surface);border:.5px solid var(--line);transition:transform .35s var(--spring)}
+.fuego:active{transform:scale(.92)}
+.fuego .f{font-size:30px;line-height:1;filter:drop-shadow(0 2px 8px rgba(255,120,0,.45))}
+.fuego.apagado .f{filter:grayscale(1) opacity(.45)}
+.fuego b{font-size:19px;font-weight:800;line-height:1.1;color:#ff8a00}
+.fuego.apagado b{color:var(--text3)}
+.fuego.vivo .f{animation:llama 2.2s ease-in-out infinite}
+@keyframes llama{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.08) rotate(2deg)}}
+.semana{display:flex;justify-content:space-between;gap:6px;margin:14px 0 2px;padding:12px 12px 10px;background:var(--surface);border:.5px solid var(--line);border-radius:var(--r-m)}
+.semana .d{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--text3)}
+.semana .d .c{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);font-size:16px;transition:transform .4s var(--spring)}
+.semana .d.si .c{background:linear-gradient(135deg,#ffb347,#ff6a00);box-shadow:0 2px 10px rgba(255,106,0,.35)}
+.semana .d.perf .c{background:linear-gradient(135deg,#ffe066,#ffb000)}
+.semana .d.hoy{color:var(--text)}
+.semana .d.hoy .c{outline:2px solid var(--accent);outline-offset:2px}
+.semana .d.fut{opacity:.45}
+.hero.compacto{padding:14px}
+.hero.compacto .ring{width:92px;height:92px}
+.hero.compacto .pct{font-size:23px}
+.falta{font-size:14px;font-weight:650;margin-bottom:2px}
+.falta small{display:block;color:var(--text2);font-weight:500;font-size:12.5px;margin-top:2px}
+
+.stories{gap:16px;padding-top:18px}
+.story{width:84px}
+.story .anillo{width:80px;height:80px;padding:3px}
+.story .cara{font-size:32px;border-width:3px}
+.story .lbl{font-size:12.5px;margin-top:6px;color:var(--text)}
+
+.grid-m{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{position:relative;background:var(--surface);border:.5px solid var(--line);border-radius:22px;padding:14px 12px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-height:156px;
+  transition:transform .35s var(--spring),background .3s,border-color .3s;user-select:none;-webkit-user-select:none;cursor:pointer;overflow:hidden}
+.tile:active{transform:scale(.95)}
+.tile .tr{position:relative;width:72px;height:72px}
+.tile .tr svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.tile .tr .trk{stroke:var(--surface3)}
+.tile .tr .prg{stroke:url(#gRing);transition:stroke-dashoffset .7s var(--smooth)}
+.tile .te{position:absolute;inset:9px;border-radius:50%;display:grid;place-items:center;font-size:30px;background:var(--surface2);transition:transform .35s var(--spring)}
+.tile .tn{font-weight:700;font-size:14px;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile .ts{font-size:12px;color:var(--text2);font-weight:600}
+.tile .ts .hora{color:var(--accent)}
+.tile .ok{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;background:var(--ok);display:grid;place-items:center;transform:scale(0);transition:transform .45s var(--spring)}
+.tile .ok svg{width:14px;height:14px;stroke:#fff;stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.tile.hecha{background:color-mix(in srgb,var(--ok) 10%,var(--surface));border-color:color-mix(in srgb,var(--ok) 35%,transparent)}
+.tile.hecha .ok{transform:scale(1)}
+.tile.hecha .tn{color:var(--text2)}
+.tile.principal::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.9}
+.tile .menos{position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:50%;background:var(--surface2);font-size:18px;font-weight:700;display:grid;place-items:center;color:var(--text2)}
+.tile .menos:active{transform:scale(.85)}
+.tile .mas{position:absolute;bottom:8px;right:8px;font-size:11px;font-weight:800;color:var(--accent)}
+.tile.pop .te{animation:pop .5s var(--spring)}
+.tile.flash{animation:flash 1.2s var(--smooth)}
+.sec-camp{display:flex;align-items:center;gap:10px;margin:22px 4px 10px}
+.sec-camp .ico{font-size:22px}
+.sec-camp .tt{flex:1;min-width:0}
+.sec-camp b{display:block;font-size:16px;font-weight:750}
+.sec-camp small{color:var(--text2);font-size:12px}
+.sec-camp .cnt{font-weight:800;font-size:14px;padding:4px 10px;border-radius:12px;background:var(--surface2)}
+.chips-r{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
+.chips-r button{padding:10px 14px;border-radius:14px;background:var(--surface);border:.5px solid var(--line);font-weight:700;font-size:15px;transition:transform .3s var(--spring)}
+.chips-r button:active{transform:scale(.9);background:var(--surface2)}
+
+/* calendario de racha */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;text-align:center}
+.cal .dn{font-size:11px;font-weight:700;color:var(--text3)}
+.cal i{font-style:normal;width:36px;height:36px;justify-self:center;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:700;color:var(--text2);background:var(--surface2)}
+.cal i.nada{background:none}
+.cal i.si{background:linear-gradient(135deg,#ffb347,#ff6a00);color:#fff}
+.cal i.perf{background:linear-gradient(135deg,#ffe066,#ffb000);color:#3a2500}
+.cal i.hoy{outline:2px solid var(--accent);outline-offset:1px}
+.racha-big{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.racha-big .f{font-size:52px;filter:drop-shadow(0 4px 14px rgba(255,120,0,.5))}
+.racha-big b{font-size:40px;font-weight:800;letter-spacing:-1px;line-height:1;color:#ff8a00}
+.racha-big small{display:block;color:var(--text2);font-size:13px;margin-top:3px}
+.cons{display:grid;grid-template-columns:28px 1fr 2fr 40px;gap:8px;align-items:center;font-size:13px;margin:8px 0}
+.cons .e{font-size:18px}.cons .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.cons .tb{height:7px;border-radius:7px;background:var(--surface3);overflow:hidden}.cons .tb i{display:block;height:100%;border-radius:7px;background:var(--grad)}
+.insight{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:.5px solid var(--line)}
+.insight:first-of-type{border-top:0}
+.insight .e{font-size:24px;width:36px;text-align:center}.insight b{display:block;font-size:14px}.insight small{color:var(--text2);font-size:12.5px}
+@media (min-width:560px){.grid-m{grid-template-columns:repeat(3,1fr)}}
+
 </style>
 </head>
-<body data-tema="oscuro" data-acento="aurora">
+<body data-tema="oscuro" data-skin="aurora">
 
 <header class="topbar" id="topbar">
   <div class="wordmark"><span class="dot"></span>Misión Diaria</div>
@@ -416,10 +516,12 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
 <main>
   <!-- HOY -->
   <section class="vista activa" id="v-hoy">
-    <h1 class="h-titulo" id="saludo">Hola, Doc</h1>
-    <div class="h-sub" id="fechaHoy"></div>
+    <div class="hoy-top">
+      <div class="tx"><h1 class="h-titulo" id="saludo">Hola, Doc</h1><div class="h-sub" id="fechaHoy"></div></div>
+      <button class="fuego" id="fuego" onclick="abrirRacha()" aria-label="Racha"><span class="f">🔥</span><b class="num" id="rachaNum">0</b></button>
+    </div>
     <div id="avisos"></div>
-    <div class="hero">
+    <div class="hero compacto">
       <div class="ring">
         <svg viewBox="0 0 120 120"><defs><linearGradient id="gRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--a1)"/><stop offset=".35" stop-color="var(--a2)"/><stop offset=".6" stop-color="var(--a3)"/><stop offset="1" stop-color="var(--a5)"/></linearGradient></defs>
           <circle class="track" cx="60" cy="60" r="52" fill="none" stroke-width="11"/>
@@ -427,16 +529,13 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
         <div class="centro"><div><div class="pct num" id="pctHoy">0%</div><div class="frac num" id="fracHoy">0 / 0</div></div></div>
       </div>
       <div class="hero-info">
-        <div class="nivel-row"><div class="nivel" id="nivelTxt">Nivel 1</div><div class="rango" id="rangoTxt">Novato</div></div>
+        <div class="falta" id="faltaTxt"></div>
+        <div class="nivel-row" style="margin-top:8px"><div class="nivel" id="nivelTxt">Nivel 1</div><div class="rango" id="rangoTxt">Novato</div></div>
         <div class="xpbar"><i id="xpFill"></i></div>
         <div class="xptxt num" id="xpTxt">0 / 100 XP</div>
-        <div class="chips">
-          <span class="chip">🔥 <span class="num" id="rachaNum">0</span></span>
-          <span class="chip">⚡ <span class="num" id="xpTotal">0</span></span>
-          <span class="chip">🏆 <span class="num" id="gNum">0</span> G</span>
-        </div>
       </div>
     </div>
+    <div class="semana" id="semana"></div>
     <div class="frase"><span class="mochi" id="mochi">😴</span><span id="fraseTxt"></span></div>
     <div class="stories" id="stories"></div>
     <div id="proxima"></div>
@@ -460,7 +559,8 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
   <section class="vista" id="v-progreso">
     <h1 class="h-titulo">Progreso</h1>
     <div class="h-sub">Lo que estás construyendo</div>
-    <div class="kpis" id="kpis"></div>
+    <div id="constancia"></div>
+    <div class="kpis" id="kpis" style="margin-top:10px"></div>
     <div id="champ"></div>
     <div id="metas"></div>
     <div class="card"><h3>Últimos 7 días <small>% completado</small></h3><div class="barras" id="barras7"></div></div>
@@ -518,7 +618,8 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
     <div class="grupo-tit">Apariencia</div>
     <div class="grupo">
       <div class="item"><div class="ii">🌗</div><div class="tx"><b>Tema</b></div><select id="selTema" onchange="setCfg('tema',this.value)"><option value="auto">Automático</option><option value="oscuro">Oscuro</option><option value="claro">Claro</option></select></div>
-      <div class="item"><div class="ii">🎨</div><div class="tx"><b>Color</b></div><select id="selAcento" onchange="setCfg('acento',this.value)"><option value="aurora">Aurora</option><option value="carmesi">Carmesí</option><option value="madrid">Madrid ⚪</option><option value="oceano">Océano</option></select></div>
+      <div class="item"><div class="ii">🎨</div><div class="tx"><b>Skin</b><small>Cada una tiene modo día y noche</small></div><select id="selAcento" onchange="setCfg('acento',this.value)"><option value="aurora">Aurora</option><option value="carmesi">Cyber Carmesí</option><option value="sakura">Sakura 🌸</option><option value="madrid">Madrid ⚪</option><option value="oceano">Océano</option></select></div>
+      <div class="item"><div class="ii">🧩</div><div class="tx"><b>Vista de Hoy</b></div><select id="selVista" onchange="setCfg('vistaHoy',this.value)"><option value="cuadricula">Cuadrícula</option><option value="lista">Lista</option></select></div>
       <div class="item"><div class="ii">✅</div><div class="tx"><b>Mandar al final las hechas</b></div><label class="sw"><input type="checkbox" id="swHechasAbajo" onchange="setCfg('hechasAbajo',this.checked)"><span></span></label></div>
     </div>
 
@@ -906,7 +1007,7 @@ const RECOMPENSAS_DEFAULT=[
 <script>
 /* ═══════════ Misión Diaria v4 ═══════════ */
 'use strict';
-const VERSION = '4.0.0';
+const VERSION = '4.1.0';
 const API = 'https://bpwbkoobzkjkjtdfxtxx.supabase.co/functions/v1/md';
 const VAPID = 'BOpca9dq4j8pt-BLIKP708IW6b1zbFW4bhUgA4h8CFe4SqSh2ia7E30ZIRA3ER7hUMQ6gSfK_VnjXcM81WiYYco';
 const CLAVE = 'mision-diaria-v3', CLAVE_V2 = 'mision-diaria-v2', CLAVE_V1 = 'mision-diaria-v1';
@@ -1074,6 +1175,13 @@ function calcularRacha() {
   for (let i = 0; i < 800; i++) { const f = fechaStr(off - i); if (!D.dias[f] && i > 0 && f < (Object.keys(D.dias).sort()[0] || f)) break; if (resumenDia(f).pct >= .6) r++; else break; }
   return r;
 }
+function hizoAlgo(f) { const d = D.dias[f]; if (!d) return false; for (const h of D.habitos) if (estadoHabito(h, d).hecha) return true; for (const k in d) if (k[0] !== '_' && d[k] !== false && d[k] != null && !(Array.isArray(d[k]) && !d[k].length) && !(typeof d[k] === 'object' && !Array.isArray(d[k]) && !d[k].ok && !d[k].n)) return true; return false; }
+function rachaRegistro() {
+  const hoyOk = hizoAlgo(hoyStr()); let r = 0;
+  for (let i = hoyOk ? 0 : 1; i < 2000; i++) { if (hizoAlgo(fechaStr(-i))) r++; else break; }
+  return { n: r, hoy: hoyOk };
+}
+function mejorRachaRegistro() { const fs = Object.keys(D.dias).sort(); if (!fs.length) return 0; let m = 0, c = 0; const fin = new Date(hoyStr() + 'T12:00'); for (let dt = new Date(fs[0] + 'T12:00'); dt <= fin; dt.setDate(dt.getDate() + 1)) { c = hizoAlgo(fechaDe(dt)) ? c + 1 : 0; if (c > m) m = c; } return m; }
 const umbral = n => 50 * n * (n + 1);
 function nivelDe(xp) { let n = 1; while (xp >= umbral(n)) n++; return n; }
 function rangoDe(n) { let r = RANGOS[0][1]; for (const [min, nom] of RANGOS) if (n >= min) r = nom; return r; }
@@ -1254,7 +1362,8 @@ function guiaInstalar() {
 /* ───────── render principal ───────── */
 function aplicarTema() {
   const t = D.config.tema === 'auto' ? (matchMedia('(prefers-color-scheme: light)').matches ? 'claro' : 'oscuro') : D.config.tema;
-  document.body.dataset.tema = t; document.body.dataset.acento = D.config.acento || 'aurora';
+  document.body.dataset.tema = t; document.body.dataset.skin = D.config.acento || 'aurora';
+  requestAnimationFrame(() => { const bg = getComputedStyle(document.body).getPropertyValue('--bg').trim(); $('metaTheme')?.setAttribute('content', bg || '#000'); document.documentElement.style.background = bg; });
 }
 function seguro(n, fn) { try { fn(); } catch (e) { console.error('[' + n + ']', e); } }
 let vistaActual = 'hoy';
@@ -1271,6 +1380,25 @@ function frase(pct) {
   const g = pct === 0 ? 'dormida' : pct < .6 ? 'animada' : pct < 1 ? 'feliz' : 'estrella';
   const fr = FRASES[g]; return { emoji: { dormida: '😴', animada: '😤', feliz: '😎', estrella: '🐐' }[g], txt: fr[(new Date().getDate() + Math.floor(pct * 10)) % fr.length] };
 }
+function renderSemana() {
+  const hoy = new Date(); const w = hoy.getDay(); const lunes = new Date(hoy); lunes.setDate(hoy.getDate() + (w === 0 ? -6 : 1 - w));
+  let h = '';
+  for (let i = 0; i < 7; i++) { const d = new Date(lunes); d.setDate(lunes.getDate() + i); const f = fechaDe(d); const fut = f > hoyStr(); const si = !fut && hizoAlgo(f); const r = resumenDia(f); const perf = si && r.total && r.pct === 1;
+    h += `<div class="d${si ? ' si' : ''}${perf ? ' perf' : ''}${f === hoyStr() ? ' hoy' : ''}${fut ? ' fut' : ''}"><div class="c">${perf ? '⭐' : si ? '🔥' : ''}</div>${'LMMJVSD'[i]}</div>`; }
+  $('semana').innerHTML = h;
+}
+function abrirRacha() {
+  const rr = rachaRegistro(); const best = Math.max(mejorRachaRegistro(), rr.n); haptic();
+  const hoy = new Date(); const y = hoy.getFullYear(), mo = hoy.getMonth(); const pri = new Date(y, mo, 1); const off = (pri.getDay() + 6) % 7; const dias = new Date(y, mo + 1, 0).getDate();
+  let cal = 'LMMJVSD'.split('').map(x => `<span class="dn">${x}</span>`).join('') + '<i class="nada"></i>'.repeat(off);
+  for (let dd = 1; dd <= dias; dd++) { const f = y + '-' + pad(mo + 1) + '-' + pad(dd); const si = f <= hoyStr() && hizoAlgo(f); const r = resumenDia(f); cal += `<i class="${si ? (r.total && r.pct === 1 ? 'perf' : 'si') : ''}${f === hoyStr() ? ' hoy' : ''}">${dd}</i>`; }
+  const diasMes = Object.keys(D.dias).filter(f => f.startsWith(y + '-' + pad(mo + 1)) && hizoAlgo(f)).length;
+  abrirSheet('Tu racha', `<div class="racha-big"><span class="f">🔥</span><div><b class="num">${rr.n} ${rr.n === 1 ? 'día' : 'días'}</b><small>${rr.hoy ? 'Hoy ya cuenta ✓' : rr.n ? 'Marca al menos una misión hoy para no perderla' : 'Marca una misión para encenderla'}</small></div></div>
+    <div class="kpis" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px"><div class="kpi"><b class="num">${best}</b><small>Mejor racha</small></div><div class="kpi"><b class="num">${diasMes}</b><small>Días este mes</small></div><div class="kpi"><b class="num">${calcularRacha()}</b><small>Racha 60%</small></div></div>
+    <div class="card" style="margin-top:0"><h3>${hoy.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' }).replace(/^./, c => c.toUpperCase())}</h3><div class="cal">${cal}</div>
+    <div class="leyenda" style="justify-content:flex-start;gap:12px"><span>🔥 registraste algo</span><span>⭐ día perfecto</span></div></div>
+    <div class="nota">Como en Duolingo: la racha sigue viva mientras marques <b>al menos una misión</b> cada día. La «Racha 60%» es la exigente, la que cuenta para los logros.</div>`);
+}
 function renderCabecera() {
   const h = new Date().getHours();
   $('saludo').textContent = (h < 5 ? 'Buena guardia' : h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches') + ', Doc';
@@ -1279,12 +1407,14 @@ function renderCabecera() {
   $('nivelTxt').textContent = 'Nivel ' + nivel; $('rangoTxt').textContent = rangoDe(nivel);
   $('xpTxt').textContent = (D.xp - base) + ' / ' + (sig - base) + ' XP para el nivel ' + (nivel + 1);
   $('xpFill').style.width = Math.min(100, ((D.xp - base) / (sig - base)) * 100) + '%';
-  $('rachaNum').textContent = calcularRacha(); $('xpTotal').textContent = D.xp.toLocaleString('es-CO'); $('gNum').textContent = puntosG();
-  const r = resumenDia(hoyStr());
+  const rr = rachaRegistro(); $('rachaNum').textContent = rr.n; $('fuego').className = 'fuego' + (rr.hoy ? ' vivo' : ' apagado');
+  const r = resumenDia(hoyStr()); const falta = r.total - r.hechas;
+  $('faltaTxt').innerHTML = r.total === 0 ? 'Sin misiones hoy' : falta === 0 ? '¡Día perfecto! 🐐<small>Todo completado</small>' : (rr.hoy ? 'Te faltan ' + falta : 'Marca una misión') + `<small>${rr.hoy ? 'Racha de ' + rr.n + ' días asegurada 🔥' : rr.n ? 'para no perder tu racha de ' + rr.n + ' días' : 'para encender tu racha'}</small>`;
+  renderSemana();
   $('pctHoy').textContent = Math.round(r.pct * 100) + '%'; $('fracHoy').textContent = r.hechas + ' / ' + r.total;
   $('ringProg').style.strokeDashoffset = 326.7 * (1 - r.pct);
   const fz = frase(r.pct); $('mochi').textContent = fz.emoji; $('fraseTxt').textContent = fz.txt;
-  const pend = r.total - r.hechas; const b = $('badgePend'); b.hidden = !pend; b.textContent = pend;
+  const pend = falta; const b = $('badgePend'); b.hidden = !pend; b.textContent = pend;
   try { if (estadoPush() === 'granted' && navigator.setAppBadge) pend ? navigator.setAppBadge(pend) : navigator.clearAppBadge(); } catch {}
 }
 
@@ -1315,20 +1445,38 @@ function cardMision(h) {
   return `<div class="m${h.prioridad === 'principal' ? ' principal' : ''}${e.hecha ? ' hecha' : ''}" id="m-${id}" data-h="${id}">
     <div class="fila"><div class="ic" data-a="editar">${esc(h.icono || '✦')}</div><div class="cuerpo"><div class="nom"><span>${esc(h.nombre)}</span></div><div class="det">${h.prioridad === 'principal' ? '<i class="tag-p">PRINCIPAL</i>' : ''}${det}</div></div>${accion}</div>${extra}</div>`;
 }
+function tileMision(h) {
+  const e = estadoHabito(h, dia()); const id = esc(h.id); const C = 213.6; // 2πr, r=34
+  let sub = '', menos = '', mas = '';
+  switch (h.tipo) {
+    case 'check': sub = e.hecha ? 'Hecho' : (h.hora ? `<span class="hora">${esc(h.hora)}</span>` : 'Toca para marcar'); break;
+    case 'contador': sub = `${e.n || 0}/${h.meta} ${esc(h.unidad || '')}`; if (e.n) menos = '<button class="menos" data-a="menos" aria-label="Menos">−</button>'; if (!e.hecha) mas = '<span class="mas">+1</span>'; break;
+    case 'qbank': sub = `${e.n || 0}/${h.meta} preguntas`; break;
+    case 'lista': sub = `${(e.a || []).length}/${(h.subitems || []).length} pasos` + (h.hora && !e.hecha ? ` · <span class="hora">${esc(h.hora)}</span>` : ''); break;
+    case 'nota': sub = e.hecha ? 'Hecho ✏️' : 'Toca y anota'; break;
+    default: sub = e.hecha ? `${e.v} ${esc(h.unidad || '')}` : 'Registrar';
+  }
+  return `<div class="tile${e.hecha ? ' hecha' : ''}${h.prioridad === 'principal' ? ' principal' : ''}" id="m-${id}" data-h="${id}">${menos}
+    <div class="tr"><svg viewBox="0 0 72 72"><circle class="trk" cx="36" cy="36" r="34" fill="none" stroke-width="4"/><circle class="prg" cx="36" cy="36" r="34" fill="none" stroke-width="4" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - Math.min(1, e.prog || 0))}"/></svg><div class="te">${esc(h.icono || '✦')}</div></div>
+    <div class="tn">${esc(h.nombre)}</div><div class="ts">${sub}</div><div class="ok">${CHK_SVG}</div>${mas}</div>`;
+}
 function renderHoy() {
-  const activas = D.habitos.filter(h => aplicaHoy(h)); const d = dia();
+  const activas = D.habitos.filter(h => aplicaHoy(h)); const d = dia(); const grid = D.config.vistaHoy !== 'lista';
+  const pinta = arr => grid ? `<div class="grid-m">${arr.map(tileMision).join('')}</div>` : arr.map(cardMision).join('');
   const orden = arr => D.config.hechasAbajo ? [...arr].sort((a, b) => estadoHabito(a, d).hecha - estadoHabito(b, d).hecha) : arr;
   let html = '';
   for (const c of D.campanas) {
     const ms = activas.filter(h => h.campana === c.id); if (!ms.length) continue;
     const hechas = ms.filter(h => estadoHabito(h, d).hecha).length; const pct = Math.round(hechas / ms.length * 100);
-    html += `<div class="camp"><div class="fila"><div class="ico">${esc(c.icono)}</div><div><div class="tit">${esc(c.nombre)}</div><div class="meta">${esc(c.metaTexto || '')}</div></div><div class="cnt num">${hechas}/${ms.length}</div></div><div class="barra"><i style="width:${pct}%"></i></div>${c.lema ? `<div class="lema">${esc(c.lema)}</div>` : ''}</div>`;
-    html += orden(ms).map(cardMision).join('');
+    html += grid ? `<div class="sec-camp"><span class="ico">${esc(c.icono)}</span><div class="tt"><b>${esc(c.nombre)}</b><small>${esc(c.metaTexto || '')}</small></div><span class="cnt num">${hechas}/${ms.length}</span></div>`
+      : `<div class="camp"><div class="fila"><div class="ico">${esc(c.icono)}</div><div><div class="tit">${esc(c.nombre)}</div><div class="meta">${esc(c.metaTexto || '')}</div></div><div class="cnt num">${hechas}/${ms.length}</div></div><div class="barra"><i style="width:${pct}%"></i></div>${c.lema ? `<div class="lema">${esc(c.lema)}</div>` : ''}</div>`;
+    html += pinta(orden(ms));
   }
   const otras = activas.filter(h => !h.campana || !D.campanas.some(c => c.id === h.campana));
   if (otras.length) {
     const cats = [...CAT_ORDEN]; for (const h of otras) if (h.cat && !cats.includes(h.cat)) cats.push(h.cat); cats.push('');
-    for (const c of cats) { const g = otras.filter(h => (h.cat || '') === c); if (!g.length) continue; html += `<div class="cat">${esc(c || 'Otras')}</div>` + orden(g).map(cardMision).join(''); }
+    if (grid) { html += `<div class="sec-camp"><span class="ico">✦</span><div class="tt"><b>Rutina</b><small>Tu día a día</small></div><span class="cnt num">${otras.filter(h => estadoHabito(h, d).hecha).length}/${otras.length}</span></div>`; const ord = []; for (const c of cats) ord.push(...otras.filter(h => (h.cat || '') === c)); html += pinta(orden(ord)); }
+    else for (const c of cats) { const g = otras.filter(h => (h.cat || '') === c); if (!g.length) continue; html += `<div class="cat">${esc(c || 'Otras')}</div>` + orden(g).map(cardMision).join(''); }
   }
   if (!activas.length) html = '<div class="vacio"><div class="e">🌱</div>No tienes misiones para hoy.<br>Crea una o actívala desde la biblioteca.</div>';
   const abiertas = [...document.querySelectorAll('#listaMisiones .m.abierta')].map(x => x.dataset.h);
@@ -1354,6 +1502,15 @@ let lpTimer = null, lpFired = false;
 function hookTarjetas(cont) {
   cont.addEventListener('click', ev => {
     if (lpFired) { lpFired = false; return; }
+    const tile = ev.target.closest('.tile');
+    if (tile) { const id = tile.dataset.h; const h = D.habitos.find(x => x.id === id); if (!h) return; const te = tile.querySelector('.te');
+      if (ev.target.closest('[data-a="menos"]')) return sumar(id, -1, te);
+      tile.classList.remove('pop'); void tile.offsetWidth; tile.classList.add('pop');
+      if (h.tipo === 'check') return toggleCheck(id, te);
+      if (h.tipo === 'contador') return sumar(id, 1, te);
+      if (h.tipo === 'qbank') return abrirQbank(id);
+      if (h.tipo === 'lista') return abrirLista(id);
+      return abrirValor(id); }
     const card = ev.target.closest('.m'); if (!card) return; const id = card.dataset.h; const h = D.habitos.find(x => x.id === id); if (!h) return;
     const btn = ev.target.closest('[data-a]'); const a = btn?.dataset.a;
     if (a === 'editar') return abrirHabito(id);
@@ -1368,10 +1525,10 @@ function hookTarjetas(cont) {
     if (h.tipo === 'nota' || h.tipo === 'registro') return abrirValor(id);
   });
   let p0 = null;
-  cont.addEventListener('pointerdown', ev => { const card = ev.target.closest('.m'); if (!card || ev.target.closest('button')) return; p0 = [ev.clientX, ev.clientY]; clearTimeout(lpTimer); lpFired = false; lpTimer = setTimeout(() => { lpFired = true; haptic(); abrirHabito(card.dataset.h); }, 520); });
+  cont.addEventListener('pointerdown', ev => { const card = ev.target.closest('.m,.tile'); if (!card || ev.target.closest('button')) return; p0 = [ev.clientX, ev.clientY]; clearTimeout(lpTimer); lpFired = false; lpTimer = setTimeout(() => { lpFired = true; haptic(); abrirHabito(card.dataset.h); }, 520); });
   cont.addEventListener('pointermove', ev => { if (p0 && Math.hypot(ev.clientX - p0[0], ev.clientY - p0[1]) > 8) clearTimeout(lpTimer); }, { passive: true });
   ['pointerup', 'pointerleave', 'pointercancel'].forEach(t => cont.addEventListener(t, () => { clearTimeout(lpTimer); p0 = null; }, { passive: true }));
-  cont.addEventListener('contextmenu', ev => { if (ev.target.closest('.m')) ev.preventDefault(); });
+  cont.addEventListener('contextmenu', ev => { if (ev.target.closest('.m,.tile')) ev.preventDefault(); });
 }
 
 /* ───────── acciones ───────── */
@@ -1414,7 +1571,7 @@ function toggleSub(id, idx, el) {
   const d = dia(), h = D.habitos.find(x => x.id === id), pf = perfecto(); if (!Array.isArray(d[id])) d[id] = [];
   const antes = estadoHabito(h, d).hecha; const p = d[id].indexOf(idx); if (p >= 0) d[id].splice(p, 1); else d[id].push(idx);
   const ahora = estadoHabito(h, d).hecha;
-  el?.classList.toggle('on'); haptic();
+  el?.closest('.paso')?.classList.toggle('on'); haptic();
   if (!antes && ahora) darXP(h, el, h.nombre + ' completo ✓'); if (antes && !ahora) quitarXP(h);
   setTimeout(() => despues(pf), 180);
 }
@@ -1461,12 +1618,19 @@ function guardarValor(id) {
 }
 function borrarValor(id) { const h = D.habitos.find(x => x.id === id), d = dia(); if (estadoHabito(h, d).hecha) quitarXP(h); delete d[id]; cerrarSheet(); despues(true); }
 
+/* lista de pasos en hoja */
+function abrirLista(id) {
+  const h = D.habitos.find(x => x.id === id); const a = estadoHabito(h, dia()).a || [];
+  abrirSheet(h.icono + ' ' + h.nombre, `<div class="grupo">${(h.subitems || []).map((s, i) => `<div class="paso item${a.includes(i) ? ' on' : ''}" onclick="toggleSub('${esc(id)}',${i},this.querySelector('.sc'));setTimeout(()=>abrirLista('${esc(id)}'),220)" style="padding:14px"><span class="sc">${CHK_SVG}</span><span class="ptx" style="font-size:16px">${esc(s)}</span></div>`).join('')}</div>
+    <div class="nota">${a.length}/${(h.subitems || []).length} pasos · +${h.xp} XP al completar</div><button class="btn prim" onclick="cerrarSheet()">Listo</button>`);
+}
 /* QBank */
 function abrirQbank(id) {
   const d = dia(); const o = d[id] && typeof d[id] === 'object' ? d[id] : { n: numQ(d[id]) };
   const temas = [...new Set(Object.values(D.dias).map(x => x[id]?.t).filter(Boolean))].slice(-12);
   abrirSheet('📚 Sesión de QBank', `
-    <div class="dos"><div class="campo"><label>Preguntas hechas</label><input id="qN" type="number" inputmode="numeric" value="${o.n || ''}"></div>
+    <div class="campo"><label>Sumar rápido</label><div class="chips-r">${[5, 10, 20, 30, 50].map(n => `<button onclick="$('qN').value=(parseInt($('qN').value)||0)+${n};haptic()">+${n}</button>`).join('')}</div></div>
+    <div class="dos"><div class="campo"><label>Preguntas hechas hoy</label><input id="qN" type="number" inputmode="numeric" value="${o.n || ''}"></div>
     <div class="campo"><label>Aciertos %</label><input id="qA" type="number" inputmode="numeric" min="0" max="100" value="${o.a ?? ''}" placeholder="Ej: 72"></div></div>
     <div class="campo"><label>Tema del bloque</label><input id="qT" list="dlTemas" value="${esc(o.t || '')}" placeholder="Cardiología, Hemato…"><datalist id="dlTemas">${temas.map(t => `<option value="${esc(t)}">`).join('')}</datalist></div>
     <button class="btn prim" onclick="guardarQbank('${esc(id)}')">Guardar sesión</button>`);
@@ -1643,8 +1807,9 @@ function abrirRecordatorios() {
 function renderProgreso() {
   const s = statsGlobales();
   const k = (v, l) => `<div class="kpi"><b class="num">${v}</b><small>${l}</small></div>`;
-  $('kpis').innerHTML = k('🔥 ' + s.racha, 'Racha') + k(s.maxRacha, 'Mejor racha') + k(s.diasPerfectos, 'Días perfectos') + k(s.totalMisiones.toLocaleString('es-CO'), 'Misiones') + k(s.tot('qbank').toLocaleString('es-CO'), 'Preguntas') + k(D.xp.toLocaleString('es-CO'), 'XP total');
-  renderChampions(); renderMetas();
+  $('kpis').innerHTML = k('🔥 ' + rachaRegistro().n, 'Racha') + k(s.racha, 'Racha 60%') + k(s.diasPerfectos, 'Días perfectos') + k(s.totalMisiones.toLocaleString('es-CO'), 'Misiones') + k(s.tot('qbank').toLocaleString('es-CO'), 'Preguntas') + k(D.xp.toLocaleString('es-CO'), 'XP total');
+  const rr = rachaRegistro();
+  renderChampions(); renderMetas(); renderConstancia(rr);
   let b = ''; for (let i = 6; i >= 0; i--) { const f = fechaStr(-i), r = resumenDia(f); b += `<div class="col"><div class="n">${r.total ? Math.round(r.pct * 100) : ''}</div><div class="b${r.pct >= .6 ? ' lleno' : ''}${i === 0 ? ' hoy' : ''}" style="height:${Math.max(4, r.pct * 100)}%"></div><div class="l">${new Date(f + 'T12:00').toLocaleDateString('es-CO', { weekday: 'narrow' })}</div></div>`; }
   $('barras7').innerHTML = b;
   let hm = ''; const hoy = hoyStr(); for (let i = 89; i >= 0; i--) { const f = fechaStr(-i), r = resumenDia(f); const n = !D.dias[f] || !r.hechas ? 0 : r.pct < .4 ? 1 : r.pct < 1 ? 2 : 3; hm += `<i class="${n ? 'n' + n : ''}${f === hoy ? ' hoy' : ''}" title="${f} · ${r.hechas}/${r.total}"></i>`; }
@@ -1655,6 +1820,22 @@ function renderProgreso() {
   const temas = Object.keys(st).sort((a, b) => st[a].s / st[a].c - st[b].s / st[b].c); $('cTemas').hidden = !temas.length;
   $('temas').innerHTML = temas.map(t => { const p = Math.round(st[t].s / st[t].c); const c = p < 60 ? 'lo' : p < 80 ? 'me' : 'hi'; return `<div class="tema"><span>${esc(t)}</span><div class="tb"><i class="${c}" style="width:${p}%"></i></div><b class="num">${p}%</b></div>`; }).join('');
   renderPeso();
+}
+function renderConstancia(rr) {
+  const best = Math.max(mejorRachaRegistro(), rr.n);
+  const dias30 = Array.from({ length: 30 }, (_, i) => fechaStr(-i));
+  const activas = D.habitos.filter(h => !h.archivada);
+  const filas = activas.map(h => { let ap = 0, ok = 0; for (const f of dias30) { if (!aplicaHoy(h, f)) continue; if (f === hoyStr() && !estadoHabito(h, D.dias[f] || {}).hecha) continue; ap++; if (estadoHabito(h, D.dias[f] || {}).hecha) ok++; } return { h, p: ap ? Math.round(ok / ap * 100) : 0, ap }; }).filter(x => x.ap).sort((a, b) => b.p - a.p);
+  const wd = [0, 0, 0, 0, 0, 0, 0], wn = [0, 0, 0, 0, 0, 0, 0]; for (const f of Object.keys(D.dias)) { const r = resumenDia(f); if (!r.total) continue; const w = new Date(f + 'T12:00').getDay(); wd[w] += r.pct; wn[w]++; }
+  const prom = wd.map((v, i) => wn[i] ? v / wn[i] : -1); const mejor = prom.indexOf(Math.max(...prom)); const peor = prom.indexOf(Math.min(...prom.map(x => x < 0 ? 9 : x)));
+  const nomD = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+  let ins = '';
+  if (filas.length) ins += `<div class="insight"><span class="e">${esc(filas[0].h.icono)}</span><div><b>Tu misión más constante</b><small>${esc(filas[0].h.nombre)} · ${filas[0].p}% de los días</small></div></div>`;
+  if (filas.length > 1) { const f = filas.at(-1); ins += `<div class="insight"><span class="e">${esc(f.h.icono)}</span><div><b>La que más necesita rescate</b><small>${esc(f.h.nombre)} · ${f.p}% · ponle un recordatorio</small></div></div>`; }
+  if (mejor >= 0 && prom[mejor] >= 0) ins += `<div class="insight"><span class="e">📅</span><div><b>Tu mejor día: ${nomD[mejor]}</b><small>${Math.round(prom[mejor] * 100)}% promedio${peor !== mejor && prom[peor] >= 0 ? ' · el más flojo: ' + nomD[peor] + ' (' + Math.round(prom[peor] * 100) + '%)' : ''}</small></div></div>`;
+  $('constancia').innerHTML = `<div class="card" onclick="abrirRacha()"><div class="racha-big" style="margin:0"><span class="f">🔥</span><div style="flex:1"><b class="num">${rr.n} ${rr.n === 1 ? 'día' : 'días'}</b><small>Racha de registro · mejor: ${best} días</small></div><span class="chev" style="color:var(--text3);font-size:22px">›</span></div></div>
+    ${ins ? `<div class="card"><h3>💡 Lo que dicen tus datos</h3>${ins}</div>` : ''}
+    ${filas.length ? `<div class="card"><h3>Constancia por misión <small>30 días</small></h3>${filas.map(x => `<div class="cons"><span class="e">${esc(x.h.icono)}</span><span class="n">${esc(x.h.nombre)}</span><div class="tb"><i style="width:${x.p}%"></i></div><b class="num" style="text-align:right">${x.p}%</b></div>`).join('')}</div>` : ''}`;
 }
 function renderPeso() {
   const hP = D.habitos.find(x => x.id === 'peso' || (x.tipo === 'registro' && /kg/i.test(x.unidad || ''))); const pts = [];
@@ -1723,7 +1904,7 @@ function renderTrofeos() {
   $('filtrosLogros').innerHTML = Object.entries(fs).map(([k, l]) => `<button class="${filtroLogros === k ? 'on' : ''}" onclick="filtroLogros='${k}';renderTrofeos()">${l}</button>`).join('');
   let lista = [...LOGROS].sort((a, b) => (D.logros.includes(b.id) - D.logros.includes(a.id)) || (PTS[a.r] - PTS[b.r]));
   if (filtroLogros === 'mios') lista = lista.filter(l => D.logros.includes(l.id)); else if (filtroLogros !== 'todos') lista = lista.filter(l => l.r === filtroLogros);
-  $('listaLogros').innerHTML = lista.map(l => { const ok = D.logros.includes(l.id); return `<div class="lg ${l.r}${ok ? ' ok' : ' bloq'}" onclick="toast('${ok ? l.ico : '🔒'}',${JSON.stringify(l.nom).replace(/"/g, '&quot;')},${JSON.stringify(l.desc + ' · ' + PTS[l.r] + ' G').replace(/"/g, '&quot;')})"><div class="med">${ok ? l.ico : '🔒'}</div><div class="ln">${esc(l.nom)}</div><div class="lr">${{ comun: 'Común', raro: 'Raro', epico: 'Épico', legendario: 'Legendario' }[l.r] || l.r}</div></div>`; }).join('');
+  $('listaLogros').innerHTML = lista.map(l => { const ok = D.logros.includes(l.id); return `<div class="lg ${l.r}${ok ? ' ok' : ' bloq'}" onclick="toast('${ok ? l.ico : '🔒'}',${JSON.stringify(l.nom).replace(/"/g, '&quot;')},${JSON.stringify(l.desc + ' · ' + PTS[l.r] + ' G').replace(/"/g, '&quot;')})"><div class="med">${ok ? l.ico : '🔒'}</div><div class="ln">${esc(l.nom)}</div><div class="lr ${l.r}">${{ comun: 'Común', raro: 'Raro', epico: 'Épico', legendario: 'Legendario' }[l.r] || l.r}</div></div>`; }).join('');
   $('xpDisp').textContent = D.xp.toLocaleString('es-CO'); $('canjesCont').textContent = D.canjes.filter(c => c.costo > 0).length;
   $('listaPremios').innerHTML = D.recompensas.map(r => { const p = Math.min(100, D.xp / r.costo * 100); const puede = D.xp >= r.costo; return `<div class="rec"><div class="ri">${esc(r.icono)}</div><div class="rt"><b>${esc(r.nombre)}</b><small>${r.costo} XP${puede ? '' : ' · te faltan ' + (r.costo - D.xp)}</small><div class="barra"><i style="width:${p}%"></i></div></div><button class="pill${puede ? ' prim' : ''}" ${puede ? '' : 'disabled style="opacity:.4"'} onclick="canjear('${esc(r.id)}',this)">Canjear</button><button class="icon-btn" onclick="abrirPremio('${esc(r.id)}')" aria-label="Editar">✎</button></div>`; }).join('')
     + (D.canjes.filter(c => c.costo > 0).length ? '<div class="sec"><h2>Últimos canjes</h2></div>' + D.canjes.filter(c => c.costo > 0).slice(-5).reverse().map(c => `<div class="rec" style="opacity:.7"><div class="ri">${esc(c.icono)}</div><div class="rt"><b>${esc(c.nombre)}</b><small>${new Date(c.fecha).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })} · −${c.costo} XP</small></div></div>`).join('') : '');
@@ -1738,7 +1919,7 @@ function renderAjustes() {
   const C = D.config; $('horaManana').value = C.horaManana; $('horaTarde').value = C.horaTarde; $('horaNoche').value = C.horaNoche;
   $('swResumenes').checked = C.notif.resumenes !== false; $('swHabitos').checked = C.notif.habitos !== false;
   $('swSilencio').checked = !!C.notif.silencio.on; $('silDesde').value = C.notif.silencio.desde; $('silHasta').value = C.notif.silencio.hasta;
-  $('selTema').value = C.tema; $('selAcento').value = C.acento; $('swHechasAbajo').checked = !!C.hechasAbajo;
+  $('selTema').value = C.tema; $('selAcento').value = C.acento; $('selVista').value = C.vistaHoy || 'cuadricula'; $('swHechasAbajo').checked = !!C.hechasAbajo;
   const hP = D.habitos.find(x => x.id === 'peso'); $('resObjetivos').textContent = (hP ? hP.metaPeso + ' kg · ' : '') + (D.objetivos.qbankTotal || 5000) + ' preguntas';
   $('resCampanas').textContent = D.campanas.length + ' activas'; $('resMisiones').textContent = D.habitos.length + ' misiones · ' + D.habitos.filter(h => h.rec?.modo && h.rec.modo !== 'off').length + ' con aviso';
   pintarNotif(); setSync(syncState); $('versionTxt').textContent = 'Misión Diaria ' + VERSION + ' · hecha para Doc 🌸';
@@ -1813,7 +1994,7 @@ function storiesDatos() {
   out.push({ id: 'dia', ico: r.pct === 1 ? '🐐' : '☀️', lbl: 'Tu día', mini: Math.round(r.pct * 100) + '%', slides: [
     { big: r.pct === 1 ? '🐐' : '🎯', kpi: Math.round(r.pct * 100) + '%', h: r.hechas + ' de ' + r.total + ' misiones', p: frase(r.pct).txt },
     { big: '📋', h: pend.length ? 'Te faltan' : 'Nada pendiente', p: pend.slice(0, 6).map(h => h.icono + ' ' + esc(h.nombre)).join('<br>') || 'Día cerrado. Disfruta.' }] });
-  out.push({ id: 'racha', ico: '🔥', lbl: 'Racha', mini: s.racha, slides: [{ big: '🔥', kpi: s.racha + (s.racha === 1 ? ' día' : ' días'), h: 'Racha actual', p: 'Tu mejor racha: ' + s.maxRacha + ' días. Se mantiene con el 60% del día.' }] });
+  const rr = rachaRegistro(); out.push({ id: 'racha', ico: '🔥', lbl: 'Racha', mini: rr.n, slides: [{ big: '🔥', kpi: rr.n + (rr.n === 1 ? ' día' : ' días'), h: rr.hoy ? 'Racha viva' : 'Racha en juego', p: (rr.hoy ? 'Hoy ya cuenta. ' : 'Marca al menos una misión hoy. ') + 'Mejor racha: ' + Math.max(mejorRachaRegistro(), rr.n) + ' días.' }] });
   for (const c of D.campanas) {
     const ms = D.habitos.filter(h => h.campana === c.id && aplicaHoy(h)); if (!ms.length) continue; const hc = ms.filter(h => estadoHabito(h, d).hecha).length;
     const sl = [{ big: c.icono, h: c.nombre, kpi: hc + '/' + ms.length, p: esc(c.metaTexto || '') + (c.lema ? '<br><i>' + esc(c.lema) + '</i>' : '') }];
@@ -1858,6 +2039,8 @@ function navHash() {
   if (h.startsWith('m-')) irMision(h.slice(2)); else if ($('v-' + h)) irA(h);
   history.replaceState(null, '', location.pathname + location.search);
 }
+['gesturestart', 'gesturechange', 'gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
+document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
 let ultimoDia = null;
 async function iniciar() {
   const nuevo = cargar(); aplicarTema();
