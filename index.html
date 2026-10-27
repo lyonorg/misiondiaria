@@ -512,6 +512,69 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
 .turno-chip{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 14px;border-radius:20px;background:var(--surface);border:.5px solid var(--line);font-size:13.5px}
 .turno-chip span{color:var(--accent);font-weight:600;margin-left:4px}
 .aviso .at .turnos{width:100%}
+/* ───── v4.3 ───── */
+.ring .r2.prog{stroke:var(--ok);transition:stroke-dashoffset 1s var(--smooth),stroke .4s}
+.ring .r2.prog.casi{stroke:var(--warn)}.ring .r2.prog.over{stroke:var(--bad)}
+.ring .r3.prog{stroke:var(--info);transition:stroke-dashoffset 1s var(--smooth)}
+.ring .r2.track,.ring .r3.track{stroke:var(--surface3)}
+.anillos-ley{display:flex;flex-wrap:wrap;gap:4px 10px;margin:6px 0 2px;font-size:11.5px;color:var(--text2);font-weight:600}
+.anillos-ley span{display:flex;align-items:center;gap:4px}.anillos-ley b{color:var(--text);font-weight:750}
+.anillos-ley i{width:8px;height:8px;border-radius:50%}.anillos-ley .l1{background:var(--grad)}.anillos-ley .l2{background:var(--ok)}.anillos-ley .l2.over{background:var(--bad)}.anillos-ley .l3{background:var(--info)}
+.n-cab{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.n-cab b{font-size:15.5px}.n-cab small{color:var(--text3);font-size:12px;font-weight:600}
+.ay{font-size:11.5px;font-weight:700;padding:5px 9px;border-radius:12px;background:var(--surface2);color:var(--text2);white-space:nowrap}
+.ay.abierta{background:color-mix(in srgb,var(--ok) 18%,var(--surface2));color:var(--ok)}
+.n-big{display:flex;align-items:baseline;gap:6px}.n-big b{font-size:34px;font-weight:800;letter-spacing:-1px}.n-big span{color:var(--text2);font-weight:600}
+.n-bar{margin:8px 0 6px}.n-bar i{background:var(--ok)}.nutri.casi .n-bar i{background:var(--warn)}.nutri.over .n-bar i{background:var(--bad)}
+.nutri.over{border-color:color-mix(in srgb,var(--bad) 50%,var(--line))}.nutri.over .n-big b{color:var(--bad)}
+.n-sub{font-size:13px;color:var(--text2)}.n-sub b{color:var(--text)}
+.comidas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
+.cm{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:16px;background:var(--surface2);border:.5px solid var(--line);transition:transform .3s var(--spring)}
+.cm:active{transform:scale(.92)}.cm .ce{font-size:24px}.cm b{font-size:14px;font-weight:800}.cm small{font-size:10px;color:var(--text3);font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.cm.ok{background:color-mix(in srgb,var(--ok) 14%,var(--surface2));border-color:color-mix(in srgb,var(--ok) 40%,var(--line))}.cm.ok b{color:var(--ok)}
+.gem{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gem .btn{margin:0 0 12px;font-size:13.5px;padding:12px 8px}
+.peg{min-height:64px!important;font-size:14px!important}.peg.ok{border-color:var(--ok)!important}
+.c-prev{padding:10px 12px;border-radius:12px;font-size:13.5px;margin-bottom:10px;background:var(--surface2);color:var(--text2)}
+.c-prev.ok{background:color-mix(in srgb,var(--ok) 12%,var(--surface2))}.c-prev.casi{background:color-mix(in srgb,var(--warn) 16%,var(--surface2))}.c-prev.over{background:color-mix(in srgb,var(--bad) 16%,var(--surface2));color:var(--text)}
+.c-prev:empty{display:none}
+.chq .s-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:.5px solid var(--line)}
+.chq .s-row:first-of-type{border-top:0}
+.chq .lb{font-size:14px;font-weight:700;flex:none;max-width:42%}.chq .lb small{display:block;font-size:11px;color:var(--text3);font-weight:600;margin-top:1px}
+.caras{display:flex;gap:4px}.caras button{font-size:26px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;opacity:.45;filter:grayscale(.6);transition:transform .35s var(--spring),opacity .2s}
+.caras button.on{opacity:1;filter:none;transform:scale(1.18);background:var(--surface2)}
+.seg2{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.seg2 button{padding:8px 12px;border-radius:14px;background:var(--surface2);font-weight:700;font-size:13px;transition:transform .3s var(--spring),background .2s}
+.seg2 button:active{transform:scale(.9)}
+.seg2 button.on.ok{background:var(--ok);color:#fff}.seg2 button.on.mal{background:var(--warn);color:#1a1000}.seg2 button.on.neu{background:var(--accent);color:var(--on-accent)}
+.chq .ayer{background:var(--grad-soft);margin:6px -10px 0;padding:10px;border-radius:12px;border-top:0}
+.chq.mini{display:flex;align-items:center;gap:10px;padding:12px 16px}.chq.mini .res{font-size:20px;letter-spacing:2px}.chq.mini .st{flex:1;font-size:12px;color:var(--text2);text-align:right}.chq.mini .chev{color:var(--text3)}
+.hielos .hl{display:flex;gap:12px;align-items:center}.hielos .hi-ico{font-size:30px;letter-spacing:2px;flex:none}.hielos b{display:block;font-size:14.5px}.hielos small{color:var(--text2);font-size:12.5px;line-height:1.4}
+.hielos .btn{margin-top:12px;margin-bottom:0}
+.cal i.hielo{background:linear-gradient(135deg,#bfe9ff,#5ac8fa);font-size:16px}
+.tile.swiping,.m.swiping{transition:none!important}
+.tile,.m{touch-action:pan-y;transition:transform .35s var(--spring)}
+.tile[data-sw="der"]{box-shadow:inset 0 0 0 2px var(--ok)}.tile[data-sw="izq"]{box-shadow:inset 0 0 0 2px var(--bad)}
+.m[data-sw="der"]{box-shadow:inset 3px 0 0 var(--ok)}.m[data-sw="izq"]{box-shadow:inset -3px 0 0 var(--bad)}
+.barras.kc .lim{position:absolute;left:0;right:0;border-top:1.5px dashed var(--text3);pointer-events:none;margin-bottom:20px}
+.barras .b.okk{background:var(--ok)}.barras .b.over{background:var(--bad)}
+.pred.alerta{background:color-mix(in srgb,var(--warn) 14%,var(--surface2))}
+.tira{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:2px;text-align:center;margin-bottom:6px}
+.tira span{font-size:17px;line-height:1.2;position:relative;color:var(--text3)}.tira span.hoy{background:var(--surface2);border-radius:8px}
+.tira i{display:block;font-style:normal;font-size:9px;height:12px}
+.enf{position:fixed;inset:0;z-index:90;background:radial-gradient(120% 70% at 50% 0%,color-mix(in srgb,var(--accent) 22%,#000) 0%,#000 65%);color:#fff;display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 50px) 24px calc(env(safe-area-inset-bottom) + 20px);opacity:0;pointer-events:none;transform:scale(1.04);transition:opacity .35s,transform .45s var(--spring);overflow-y:auto}
+.enf.on{opacity:1;pointer-events:auto;transform:none}
+.enf .cerrar{position:absolute;top:calc(env(safe-area-inset-top) + 10px);right:16px;font-size:30px;color:#fff;width:44px;height:44px}
+.enf-tit{font-weight:750;font-size:17px;opacity:.85;margin-bottom:18px}
+.enf-ring{position:relative;width:min(70vw,260px);aspect-ratio:1}.enf-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.enf-ring circle#enfProg{transition:stroke-dashoffset 1s linear}
+.enf-t{position:absolute;inset:0;display:grid;place-items:center;font-size:52px;font-weight:800;letter-spacing:-2px}
+.enf-n{font-size:64px;font-weight:850;margin-top:14px;line-height:1}.enf-n.pop{animation:pop .4s var(--spring)}
+.enf-sub{font-size:13.5px;opacity:.7;text-align:center;margin:4px 0 14px}
+.enf-btns{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+.enf-btns button{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:20px;font-weight:800;transition:transform .3s var(--spring)}
+.enf-btns button.big{width:96px;height:96px;font-size:30px;background:var(--grad)}.enf-btns button:active{transform:scale(.88)}
+.enf-dur{display:flex;gap:8px;margin:4px 0 18px}.enf-dur button{padding:10px 14px;border-radius:16px;background:rgba(255,255,255,.1);color:#fff;font-weight:700}.enf-dur button.on{background:#fff;color:#000}
+.enf .btn{width:100%;max-width:360px}.enf .btn:not(.prim):not(.grad){background:rgba(255,255,255,.08);color:#fff}.enf .btn.peligro{color:#ff6b6b}
+#enfCuerpo{display:flex;flex-direction:column;align-items:center;width:100%}
 
 </style>
 </head>
@@ -539,11 +602,16 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
       <div class="ring">
         <svg viewBox="0 0 120 120"><defs><linearGradient id="gRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--a1)"/><stop offset=".35" stop-color="var(--a2)"/><stop offset=".6" stop-color="var(--a3)"/><stop offset="1" stop-color="var(--a5)"/></linearGradient></defs>
           <circle class="track" cx="60" cy="60" r="52" fill="none" stroke-width="11"/>
-          <circle class="prog" id="ringProg" cx="60" cy="60" r="52" fill="none" stroke="url(#gRing)" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
-        <div class="centro"><div><div class="pct num" id="pctHoy">0%</div><div class="frac num" id="fracHoy">0 / 0</div></div></div>
+          <circle class="prog" id="ringProg" cx="60" cy="60" r="52" fill="none" stroke="url(#gRing)" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+          <circle class="track r2" cx="60" cy="60" r="39" fill="none" stroke-width="11"/>
+          <circle class="prog r2" id="ringKcal" cx="60" cy="60" r="39" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="245" stroke-dashoffset="245"/>
+          <circle class="track r3" cx="60" cy="60" r="26" fill="none" stroke-width="11"/>
+          <circle class="prog r3" id="ringAgua" cx="60" cy="60" r="26" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="163.4"/></svg>
+        <div class="centro" hidden><div><div class="pct num" id="pctHoy">0%</div><div class="frac num" id="fracHoy">0 / 0</div></div></div>
       </div>
       <div class="hero-info">
         <div class="falta" id="faltaTxt"></div>
+        <div class="anillos-ley" id="anillosLey"></div>
         <div class="nivel-row" style="margin-top:8px"><div class="nivel" id="nivelTxt">Nivel 1</div><div class="rango" id="rangoTxt">Novato</div></div>
         <div class="xpbar"><i id="xpFill"></i></div>
         <div class="xptxt num" id="xpTxt">0 / 100 XP</div>
@@ -552,6 +620,7 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
     <div class="semana" id="semana"></div>
     <div class="frase"><span class="mochi" id="mochi">😴</span><span id="fraseTxt"></span></div>
     <div class="stories" id="stories"></div>
+    <div id="extras"></div>
     <div id="proxima"></div>
     <div id="listaMisiones"></div>
     <button class="btn" onclick="abrirHabito()">＋ Nueva misión</button>
@@ -582,6 +651,8 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
       <div class="leyenda">Menos <i></i><i style="background:color-mix(in srgb,var(--accent) 35%,var(--surface3))"></i><i style="background:color-mix(in srgb,var(--accent) 65%,var(--surface3))"></i><i style="background:var(--accent)"></i> Más</div></div>
     <div class="card" id="cQbank" hidden><h3>Preguntas de banco <small>14 días</small></h3><div class="barras" id="barrasQ"></div></div>
     <div class="card" id="cTemas" hidden><h3>Aciertos por tema <small>de flojo a fuerte</small></h3><div id="temas"></div></div>
+    <div id="nutriProg"></div>
+    <div id="animoProg"></div>
     <div class="card" id="cPeso" hidden><h3>Peso <small id="pesoRango"></small></h3><svg class="linea" id="svgPeso" viewBox="0 0 320 150" preserveAspectRatio="none"></svg></div>
   </section>
 
@@ -634,6 +705,11 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
       <div class="item"><div class="ii">🕓</div><div class="tx"><b>Mi día termina a las</b><small>Lo que marques de madrugada cuenta para el día anterior</small></div><input type="time" id="finDia" onchange="setCfg('finDia',this.value)"></div>
       <div class="item"><div class="ii">🌙</div><div class="tx"><b>Salgo de la guardia nocturna</b></div><input type="time" id="salidaNoche" onchange="setSuenoCfg('salidaNoche',this.value)"></div>
       <div class="item"><div class="ii">😴</div><div class="tx"><b>Meta de sueño (horas)</b></div><input type="number" step="0.5" min="4" max="10" id="metaSueno" onchange="setSuenoCfg('meta',this.value)"></div>
+    </div>
+    <div class="grupo-tit">Comidas y chequeo</div>
+    <div class="grupo">
+      <div class="item tap" onclick="abrirLimite()"><div class="ii">🍽️</div><div class="tx"><b>Calorías, proteína y ayuno</b><small id="resNutri"></small></div><span class="chev">›</span></div>
+      <div class="item"><div class="ii">🩺</div><div class="tx"><b>Aviso del chequeo nocturno</b><small>Alcohol, sustancias y ánimo · solo si no lo llenaste</small></div><input type="time" id="checkinHora" onchange="setCfg('checkin',this.value)"></div>
     </div>
     <div class="grupo-tit">Apariencia</div>
     <div class="grupo">
@@ -691,6 +767,12 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
   <div class="zona izq" onclick="storyPaso(-1)"></div><div class="zona der" onclick="storyPaso(1)"></div>
 </div>
 
+<div class="enf" id="enf">
+  <button class="cerrar" onclick="cerrarEnfoque()">×</button>
+  <div class="enf-tit" id="enfTit">⏱ Modo enfoque</div>
+  <div class="enf-ring"><svg viewBox="0 0 220 220"><circle cx="110" cy="110" r="100" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="10"/><circle id="enfProg" cx="110" cy="110" r="100" fill="none" stroke="url(#gRing)" stroke-width="10" stroke-linecap="round" stroke-dasharray="628.3" stroke-dashoffset="0"/></svg><div class="enf-t num" id="enfT">25:00</div></div>
+  <div id="enfCuerpo"></div>
+</div>
 <div class="isla" id="isla"><div class="ti" id="islaIco"></div><div><b id="islaTit"></b><small id="islaSub"></small></div></div>
 <div class="undo" id="undo"><span id="undoTxt"></span><button onclick="deshacer()">Deshacer</button></div>
 <label id="haptic" class="sr" aria-hidden="true"><input type="checkbox" switch tabindex="-1"></label>
@@ -1028,7 +1110,7 @@ const RECOMPENSAS_DEFAULT=[
 <script>
 /* ═══════════ Misión Diaria v4 ═══════════ */
 'use strict';
-const VERSION = '4.2.0';
+const VERSION = '4.3.0';
 const API = 'https://bpwbkoobzkjkjtdfxtxx.supabase.co/functions/v1/md';
 const VAPID = 'BOpca9dq4j8pt-BLIKP708IW6b1zbFW4bhUgA4h8CFe4SqSh2ia7E30ZIRA3ER7hUMQ6gSfK_VnjXcM81WiYYco';
 const CLAVE = 'mision-diaria-v3', CLAVE_V2 = 'mision-diaria-v2', CLAVE_V1 = 'mision-diaria-v1';
@@ -1132,6 +1214,7 @@ function normalizar(x) {
     for (const h of x.habitos) if (/bupropi|semaglut|tirzepat|metform|pastilla|medic/i.test(h.nombre + ' ' + (h.desc || '')) && h.rec && h.rec.modo !== 'off') h.rec.insistir = true;
     if (!x.habitos.some(h => /dient/i.test(h.nombre))) { x.habitos.push(clone(EXTRA_LIB.dientes)); x._nuevoDientes = true; }
   }
+  normalizarV43(x);
   x._v = 4;
   return x;
 }
@@ -1206,13 +1289,14 @@ function calcularRacha() {
   for (let i = 0; i < 800; i++) { const f = fechaStr(off - i); if (!D.dias[f] && i > 0 && f < (Object.keys(D.dias).sort()[0] || f)) break; if (resumenDia(f).pct >= .6) r++; else break; }
   return r;
 }
-function hizoAlgo(f) { const d = D.dias[f]; if (!d) return false; for (const h of D.habitos) if (estadoHabito(h, d).hecha) return true; for (const k in d) if (k[0] !== '_' && d[k] !== false && d[k] != null && !(Array.isArray(d[k]) && !d[k].length) && !(typeof d[k] === 'object' && !Array.isArray(d[k]) && !d[k].ok && !d[k].n)) return true; return false; }
+function hizoAlgo(f) { const d = D.dias[f]; if (!d) return false; if ((d._kcal && d._kcal.length) || d._alc || d._animo) return true; for (const h of D.habitos) if (estadoHabito(h, d).hecha) return true; for (const k in d) if (k[0] !== '_' && d[k] !== false && d[k] != null && !(Array.isArray(d[k]) && !d[k].length) && !(typeof d[k] === 'object' && !Array.isArray(d[k]) && !d[k].ok && !d[k].n)) return true; return false; }
+const cuenta = f => hizoAlgo(f) || !!(D.dias[f] && D.dias[f]._hielo);
 function rachaRegistro() {
   const hoyOk = hizoAlgo(hoyStr()); let r = 0;
-  for (let i = hoyOk ? 0 : 1; i < 2000; i++) { if (hizoAlgo(fechaStr(-i))) r++; else break; }
+  for (let i = hoyOk ? 0 : 1; i < 2000; i++) { if (cuenta(fechaStr(-i))) r++; else break; }
   return { n: r, hoy: hoyOk };
 }
-function mejorRachaRegistro() { const fs = Object.keys(D.dias).sort(); if (!fs.length) return 0; let m = 0, c = 0; const fin = new Date(hoyStr() + 'T12:00'); for (let dt = new Date(fs[0] + 'T12:00'); dt <= fin; dt.setDate(dt.getDate() + 1)) { c = hizoAlgo(fechaDe(dt)) ? c + 1 : 0; if (c > m) m = c; } return m; }
+function mejorRachaRegistro() { const fs = Object.keys(D.dias).sort(); if (!fs.length) return 0; let m = 0, c = 0; const fin = new Date(hoyStr() + 'T12:00'); for (let dt = new Date(fs[0] + 'T12:00'); dt <= fin; dt.setDate(dt.getDate() + 1)) { c = cuenta(fechaDe(dt)) ? c + 1 : 0; if (c > m) m = c; } return m; }
 const umbral = n => 50 * n * (n + 1);
 function nivelDe(xp) { let n = 1; while (xp >= umbral(n)) n++; return n; }
 function rangoDe(n) { let r = RANGOS[0][1]; for (const [min, nom] of RANGOS) if (n >= min) r = nom; return r; }
@@ -1248,6 +1332,7 @@ function statsGlobales() {
   const hP = D.habitos.find(x => x.id === 'peso'); let kgBajados = 0;
   if (hP && hP.pesoInicial) { for (let i = fechas.length - 1; i >= 0; i--) { const v = D.dias[fechas[i]].peso; if (typeof v === 'number') { kgBajados = Math.max(0, hP.pesoInicial - v); break; } } }
   _statsCache = { totalMisiones, diasPerfectos, semanaPerfecta, maxRacha, racha: calcularRacha(), nivel: nivelDe(D.xp), xp: D.xp, tot, veces, maxDia, madrugador, nocturno, creadas: D.creadas, libAdds: D.libAdds, logrosN: D.logros.length, rachaHabito, canjes: D.canjes.length, diaCategorias: cats.size, guardiaPerfecta, finPerfecto, maxDiaMisiones, maxDiaMisionesPerfecto, rachaUso, seguidosPerfectos, principalesHechas, tempranero, trasnochador, kgBajados };
+  Object.assign(_statsCache, extStats());
   _statsKey = key; return _statsCache;
 }
 function ajustarLogros() {
@@ -1273,6 +1358,7 @@ function avisosDelDia() {
     out.push({ t: toMin(C.horaNoche), titulo: '🌙 Cierre del día', sub: 'Racha y lo que falta' });
   }
   if (N.habitos !== false) for (const h of pend) for (const x of tiemposMision(h)) out.push({ t: x.t, titulo: (x.ins ? '⏰ ' : '') + h.icono + ' ' + h.nombre, sub: x.ins ? 'Insistencia ' + x.ins + ' · si aún no la marcas' : x.sub, hid: h.id });
+  out.push(...avisosExtra(d));
   const s = N.silencio; const dz = d._dormir; const win = (m, a, b) => a <= b ? m >= a && m < b : m >= a || m < b;
   const enSil = m => (s.on && win(m, toMin(s.desde), toMin(s.hasta))) || (dz && win(m, toMin(dz.desde), toMin(dz.hasta)));
   return out.filter(x => x.t >= 0 && !enSil(x.t)).sort((a, b) => a.t - b.t);
@@ -1424,20 +1510,20 @@ function frase(pct) {
 function renderSemana() {
   const hoy = hoyDate(); const w = hoy.getDay(); const lunes = new Date(hoy); lunes.setDate(hoy.getDate() + (w === 0 ? -6 : 1 - w));
   let h = '';
-  for (let i = 0; i < 7; i++) { const d = new Date(lunes); d.setDate(lunes.getDate() + i); const f = fechaDe(d); const fut = f > hoyStr(); const si = !fut && hizoAlgo(f); const r = resumenDia(f); const perf = si && r.total && r.pct === 1;
-    h += `<div class="d${si ? ' si' : ''}${perf ? ' perf' : ''}${f === hoyStr() ? ' hoy' : ''}${fut ? ' fut' : ''}"><div class="c">${perf ? '⭐' : si ? '🔥' : ''}</div>${'LMMJVSD'[i]}</div>`; }
+  for (let i = 0; i < 7; i++) { const d = new Date(lunes); d.setDate(lunes.getDate() + i); const f = fechaDe(d); const fut = f > hoyStr(); const si = !fut && hizoAlgo(f); const hi = !fut && !si && (D.dias[f] || {})._hielo; const r = resumenDia(f); const perf = si && r.total && r.pct === 1;
+    h += `<div class="d${si || hi ? ' si' : ''}${perf ? ' perf' : ''}${f === hoyStr() ? ' hoy' : ''}${fut ? ' fut' : ''}"><div class="c">${perf ? '⭐' : si ? '🔥' : hi ? '🧊' : ''}</div>${'LMMJVSD'[i]}</div>`; }
   $('semana').innerHTML = h;
 }
 function abrirRacha() {
   const rr = rachaRegistro(); const best = Math.max(mejorRachaRegistro(), rr.n); haptic();
   const hoy = hoyDate(); const y = hoy.getFullYear(), mo = hoy.getMonth(); const pri = new Date(y, mo, 1); const off = (pri.getDay() + 6) % 7; const dias = new Date(y, mo + 1, 0).getDate();
   let cal = 'LMMJVSD'.split('').map(x => `<span class="dn">${x}</span>`).join('') + '<i class="nada"></i>'.repeat(off);
-  for (let dd = 1; dd <= dias; dd++) { const f = y + '-' + pad(mo + 1) + '-' + pad(dd); const si = f <= hoyStr() && hizoAlgo(f); const r = resumenDia(f); cal += `<i class="${si ? (r.total && r.pct === 1 ? 'perf' : 'si') : ''}${f === hoyStr() ? ' hoy' : ''}">${dd}</i>`; }
+  for (let dd = 1; dd <= dias; dd++) { const f = y + '-' + pad(mo + 1) + '-' + pad(dd); const si = f <= hoyStr() && hizoAlgo(f); const hi = !si && f <= hoyStr() && (D.dias[f] || {})._hielo; const r = resumenDia(f); cal += `<i class="${si ? (r.total && r.pct === 1 ? 'perf' : 'si') : hi ? 'hielo' : ''}${f === hoyStr() ? ' hoy' : ''}">${hi ? '🧊' : dd}</i>`; }
   const diasMes = Object.keys(D.dias).filter(f => f.startsWith(y + '-' + pad(mo + 1)) && hizoAlgo(f)).length;
   abrirSheet('Tu racha', `<div class="racha-big"><span class="f">🔥</span><div><b class="num">${rr.n} ${rr.n === 1 ? 'día' : 'días'}</b><small>${rr.hoy ? 'Hoy ya cuenta ✓' : rr.n ? 'Marca al menos una misión hoy para no perderla' : 'Marca una misión para encenderla'}</small></div></div>
     <div class="kpis" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px"><div class="kpi"><b class="num">${best}</b><small>Mejor racha</small></div><div class="kpi"><b class="num">${diasMes}</b><small>Días este mes</small></div><div class="kpi"><b class="num">${calcularRacha()}</b><small>Racha 60%</small></div></div>
     <div class="card" style="margin-top:0"><h3>${hoy.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' }).replace(/^./, c => c.toUpperCase())}</h3><div class="cal">${cal}</div>
-    <div class="leyenda" style="justify-content:flex-start;gap:12px"><span>🔥 registraste algo</span><span>⭐ día perfecto</span></div></div>
+    <div class="leyenda" style="justify-content:flex-start;gap:12px"><span>🔥 registraste algo</span><span>⭐ día perfecto</span><span>🧊 protector</span></div></div>${htmlHielos()}
     <div class="nota">Como en Duolingo: la racha sigue viva mientras marques <b>al menos una misión</b> cada día. La «Racha 60%» es la exigente, la que cuenta para los logros.</div>`);
 }
 function renderCabecera() {
@@ -1453,7 +1539,7 @@ function renderCabecera() {
   $('faltaTxt').innerHTML = r.total === 0 ? 'Sin misiones hoy' : falta === 0 ? '¡Día perfecto! 🐐<small>Todo completado</small>' : (rr.hoy ? 'Te faltan ' + falta : 'Marca una misión') + `<small>${rr.hoy ? 'Racha de ' + rr.n + ' días asegurada 🔥' : rr.n ? 'para no perder tu racha de ' + rr.n + ' días' : 'para encender tu racha'}</small>`;
   renderSemana();
   $('pctHoy').textContent = Math.round(r.pct * 100) + '%'; $('fracHoy').textContent = r.hechas + ' / ' + r.total;
-  $('ringProg').style.strokeDashoffset = 326.7 * (1 - r.pct);
+  $('ringProg').style.strokeDashoffset = 326.7 * (1 - r.pct); seguro('anillos', pintarAnillos);
   const fz = frase(r.pct); $('mochi').textContent = fz.emoji; $('fraseTxt').textContent = fz.txt;
   const pend = falta; const b = $('badgePend'); b.hidden = !pend; b.textContent = pend;
   try { if (estadoPush() === 'granted' && navigator.setAppBadge) pend ? navigator.setAppBadge(pend) : navigator.clearAppBadge(); } catch {}
@@ -1523,7 +1609,7 @@ function renderHoy() {
   const abiertas = [...document.querySelectorAll('#listaMisiones .m.abierta')].map(x => x.dataset.h);
   $('listaMisiones').innerHTML = html;
   abiertas.forEach(h => document.querySelector(`#listaMisiones .m[data-h="${CSS.escape(h)}"]`)?.classList.add('abierta'));
-  renderStories(); renderProxima(); renderAvisos();
+  renderStories(); renderProxima(); renderAvisos(); seguro('extras', renderExtras);
 }
 function renderProxima() {
   const m = ahoraMin(); const prox = avisosDelDia().find(a => a.hid && a.t >= m - 30);
@@ -1618,10 +1704,13 @@ function hookTarjetas(cont) {
     if (h.tipo === 'check') return toggleCheck(id, card.querySelector('.chk'));
     if (h.tipo === 'nota' || h.tipo === 'registro') return abrirValor(id);
   });
-  let p0 = null;
-  cont.addEventListener('pointerdown', ev => { const card = ev.target.closest('.m,.tile'); if (!card || ev.target.closest('button')) return; p0 = [ev.clientX, ev.clientY]; clearTimeout(lpTimer); lpFired = false; lpTimer = setTimeout(() => { lpFired = true; haptic(); abrirHabito(card.dataset.h); }, 520); });
-  cont.addEventListener('pointermove', ev => { if (p0 && Math.hypot(ev.clientX - p0[0], ev.clientY - p0[1]) > 8) clearTimeout(lpTimer); }, { passive: true });
-  ['pointerup', 'pointerleave', 'pointercancel'].forEach(t => cont.addEventListener(t, () => { clearTimeout(lpTimer); p0 = null; }, { passive: true }));
+  let p0 = null, sw = null, dx = 0;
+  cont.addEventListener('pointerdown', ev => { const card = ev.target.closest('.m,.tile'); if (!card || ev.target.closest('button,input')) return; p0 = [ev.clientX, ev.clientY]; sw = card; dx = 0; clearTimeout(lpTimer); lpFired = false; lpTimer = setTimeout(() => { lpFired = true; haptic(); abrirHabito(card.dataset.h); }, 520); });
+  cont.addEventListener('pointermove', ev => { if (!p0) return; const mx = ev.clientX - p0[0], my = ev.clientY - p0[1]; if (Math.hypot(mx, my) > 8) clearTimeout(lpTimer);
+    if (sw && Math.abs(mx) > 12 && Math.abs(mx) > Math.abs(my) * 1.4) { dx = mx; sw.classList.add('swiping'); sw.style.transform = `translateX(${Math.max(-70, Math.min(70, mx * .6))}px)`; sw.dataset.sw = mx > 0 ? 'der' : 'izq'; } }, { passive: true });
+  const finSwipe = () => { clearTimeout(lpTimer); const card = sw; p0 = null; sw = null; if (!card) return; card.style.transform = ''; card.classList.remove('swiping'); delete card.dataset.sw;
+    if (Math.abs(dx) > 70) { lpFired = true; setTimeout(() => { lpFired = false; }, 400); swipeAccion(card.dataset.h, dx > 0, card.querySelector('.te,.ic')); } dx = 0; };
+  ['pointerup', 'pointercancel'].forEach(t => cont.addEventListener(t, finSwipe, { passive: true }));
   cont.addEventListener('contextmenu', ev => { if (ev.target.closest('.m,.tile')) ev.preventDefault(); });
 }
 
@@ -1647,7 +1736,7 @@ function deshacer() {
 function despues(eraPerfecto) {
   tocarDia(); mostrarDeshacer(); const r = resumenDia(hoyStr());
   if (!eraPerfecto && r.total > 0 && r.pct === 1) { setTimeout(() => { confeti(); toast('🎉', '¡Día perfecto!', 'Completaste todas tus misiones'); }, 350); }
-  calcularMetaAgua(); revisarLogros(); guardar(); render();
+  calcularMetaAgua(); ganarHielo(); revisarLogros(); guardar(); render();
 }
 const perfecto = () => { const r = resumenDia(hoyStr()); return r.total > 0 && r.pct === 1; };
 function toggleCheck(id, el) {
@@ -1742,7 +1831,7 @@ function abrirQbank(id) {
     <div class="dos"><div class="campo"><label>Preguntas hechas hoy</label><input id="qN" type="number" inputmode="numeric" value="${o.n || ''}"></div>
     <div class="campo"><label>Aciertos %</label><input id="qA" type="number" inputmode="numeric" min="0" max="100" value="${o.a ?? ''}" placeholder="Ej: 72"></div></div>
     <div class="campo"><label>Tema del bloque</label><input id="qT" list="dlTemas" value="${esc(o.t || '')}" placeholder="Cardiología, Hemato…"><datalist id="dlTemas">${temas.map(t => `<option value="${esc(t)}">`).join('')}</datalist></div>
-    <button class="btn prim" onclick="guardarQbank('${esc(id)}')">Guardar sesión</button>`);
+    <button class="btn prim" onclick="guardarQbank('${esc(id)}')">Guardar sesión</button><button class="btn grad" onclick="cerrarSheet();abrirEnfoque('${esc(id)}')">⏱ Modo enfoque</button>`);
 }
 function guardarQbank(id) {
   pre('Sesión de QBank guardada');
@@ -1938,7 +2027,7 @@ function renderProgreso() {
   const st = {}; for (const f in D.dias) for (const h of D.habitos.filter(x => x.tipo === 'qbank')) { const v = D.dias[f][h.id]; if (v && typeof v === 'object' && v.t && typeof v.a === 'number') { const t = v.t.trim(); st[t] = st[t] || { s: 0, c: 0 }; st[t].s += v.a; st[t].c++; } }
   const temas = Object.keys(st).sort((a, b) => st[a].s / st[a].c - st[b].s / st[b].c); $('cTemas').hidden = !temas.length;
   $('temas').innerHTML = temas.map(t => { const p = Math.round(st[t].s / st[t].c); const c = p < 60 ? 'lo' : p < 80 ? 'me' : 'hi'; return `<div class="tema"><span>${esc(t)}</span><div class="tb"><i class="${c}" style="width:${p}%"></i></div><b class="num">${p}%</b></div>`; }).join('');
-  renderPeso();
+  renderPeso(); seguro('nutriProg', renderNutriProg); seguro('animoProg', renderAnimoProg);
 }
 function renderConstancia(rr) {
   const best = Math.max(mejorRachaRegistro(), rr.n);
@@ -2042,6 +2131,7 @@ function renderAjustes() {
   $('selTema').value = C.tema; $('selAcento').value = C.acento; $('selVista').value = C.vistaHoy || 'cuadricula'; $('swHechasAbajo').checked = !!C.hechasAbajo;
   const hP = D.habitos.find(x => x.id === 'peso'); $('resObjetivos').textContent = (hP ? hP.metaPeso + ' kg · ' : '') + (D.objetivos.qbankTotal || 5000) + ' preguntas';
   $('resCampanas').textContent = D.campanas.length + ' activas'; $('resMisiones').textContent = D.habitos.length + ' misiones · ' + D.habitos.filter(h => h.rec?.modo && h.rec.modo !== 'off').length + ' con aviso';
+  $('resNutri').textContent = D.config.nutri.limite ? D.config.nutri.limite + ' kcal · ' + D.config.nutri.prot + ' g proteína · ventana ' + D.config.nutri.ventana.desde + '–' + D.config.nutri.ventana.hasta : 'Configura tu límite diario'; $('checkinHora').value = D.config.checkin;
   pintarNotif(); setSync(syncState); $('versionTxt').textContent = 'Misión Diaria ' + VERSION + ' · hecha para Doc 🌸';
 }
 function setSuenoCfg(k, v) { D.config.sueno[k] = k === 'meta' ? Math.max(4, Math.min(10, parseFloat(v) || 7.5)) : v; guardar(); }
@@ -2125,6 +2215,7 @@ function storiesDatos() {
   }
   const ch = datosChampions();
   out.push({ id: 'semana', ico: '⭐', lbl: 'Semana', mini: ch.cumplidos + '/4', slides: [{ big: ch.cumplidos === 4 ? '🏆' : '⭐', h: 'Champions de la semana', kpi: ch.cumplidos + '/4', p: ch.objs.map(o => (o.ok ? '✓ ' : '· ') + o.n + ' — ' + o.v).join('<br>') }] });
+  const wr = storyWrapped(); if (wr) { const w = new Date().getDay(); if (w === 0 || w === 1) out.unshift(wr); else out.push(wr); }
   const ult = D.logros.slice(-1)[0]; const L = LOGROS.find(l => l.id === ult);
   if (L) out.push({ id: 'logro', ico: L.ico, lbl: 'Último logro', slides: [{ big: L.ico, h: L.nom, p: L.desc + ' · ' + PTS[L.r] + ' G', kpi: '' }] });
   return out;
@@ -2157,7 +2248,7 @@ function cerrarStory() { if (SV) cancelAnimationFrame(SV.raf); SV = null; $('sv'
 /* ───────── arranque ───────── */
 function navHash() {
   const h = decodeURIComponent(location.hash.slice(1)); if (!h) return;
-  if (h.startsWith('m-')) irMision(h.slice(2)); else if ($('v-' + h)) irA(h);
+  if (h.startsWith('comida-')) { irA('hoy'); setTimeout(() => abrirComida(h.slice(7)), 200); } else if (h === 'chequeo') { irA('hoy'); setTimeout(() => $('chequeo')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150); } else if (h === 'enfoque') abrirEnfoqueGuardado(); else if (h.startsWith('m-')) irMision(h.slice(2)); else if ($('v-' + h)) irA(h);
   history.replaceState(null, '', location.pathname + location.search);
 }
 ['gesturestart', 'gesturechange', 'gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
@@ -2177,17 +2268,376 @@ async function iniciar() {
   // migración automática desde el Gist de v3 (una sola vez)
   if (!lsGet('md-gist-importado', 0) && lsGet(K_GIST, {}).token) { const ok = await importarGist(true); if (!ok) lsSet('md-gist-importado', -1); }
   await bajar();
+  usarHielo(); retomarEnfoque();
   refrescarPush();
   navHash(); addEventListener('hashchange', navHash);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') { if (SYNC.pending) { clearTimeout(tPush); subir(true); } }
-    else { if (hoyStr() !== ultimoDia) { ultimoDia = hoyStr(); render(); } if (Date.now() - ultimoSync > 20000) bajar(); }
+    else { if (hoyStr() !== ultimoDia) { ultimoDia = hoyStr(); usarHielo(); render(); } if (Date.now() - ultimoSync > 20000) bajar(); }
   });
   addEventListener('pagehide', () => { if (SYNC.pending) subir(true); });
   addEventListener('online', () => { if (SYNC.pending) subir(); else bajar(); });
   setInterval(() => { if (document.visibilityState === 'visible') { if (hoyStr() !== ultimoDia) ultimoDia = hoyStr(); renderCabecera(); if (vistaActual === 'agenda') renderAgenda(); else renderProxima(); } }, 60000);
   if (nuevo) toast('🌸', 'Bienvenido, Doc', 'Tus misiones base ya están listas');
 }
+/* ═══════════ v4.3 · calorías, ayuno, chequeo (alcohol/sustancias/ánimo), protector de racha, anillos, enfoque, resumen semanal ═══════════ */
+const NUTRI_DEF = { limite: null, prot: 140, alt: 175, edad: 30, sexo: 'H', act: 1.375, def: 500, ventana: { desde: '12:00', hasta: '20:00' }, avisos: true,
+  comidas: [{ k: 'comida', n: 'Comida completa', ico: '🍽️', h: '12:00' }, { k: 'snack', n: 'Snack con proteína', ico: '🥚', h: '16:00' }, { k: 'batido', n: 'Batido proteico', ico: '🥤', h: '20:00' }] };
+function normalizarV43(x) {
+  const c = x.config;
+  c.nutri = Object.assign(clone(NUTRI_DEF), c.nutri || {}); c.nutri.ventana = Object.assign(clone(NUTRI_DEF.ventana), c.nutri.ventana || {});
+  if (!Array.isArray(c.nutri.comidas) || !c.nutri.comidas.length) c.nutri.comidas = clone(NUTRI_DEF.comidas);
+  c.checkin = c.checkin || '21:30';
+  if (!c.chequeoDesde) c.chequeoDesde = fechaStr(0);
+  x.hielos = typeof x.hielos === 'number' ? x.hielos : 1; // uno de regalo para empezar
+}
+const fmtN = n => Math.round(n).toLocaleString('es-CO');
+const prevDia = f => { const d = new Date(f + 'T12:00'); d.setDate(d.getDate() - 1); return fechaDe(d); };
+function xpExtra(n, el, ico, msg) {
+  const antes = nivelDe(D.xp); D.xp = Math.max(0, D.xp + n); if (n <= 0) return;
+  xpFloat(el, '+' + n + ' XP'); burst(el); haptic();
+  if (nivelDe(D.xp) > antes) { toast('⬆️', '¡Nivel ' + nivelDe(D.xp) + '!', rangoDe(nivelDe(D.xp))); confeti(); } else if (msg) toast(ico, msg, '+' + n + ' XP');
+}
+
+/* ───────── protector de racha 🧊 ───────── */
+function usarHielo() {
+  const y = fechaStr(-1), y2 = fechaStr(-2);
+  if (cuenta(y) || !cuenta(y2) || (D.hielos || 0) < 1) return;
+  if (!D.dias[y]) D.dias[y] = {}; D.dias[y]._hielo = true; D.dias[y]._t = Date.now(); D.hielos--;
+  let n = 0; for (let i = 1; i < 2000; i++) { if (cuenta(fechaStr(-i))) n++; else break; }
+  guardar(); render(); setTimeout(() => toast('🧊', 'Protector de racha usado', 'Ayer no marcaste nada, pero tu racha de ' + n + ' días sigue viva'), 600);
+}
+function ganarHielo() {
+  const rr = rachaRegistro(); if (!rr.hoy || !rr.n || rr.n % 7 || D.hieloUlt === hoyStr() || (D.hielos || 0) >= 2) return;
+  D.hielos = (D.hielos || 0) + 1; D.hieloUlt = hoyStr(); setTimeout(() => toast('🧊', '¡Ganaste un protector de racha!', rr.n + ' días seguidos · tienes ' + D.hielos + '/2'), 900);
+}
+function comprarHielo() {
+  if ((D.hielos || 0) >= 2) return toast('🧊', 'Ya tienes el máximo', '2 protectores guardados');
+  if (D.xp < 300) return toast('🔒', 'Te faltan ' + (300 - D.xp) + ' XP');
+  D.xp -= 300; D.hielos = (D.hielos || 0) + 1; D.canjes.push({ id: 'hielo' + Date.now(), nombre: 'Protector de racha', icono: '🧊', costo: 300, fecha: Date.now() });
+  haptic(); guardar(); render(); abrirRacha(); toast('🧊', 'Protector comprado', 'Tienes ' + D.hielos + '/2');
+}
+function htmlHielos() {
+  const n = D.hielos || 0;
+  return `<div class="card hielos"><div class="hl"><span class="hi-ico">${'🧊'.repeat(n) || '<span style="opacity:.3">🧊</span>'}</span><div><b>Protectores de racha · ${n}/2</b><small>Si un día no marcas nada, se usa uno solo y tu racha no se rompe. Ganas uno cada 7 días seguidos.</small></div></div>
+    ${n < 2 ? `<button class="btn" onclick="comprarHielo()">Comprar uno · 300 XP</button>` : ''}</div>`;
+}
+
+/* ───────── calorías y ayuno ───────── */
+const comidasDe = f => ((D.dias[f] || {})._kcal || []);
+const kcalDe = f => comidasDe(f).reduce((s, c) => s + (+c.kcal || 0), 0);
+const protDe = f => comidasDe(f).reduce((s, c) => s + (+c.p || 0), 0);
+const limiteDe = f => (D.dias[f] || {})._lim || D.config.nutri.limite;
+function tsDe(hora) { const t = new Date(hoyStr() + 'T' + (hora || toHM(ahoraMin())) + ':00'); if (toMin(hora) < finDiaMin()) t.setDate(t.getDate() + 1); return t.getTime(); }
+function ultimaComidaAntes(ts) { let m = 0; for (const f of [fechaStr(-2), fechaStr(-1), hoyStr()]) for (const c of comidasDe(f)) if (c.ts < ts && c.ts > m) m = c.ts; return m; }
+function estadoAyuno() {
+  const V = D.config.nutri.ventana; const m = ahoraMin(); const a = toMin(V.desde), b = toMin(V.hasta);
+  const ult = ultimaComidaAntes(Date.now() + 1); const hs = ult ? (Date.now() - ult) / 36e5 : 0; const hTxt = ult && hs < 48 ? fmtDur(Math.round(hs * 60)) : '';
+  const abierta = a <= b ? m >= a && m < b : m >= a || m < b;
+  if (abierta) return { cls: 'abierta', txt: '🍽️ Ventana abierta · cierra ' + V.hasta };
+  const falta = (a - m + 1440) % 1440;
+  return { cls: 'ayuno', txt: '⏳ ' + (hTxt ? hTxt + ' de ayuno' : 'En ayuno') + ' · abre ' + (falta < 360 ? 'en ' + fmtDur(falta) : 'a las ' + V.desde) };
+}
+function cardNutri() {
+  const N = D.config.nutri; const f = hoyStr(); const k = kcalDe(f), p = protDe(f), L = limiteDe(f); const cs = comidasDe(f); const ay = estadoAyuno();
+  if (!N.limite) return `<div class="card nutri"><div class="n-cab"><b>🍽️ Calorías de hoy</b><span class="ay ${ay.cls}">${ay.txt}</span></div>
+    <div class="mini-nota" style="margin:2px 0 10px">Pon tu límite diario para el déficit y te aviso antes de pasarte.</div><button class="btn prim" onclick="abrirLimite()">Configurar mi límite</button></div>`;
+  const pct = k / L; const cls = pct > 1 ? 'over' : pct > .9 ? 'casi' : '';
+  const quedan = L - k;
+  const botones = N.comidas.map(c => { const e = cs.filter(x => x.k === c.k); const kk = e.reduce((s, x) => s + (+x.kcal || 0), 0);
+    return `<button class="cm${e.length ? ' ok' : ''}" onclick="abrirComida('${c.k}')"><span class="ce">${c.ico}</span><b>${e.length ? fmtN(kk) : '+'}</b><small>${esc(c.n.split(' ')[0])}</small></button>`; }).join('');
+  const otros = cs.filter(x => !N.comidas.some(c => c.k === x.k));
+  return `<div class="card nutri ${cls}"><div class="n-cab"><b>🍽️ Calorías de hoy</b><span class="ay ${ay.cls}">${ay.txt}</span></div>
+    <div class="n-big"><b class="num">${fmtN(k)}</b><span>/ ${fmtN(L)} kcal</span></div>
+    <div class="pbar n-bar"><i style="width:${Math.min(100, pct * 100)}%"></i></div>
+    <div class="n-sub">${quedan >= 0 ? 'Quedan <b>' + fmtN(quedan) + '</b> kcal' : 'Te pasaste <b>' + fmtN(-quedan) + '</b> kcal'} · Proteína <b>${fmtN(p)}</b>/${N.prot} g</div>
+    <div class="comidas">${botones}<button class="cm mas" onclick="abrirComida('otro')"><span class="ce">＋</span><b>${otros.length ? fmtN(otros.reduce((s, x) => s + (+x.kcal || 0), 0)) : 'Otro'}</b><small>${otros.length ? otros.length + ' extra' : 'Extra'}</small></button></div></div>`;
+}
+const PROMPT_GEMINI = 'Analiza la foto de mi comida. Estima las calorías totales y los gramos de proteína según las porciones que se ven. Responde SOLO en una línea con este formato:\nplato: … | kcal: … | proteína: … g';
+function copiarPrompt() {
+  const ok = () => { haptic(); toast('📋', 'Pregunta copiada', 'Pégala en Gemini junto con la foto'); };
+  try { navigator.clipboard.writeText(PROMPT_GEMINI).then(ok, () => { $('cPeg').value = PROMPT_GEMINI; $('cPeg').select(); document.execCommand('copy'); ok(); $('cPeg').value = ''; }); } catch { toast('⚠️', 'No pude copiar'); }
+}
+const numES = s => { s = String(s).trim(); if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, ''); return parseFloat(s.replace(',', '.')); };
+function parseGemini(t) {
+  const out = {}; t = String(t || '');
+  const rango = (a, b) => b ? (numES(a) + numES(b)) / 2 : numES(a);
+  let m = t.match(/kcal\s*[:=]?\s*~?\s*(\d[\d.,]*)(?:\s*[-–a]\s*(\d[\d.,]*))?/i) || t.match(/(\d[\d.,]*)(?:\s*[-–a]\s*(\d[\d.,]*))?\s*(?:k?cal|calor[ií]as)/i);
+  if (m) out.kcal = Math.round(rango(m[1], m[2]));
+  m = t.match(/prote[ií]nas?\s*[:=]?\s*~?\s*(\d[\d.,]*)(?:\s*[-–a]\s*(\d[\d.,]*))?/i) || t.match(/(\d[\d.,]*)(?:\s*[-–a]\s*(\d[\d.,]*))?\s*g(?:r|ramos)?\s*(?:de\s*)?prote/i);
+  if (m) out.p = Math.round(rango(m[1], m[2]));
+  m = t.match(/plato\s*[:=]\s*([^|\n]+)/i); if (m) out.n = m[1].trim().slice(0, 60);
+  return out;
+}
+function pegadoGemini() {
+  const r = parseGemini(val('cPeg')); if (r.kcal) $('cK').value = r.kcal; if (r.p != null) $('cP').value = r.p; if (r.n && !val('cN')) $('cN').value = r.n;
+  if (r.kcal) { haptic(); $('cPeg').classList.add('ok'); } previewComida();
+}
+function previewComida(idx) {
+  const L = limiteDe(hoyStr()); if (!L || !$('cPrev')) return; const k = parseFloat(val('cK')) || 0;
+  const editK = $('cK').dataset.prev ? +$('cK').dataset.prev : 0; const total = kcalDe(hoyStr()) - editK + k; const q = L - total;
+  $('cPrev').className = 'c-prev ' + (q < 0 ? 'over' : q < L * .1 ? 'casi' : 'ok');
+  $('cPrev').innerHTML = k ? (q >= 0 ? `Te quedarían <b>${fmtN(q)}</b> kcal` : `⚠️ Te pasarías por <b>${fmtN(-q)}</b> kcal`) : `Hoy llevas ${fmtN(total)} de ${fmtN(L)} kcal`;
+}
+function abrirComida(tipo, idx) {
+  const N = D.config.nutri; const c = N.comidas.find(x => x.k === tipo) || { k: 'otro', n: 'Comida extra', ico: '＋', h: '' };
+  const cs = comidasDe(hoyStr()); if (idx == null && tipo !== 'otro') { const i = cs.findIndex(x => x.k === tipo); if (i >= 0) idx = i; }
+  const e = idx != null ? cs[idx] : null;
+  const prev = {}; for (const f of Object.keys(D.dias).sort().reverse()) for (const x of (D.dias[f]._kcal || [])) if ((x.k === tipo || tipo === 'otro') && x.kcal) { const key = (x.n || '') + '|' + x.kcal; if (!prev[key] && Object.keys(prev).length < 4) prev[key] = x; }
+  const rep = Object.values(prev);
+  const lista = tipo === 'otro' ? cs.map((x, i) => ({ x, i })).filter(o => !N.comidas.some(cc => cc.k === o.x.k)) : [];
+  abrirSheet(c.ico + ' ' + c.n, `
+    ${lista.length ? `<div class="grupo" style="margin-bottom:12px">${lista.map(o => `<div class="item tap" onclick="abrirComida('otro',${o.i})"><div class="ii">🍴</div><div class="tx"><b>${esc(o.x.n || 'Extra')}</b><small>${o.x.h || ''} · ${fmtN(o.x.kcal)} kcal${o.x.p ? ' · ' + o.x.p + ' g prot' : ''}</small></div><span class="chev">›</span></div>`).join('')}</div>` : ''}
+    ${rep.length && !e ? `<div class="campo"><label>Repetir rápido</label><div class="chips-r">${rep.map(x => `<button onclick="$('cK').value=${+x.kcal};$('cP').value=${+x.p || 0};$('cN').value=${JSON.stringify(x.n || '').replace(/"/g, '&quot;')};previewComida();haptic()">${esc((x.n || 'Igual').slice(0, 18))} · ${fmtN(x.kcal)}</button>`).join('')}</div></div>` : ''}
+    <div class="gem"><button class="btn" onclick="copiarPrompt()">📋 Copiar pregunta para Gemini</button><button class="btn" onclick="window.open('https://gemini.google.com/app','_blank')">✨ Abrir Gemini</button></div>
+    <div class="campo"><label>Pega aquí lo que te respondió (lleno los campos solo)</label><textarea id="cPeg" class="peg" placeholder="plato: arroz con pollo | kcal: 650 | proteína: 42 g" oninput="pegadoGemini()"></textarea></div>
+    <div class="dos"><div class="campo"><label>Calorías (kcal)</label><input id="cK" type="number" inputmode="numeric" value="${e ? e.kcal : ''}" data-prev="${e ? e.kcal : ''}" oninput="previewComida()"></div>
+    <div class="campo"><label>Proteína (g)</label><input id="cP" type="number" inputmode="numeric" value="${e && e.p != null ? e.p : ''}"></div></div>
+    <div class="dos"><div class="campo"><label>Qué comiste</label><input id="cN" value="${esc(e ? e.n || '' : '')}" placeholder="Opcional"></div>
+    <div class="campo"><label>Hora</label><input id="cH" type="time" value="${esc(e ? e.h : toHM(ahoraMin()))}"></div></div>
+    <div id="cPrev" class="c-prev"></div>
+    <button class="btn prim" onclick="guardarComida('${tipo}',${idx == null ? 'null' : idx})">Guardar</button>
+    ${e ? `<button class="btn peligro" onclick="borrarComida(${idx})">Borrar</button>` : ''}`);
+  previewComida();
+}
+function guardarComida(tipo, idx) {
+  const k = Math.round(parseFloat(val('cK'))); if (!k || k < 0) return toast('⚠️', 'Escribe las calorías');
+  pre('🍽️ Comida guardada');
+  const d = dia(); if (!Array.isArray(d._kcal)) d._kcal = []; if (!d._lim) d._lim = D.config.nutri.limite;
+  const L = d._lim; const antes = kcalDe(hoyStr()); const primera = !d._kcal.length;
+  const h = val('cH') || toHM(ahoraMin()); const p = val('cP') === '' ? null : Math.max(0, Math.round(parseFloat(val('cP'))));
+  const e = { k: tipo, kcal: k, p, n: val('cN'), h, ts: tsDe(h) };
+  if (idx != null && d._kcal[idx]) d._kcal[idx] = e; else d._kcal.push(e);
+  const despuesK = kcalDe(hoyStr()); cerrarSheet();
+  // ayuno automático: horas desde la última comida
+  const hA = D.habitos.find(x => x.id === 'ayuno' && x.tipo === 'registro');
+  if (primera && hA && !estadoHabito(hA, d).hecha) { const u = ultimaComidaAntes(e.ts); if (u && e.ts - u < 40 * 36e5) { d.ayuno = Math.round((e.ts - u) / 36e5 * 2) / 2; darXP(hA, null); setTimeout(() => toast('⏳', 'Ayuno registrado solo', d.ayuno + ' h desde tu última comida'), 400); } }
+  if (idx == null && d._kcal.length <= 4) xpExtra(5, document.querySelector('.nutri .n-big'), '🍽️');
+  if (L) { if (despuesK > L && antes <= L) setTimeout(() => toast('⚠️', 'Pasaste tu límite por ' + fmtN(despuesK - L) + ' kcal', 'Un día no define nada · cuenta el promedio de la semana'), 500);
+    else if (despuesK <= L && L - despuesK < L * .1) setTimeout(() => toast('🟡', 'Casi en el límite', 'Te quedan ' + fmtN(L - despuesK) + ' kcal'), 500); }
+  despues(true);
+}
+function borrarComida(idx) { pre('Comida borrada'); const d = dia(); d._kcal.splice(idx, 1); cerrarSheet(); despues(true); }
+
+/* límite: Mifflin-St Jeor − déficit */
+function pesoActual() { for (const f of Object.keys(D.dias).sort().reverse()) { const v = D.dias[f].peso; if (typeof v === 'number') return v; } return D.habitos.find(x => x.id === 'peso')?.pesoInicial || 85; }
+function abrirLimite() {
+  const N = D.config.nutri; const P = pesoActual();
+  abrirSheet('🍽️ Calorías y ayuno', `
+    <div class="nota">Calculo tu gasto con Mifflin-St Jeor × actividad y le resto el déficit. Si ya tienes un número de tu nutricionista, escríbelo directo abajo.</div>
+    <div class="dos"><div class="campo"><label>Peso (kg)</label><input id="lP" type="number" step="0.1" value="${P}" oninput="calcLimite()"></div><div class="campo"><label>Estatura (cm)</label><input id="lA" type="number" value="${N.alt}" oninput="calcLimite()"></div></div>
+    <div class="dos"><div class="campo"><label>Edad</label><input id="lE" type="number" value="${N.edad}" oninput="calcLimite()"></div><div class="campo"><label>Sexo</label><select id="lS" onchange="calcLimite()"><option value="H"${N.sexo === 'H' ? ' selected' : ''}>Hombre</option><option value="M"${N.sexo === 'M' ? ' selected' : ''}>Mujer</option></select></div></div>
+    <div class="campo"><label>Actividad</label><select id="lAct" onchange="calcLimite()">${[[1.2, 'Sedentario (sin ejercicio)'], [1.375, 'Ligera · 1–3 días de gym'], [1.55, 'Moderada · 3–5 días'], [1.725, 'Alta · 6–7 días']].map(([v, t]) => `<option value="${v}"${+N.act === v ? ' selected' : ''}>${t}</option>`).join('')}</select></div>
+    <div class="campo"><label>Déficit</label><select id="lDef" onchange="calcLimite()">${[[300, 'Suave · −300 kcal (~0,3 kg/sem)'], [500, 'Estándar · −500 kcal (~0,5 kg/sem)'], [750, 'Agresivo · −750 kcal (~0,7 kg/sem)']].map(([v, t]) => `<option value="${v}"${+N.def === v ? ' selected' : ''}>${t}</option>`).join('')}</select></div>
+    <div id="lRes" class="c-prev ok"></div>
+    <div class="dos"><div class="campo"><label>Mi límite diario (kcal)</label><input id="lLim" type="number" value="${N.limite || ''}"></div><div class="campo"><label>Meta de proteína (g)</label><input id="lProt" type="number" value="${N.prot}"></div></div>
+    <div class="grupo-tit" style="margin-top:6px">Ventana de alimentación</div>
+    <div class="dos"><div class="campo"><label>Abre</label><input id="lV1" type="time" value="${N.ventana.desde}"></div><div class="campo"><label>Cierra</label><input id="lV2" type="time" value="${N.ventana.hasta}"></div></div>
+    <div class="grupo-tit">Tus 3 tiempos (con aviso si no lo registras)</div>
+    ${N.comidas.map((c, i) => `<div class="dos"><div class="campo"><label>${c.ico} Nombre</label><input id="lCn${i}" value="${esc(c.n)}"></div><div class="campo"><label>Hora</label><input id="lCh${i}" type="time" value="${c.h}"></div></div>`).join('')}
+    <div class="grupo"><div class="item"><div class="ii">🔔</div><div class="tx"><b>Avisarme a la hora de cada comida</b><small>Solo si aún no la registraste</small></div><label class="sw"><input type="checkbox" id="lAv" ${N.avisos !== false ? 'checked' : ''}><span></span></label></div></div>
+    <button class="btn prim" onclick="guardarLimite()">Guardar</button>`);
+  calcLimite(!!N.limite);
+}
+function calcLimite(noTocar) {
+  const P = +val('lP'), A = +val('lA'), E = +val('lE'), S = val('lS'), act = +val('lAct'), def = +val('lDef');
+  if (!P || !A || !E) return;
+  const tmb = 10 * P + 6.25 * A - 5 * E + (S === 'M' ? -161 : 5); const tdee = tmb * act; const piso = S === 'M' ? 1200 : 1500;
+  const lim = Math.max(piso, Math.round((tdee - def) / 50) * 50);
+  $('lRes').innerHTML = `Basal ≈ <b>${fmtN(tmb)}</b> · gasto diario ≈ <b>${fmtN(tdee)}</b> kcal → límite sugerido <b>${fmtN(lim)}</b> kcal${lim === piso ? ' (no bajo de ' + piso + ' por seguridad)' : ''}`;
+  if (!noTocar) { $('lLim').value = lim; $('lProt').value = Math.round(P * 1.6 / 5) * 5; }
+}
+function guardarLimite() {
+  const N = D.config.nutri; const lim = Math.round(+val('lLim'));
+  if (!lim || lim < 800 || lim > 5000) return toast('⚠️', 'Revisa el límite', 'Entre 800 y 5000 kcal');
+  Object.assign(N, { limite: lim, prot: Math.max(0, +val('lProt') || N.prot), alt: +val('lA') || N.alt, edad: +val('lE') || N.edad, sexo: val('lS') || 'H', act: +val('lAct'), def: +val('lDef'), avisos: $('lAv').checked });
+  N.ventana = { desde: val('lV1') || '12:00', hasta: val('lV2') || '20:00' };
+  N.comidas.forEach((c, i) => { c.n = val('lCn' + i) || c.n; c.h = val('lCh' + i) || c.h; });
+  const d = dia(); if (d._kcal && d._kcal.length) d._lim = lim;
+  tocarDia(); guardar(); cerrarSheet(); render(); haptic(); toast('🍽️', 'Límite: ' + fmtN(lim) + ' kcal', 'Proteína ' + N.prot + ' g · ventana ' + N.ventana.desde + '–' + N.ventana.hasta);
+}
+
+/* ───────── chequeo del día: alcohol, sustancias, ánimo ───────── */
+const CARAS = ['😞', '😕', '😐', '🙂', '😄'], ENERG = [['🪫', 'Baja'], ['⚡', 'Media'], ['🔋', 'Alta']];
+function rachaSust(test) {
+  const t = test(D.dias[hoyStr()] || {}); let n = 0;
+  for (let i = t ? 0 : 1; i < 2000; i++) { const d = D.dias[fechaStr(-i)]; if (d && test(d)) n++; else break; }
+  return n;
+}
+function mejorSust(test) { let m = 0, c = 0; const fs = Object.keys(D.dias).sort(); if (!fs.length) return 0; const fin = new Date(hoyStr() + 'T12:00'); for (let dt = new Date(fs[0] + 'T12:00'); dt <= fin; dt.setDate(dt.getDate() + 1)) { const d = D.dias[fechaDe(dt)]; c = d && test(d) ? c + 1 : 0; if (c > m) m = c; } return m; }
+const sinAlc = d => d._alc === 'no', limpio = d => d._limpio === true;
+function setAlc(v, f) {
+  f = f || hoyStr(); const hoy = f === hoyStr(); if (hoy) pre('Chequeo actualizado');
+  if (!D.dias[f]) D.dias[f] = {}; const d = D.dias[f];
+  const ant = d._alc; d._alc = ant === v && hoy ? undefined : v; if (d._alc === undefined) delete d._alc;
+  if (d._alc === 'si') d._limpio = false;
+  const xp = d._alc === 'no' ? 15 : d._alc === 'si' ? 5 : 0; const dx = xp - (d._xpA || 0); d._xpA = xp; if (dx < 0) D.xp = Math.max(0, D.xp + dx);
+  const el = document.querySelector('#chequeo .s-alc');
+  if (d._alc === 'no') { const n = rachaSust(sinAlc); if (dx > 0) xpExtra(dx, el); setTimeout(() => toast('💪', hoy ? 'Día sin alcohol' : 'Ayer sin alcohol ✓', n > 1 ? n + ' días seguidos' : 'Día 1 · así se empieza'), 300); }
+  else if (d._alc === 'si') { if (dx > 0) D.xp += dx; haptic(); setTimeout(() => toast('🤝', 'Registrado, gracias por ser honesto', 'No pierdes nada más que la cuenta. Mañana es día 1.'), 200); }
+  tocarDia(f); hoy ? despues(true) : (guardar(), render());
+}
+function setLimpio(v, f) {
+  f = f || hoyStr(); const hoy = f === hoyStr(); if (hoy) pre('Chequeo actualizado');
+  if (!D.dias[f]) D.dias[f] = {}; const d = D.dias[f];
+  d._limpio = d._limpio === v && hoy ? undefined : v; if (d._limpio === undefined) delete d._limpio;
+  if (d._limpio === true && d._alc !== 'no') { d._alc = 'no'; const dx = 15 - (d._xpA || 0); d._xpA = 15; if (dx > 0) D.xp += dx; }
+  const xp = d._limpio === true ? 10 : 0; const dx = xp - (d._xpL || 0); d._xpL = xp;
+  if (dx > 0) { xpExtra(dx, document.querySelector('#chequeo .s-limp')); const n = rachaSust(limpio); setTimeout(() => toast('🌿', 'Día limpio', n > 1 ? n + ' días seguidos sin nada' : 'Día 1 · vamos'), 300); } else { D.xp = Math.max(0, D.xp + dx); haptic(); }
+  tocarDia(f); hoy ? despues(true) : (guardar(), render());
+}
+function setAnimo(n) { pre('Ánimo registrado'); const d = dia(); d._animo = n; if (!d._xpM) { d._xpM = 5; xpExtra(5, document.querySelector('#chequeo .s-an')); } else haptic(); despues(true); }
+function setEnergia(n) { pre('Energía registrada'); const d = dia(); d._energia = n; haptic(); despues(true); }
+function cardChequeo() {
+  const d = dia(); const ay = fechaStr(-1); const dAy = D.dias[ay] || {};
+  const nA = rachaSust(sinAlc), nL = rachaSust(limpio), bA = Math.max(nA, mejorSust(sinAlc)), bL = Math.max(nL, mejorSust(limpio));
+  const completo = d._alc && d._limpio !== undefined && d._animo && d._energia; const abierto = window._chqAbierto;
+  if (completo && !abierto) return `<div class="card chq mini" id="chequeo" onclick="window._chqAbierto=true;renderExtras()"><b>🩺 Chequeo</b><span class="res">${CARAS[d._animo - 1]} ${ENERG[d._energia - 1][0]} ${d._alc === 'no' ? '🚫🍺' : '🍺'} ${d._limpio ? '🌿' : ''}</span><span class="st">${d._alc === 'no' ? nA + ' d sin alcohol' : ''}${d._limpio ? ' · ' + nL + ' d limpio' : ''}</span><span class="chev">›</span></div>`;
+  const b = (on, cls, fn, txt) => `<button class="${on ? 'on ' + cls : ''}" onclick="${fn}">${txt}</button>`;
+  return `<div class="card chq" id="chequeo"><div class="n-cab"><b>🩺 Chequeo del día</b>${completo ? '<button class="link" onclick="window._chqAbierto=false;renderExtras()">Listo</button>' : '<small>10 segundos</small>'}</div>
+    <div class="s-row s-an"><span class="lb">Ánimo</span><div class="caras">${CARAS.map((c, i) => `<button class="${d._animo === i + 1 ? 'on' : ''}" onclick="setAnimo(${i + 1})">${c}</button>`).join('')}</div></div>
+    <div class="s-row"><span class="lb">Energía</span><div class="seg2">${ENERG.map(([e, t], i) => b(d._energia === i + 1, 'neu', `setEnergia(${i + 1})`, e + ' ' + t)).join('')}</div></div>
+    <div class="s-row s-alc"><span class="lb">🍺 Alcohol<small>${nA ? nA + ' días sin · mejor ' + bA : bA ? 'mejor racha ' + bA + ' días' : ''}</small></span><div class="seg2">${b(d._alc === 'no', 'ok', "setAlc('no')", 'No tomé')}${b(d._alc === 'si', 'mal', "setAlc('si')", 'Tomé')}</div></div>
+    <div class="s-row s-limp"><span class="lb">🌿 Nada de nada<small>${nL ? nL + ' días limpio · mejor ' + bL : 'sin ninguna sustancia'}</small></span><div class="seg2">${b(d._limpio === true, 'ok', 'setLimpio(true)', 'Limpio')}${b(d._limpio === false, 'mal', 'setLimpio(false)', 'No')}</div></div>
+    ${!dAy._alc && ay >= D.config.chequeoDesde && ay < hoyStr() ? `<div class="s-row ayer"><span class="lb">¿Y ayer?<small>Para que la cuenta sea real</small></span><div class="seg2"><button onclick="setAlc('no','${ay}')">Sin alcohol</button><button onclick="setAlc('si','${ay}')">Tomé</button></div></div>` : ''}</div>`;
+}
+
+/* ───────── Hoy: tarjetas extra + anillos ───────── */
+function renderExtras() {
+  const e = ENF && !ENF.cerrado ? `<div class="aviso accion" onclick="abrirEnfoqueGuardado()"><div class="ai">⏱</div><div class="at"><b>Bloque de enfoque en curso</b>${ENF.n} preguntas · termina ${(t => pad(t.getHours()) + ':' + pad(t.getMinutes()))(new Date(ENF.ini + ENF.dur * 6e4))}</div><span class="chev">›</span></div>` : '';
+  $('extras').innerHTML = e + cardNutri() + cardChequeo();
+}
+function pintarAnillos() {
+  const f = hoyStr(); const r = resumenDia(f); const L = limiteDe(f); const k = kcalDe(f);
+  const hA = D.habitos.find(x => x.id === 'agua'); const eA = hA ? estadoHabito(hA, dia()) : null;
+  const pk = L ? k / L : 0; const rk = $('ringKcal'); rk.style.strokeDashoffset = 245 * (1 - Math.min(1, pk)); rk.classList.toggle('over', pk > 1); rk.classList.toggle('casi', pk > .9 && pk <= 1);
+  $('ringAgua').style.strokeDashoffset = 163.4 * (1 - (eA ? Math.min(1, eA.prog) : 0));
+  $('anillosLey').innerHTML = `<span><i class="l1"></i>Misiones <b class="num">${r.hechas}/${r.total}</b></span><span onclick="${L ? "abrirComida('otro')" : 'abrirLimite()'}"><i class="l2${pk > 1 ? ' over' : ''}"></i>Kcal <b class="num">${L ? fmtN(k) + '/' + fmtN(L) : '—'}</b></span>${hA ? `<span><i class="l3"></i>Agua <b class="num">${eA.n || 0}/${hA.meta}</b></span>` : ''}`;
+}
+function avisosExtra(d) {
+  const out = []; const N = D.config.nutri; const cs = d._kcal || [];
+  if (N.avisos !== false && N.limite) for (const c of N.comidas) if (!cs.some(x => x.k === c.k)) out.push({ t: toMin(c.h), titulo: c.ico + ' ' + c.n, sub: 'Registra las calorías' });
+  if (!d._alc || !d._animo) out.push({ t: toMin(D.config.checkin), titulo: '🩺 Chequeo del día', sub: 'Alcohol, sustancias y ánimo' });
+  if (d._enfFin) out.push({ t: toMin(d._enfFin), titulo: '⏱ Fin del bloque de enfoque', sub: 'Registra tus preguntas' });
+  return out;
+}
+function swipeAccion(id, der, el) {
+  const h = D.habitos.find(x => x.id === id); if (!h) return; const e = estadoHabito(h, dia());
+  if (der) { if (h.tipo === 'check') { if (!e.hecha) toggleCheck(id, el); else haptic(); } else if (h.tipo === 'contador') sumar(id, 1, el); else if (h.tipo === 'qbank') abrirQbank(id); else if (h.tipo === 'lista') abrirLista(id); else abrirValor(id); }
+  else { if (h.tipo === 'check' && e.hecha) toggleCheck(id, el); else if (h.tipo === 'contador' && e.n) sumar(id, -1, el); else haptic(); }
+}
+
+/* ───────── estadísticas extra y logros nuevos ───────── */
+function extStats() {
+  let comidasN = 0, diasDeficit = 0, defRacha = 0, c = 0, animoN = 0, enfN = 0, enfMin = 0, diasSobrio = 0, hielosUsados = 0;
+  for (const f of Object.keys(D.dias).sort()) { const d = D.dias[f]; const cs = d._kcal || []; comidasN += cs.length; if (d._animo) animoN++; enfN += d._enfN || 0; enfMin += d._enf || 0; if (d._alc === 'no') diasSobrio++; if (d._hielo) hielosUsados++;
+    if (f < hoyStr() && cs.length) { const L = d._lim || D.config.nutri.limite; if (L && kcalDe(f) <= L) { diasDeficit++; c++; if (c > defRacha) defRacha = c; } else c = 0; } else if (f < hoyStr()) c = 0; }
+  return { comidasN, diasDeficit, defRacha, animoN, enfN, enfMin, diasSobrio, hielosUsados, sobrioMejor: Math.max(rachaSust(sinAlc), mejorSust(sinAlc)), limpioMejor: Math.max(rachaSust(limpio), mejorSust(limpio)) };
+}
+LOGROS.push(
+  { id: 'sob1', ico: '🌱', nom: 'Primer día sin alcohol', desc: 'Registra un día sin alcohol', r: 'comun', f: s => s.diasSobrio >= 1 },
+  { id: 'sob7', ico: '🍃', nom: 'Semana sobria', desc: '7 días seguidos sin alcohol', r: 'raro', f: s => s.sobrioMejor >= 7 },
+  { id: 'sob30', ico: '🌳', nom: 'Un mes sin alcohol', desc: '30 días seguidos sin alcohol', r: 'epico', f: s => s.sobrioMejor >= 30 },
+  { id: 'sob90', ico: '🏔️', nom: 'Noventa', desc: '90 días seguidos sin alcohol', r: 'legendario', f: s => s.sobrioMejor >= 90 },
+  { id: 'limp7', ico: '🌿', nom: 'Semana limpia', desc: '7 días seguidos sin ninguna sustancia', r: 'raro', f: s => s.limpioMejor >= 7 },
+  { id: 'limp30', ico: '💎', nom: 'Mes limpio', desc: '30 días seguidos sin ninguna sustancia', r: 'epico', f: s => s.limpioMejor >= 30 },
+  { id: 'kcal1', ico: '🍽️', nom: 'Primer plato', desc: 'Registra tu primera comida', r: 'comun', f: s => s.comidasN >= 1 },
+  { id: 'kcal100', ico: '📒', nom: 'Contador fino', desc: '100 comidas registradas', r: 'raro', f: s => s.comidasN >= 100 },
+  { id: 'def7', ico: '🎯', nom: 'Semana en déficit', desc: '7 días seguidos dentro de tu límite', r: 'raro', f: s => s.defRacha >= 7 },
+  { id: 'def30', ico: '🔥', nom: 'Mes en déficit', desc: '30 días dentro de tu límite', r: 'epico', f: s => s.diasDeficit >= 30 },
+  { id: 'animo14', ico: '🧠', nom: 'Me conozco', desc: '14 chequeos de ánimo', r: 'comun', f: s => s.animoN >= 14 },
+  { id: 'enf1', ico: '⏱', nom: 'Primer bloque', desc: 'Completa un bloque de enfoque', r: 'comun', f: s => s.enfN >= 1 },
+  { id: 'enf20', ico: '🧘', nom: 'Monje del QBank', desc: '20 bloques de enfoque', r: 'epico', f: s => s.enfN >= 20 },
+  { id: 'hielo1', ico: '🧊', nom: 'Salvado por el hielo', desc: 'Un protector salvó tu racha', r: 'comun', f: s => s.hielosUsados >= 1 }
+);
+
+/* ───────── Progreso: calorías y ánimo ───────── */
+function renderNutriProg() {
+  const L0 = D.config.nutri.limite; const fs = Array.from({ length: 7 }, (_, i) => fechaStr(i - 6));
+  const dat = fs.map(f => ({ f, k: kcalDe(f), L: limiteDe(f), n: comidasDe(f).length, p: protDe(f) }));
+  const con = dat.filter(x => x.n && x.f < hoyStr());
+  if (!L0 || !dat.some(x => x.n)) { $('nutriProg').innerHTML = ''; return; }
+  const mx = Math.max(L0 * 1.25, ...dat.map(x => x.k));
+  const prom = con.length ? con.reduce((s, x) => s + x.k, 0) / con.length : 0; const dentro = con.filter(x => x.k <= x.L).length; const pp = con.length ? con.reduce((s, x) => s + x.p, 0) / con.length : 0;
+  const balance = con.reduce((s, x) => s + (x.L - x.k), 0);
+  $('nutriProg').innerHTML = `<div class="card"><h3>🍽️ Calorías <small>7 días · límite ${fmtN(L0)}</small></h3>
+    <div class="barras kc" style="position:relative">${dat.map((x, i) => `<div class="col"><div class="n">${x.n ? fmtN(x.k) : ''}</div><div class="b${x.n ? (x.k > x.L ? ' over' : ' okk') : ''}${i === 6 ? ' hoy' : ''}" style="height:${Math.max(3, x.k / mx * 100)}%"></div><div class="l">${new Date(x.f + 'T12:00').toLocaleDateString('es-CO', { weekday: 'narrow' })}</div></div>`).join('')}</div>
+    ${con.length ? `<div class="kpis" style="grid-template-columns:repeat(3,1fr);margin-top:12px"><div class="kpi"><b class="num">${fmtN(prom)}</b><small>Promedio kcal</small></div><div class="kpi"><b class="num">${dentro}/${con.length}</b><small>Días en déficit</small></div><div class="kpi"><b class="num">${fmtN(pp)} g</b><small>Proteína prom.</small></div></div>
+    <div class="pred ${balance >= 0 ? 'ok' : 'alerta'}">${balance >= 0 ? '📉 Déficit acumulado de <b>' + fmtN(balance) + '</b> kcal en la semana ≈ ' + (balance / 7700).toFixed(2).replace('.', ',') + ' kg de grasa.' : '📈 Esta semana vas <b>' + fmtN(-balance) + '</b> kcal por encima de tu límite.'}</div>` : '<div class="mini-nota">Los promedios aparecen cuando cierres el primer día con registros.</div>'}</div>`;
+}
+function renderAnimoProg() {
+  const fs = Object.keys(D.dias).sort().filter(f => D.dias[f]._animo); if (fs.length < 3) { $('animoProg').innerHTML = ''; return; }
+  const avg = a => a.reduce((s, x) => s + x, 0) / a.length; const cara = v => CARAS[Math.max(0, Math.min(4, Math.round(v) - 1))]; const f1 = v => v.toFixed(1).replace('.', ',');
+  let ins = '';
+  const tras = fs.filter(f => (D.dias[prevDia(f)] || {})._alc); const conA = tras.filter(f => D.dias[prevDia(f)]._alc === 'si').map(f => D.dias[f]._animo), sinA = tras.filter(f => D.dias[prevDia(f)]._alc === 'no').map(f => D.dias[f]._animo);
+  if (conA.length >= 2 && sinA.length >= 2) ins += `<div class="insight"><span class="e">🍺</span><div><b>El día después de tomar: ${cara(avg(conA))} ${f1(avg(conA))}</b><small>vs ${cara(avg(sinA))} ${f1(avg(sinA))} cuando no tomaste el día anterior</small></div></div>`;
+  const porT = {}; for (const f of fs) { const t = D.dias[f]._turno; if (t) (porT[t] = porT[t] || []).push(D.dias[f]._animo); }
+  const ts = Object.entries(porT).filter(([, v]) => v.length >= 2).sort((a, b) => avg(b[1]) - avg(a[1]));
+  if (ts.length >= 2) ins += `<div class="insight"><span class="e">🩺</span><div><b>Mejor ánimo en turno ${TURNOS[ts[0][0]][1].toLowerCase()}</b><small>${ts.map(([k, v]) => TURNOS[k][0] + ' ' + f1(avg(v))).join(' · ')}</small></div></div>`;
+  const kc = fs.filter(f => comidasDe(f).length && limiteDe(f)); const dentro = kc.filter(f => kcalDe(f) <= limiteDe(f)).map(f => D.dias[f]._animo), fuera = kc.filter(f => kcalDe(f) > limiteDe(f)).map(f => D.dias[f]._animo);
+  if (dentro.length >= 2 && fuera.length >= 2) ins += `<div class="insight"><span class="e">🍽️</span><div><b>Días en déficit: ${cara(avg(dentro))} ${f1(avg(dentro))}</b><small>vs ${cara(avg(fuera))} ${f1(avg(fuera))} los días que te pasaste</small></div></div>`;
+  const ult = Array.from({ length: 14 }, (_, i) => fechaStr(i - 13));
+  $('animoProg').innerHTML = `<div class="card"><h3>🧠 Ánimo <small>promedio ${cara(avg(fs.slice(-14).map(f => D.dias[f]._animo)))} ${f1(avg(fs.slice(-14).map(f => D.dias[f]._animo)))}</small></h3>
+    <div class="tira">${ult.map(f => { const d = D.dias[f] || {}; return `<span${f === hoyStr() ? ' class="hoy"' : ''}>${d._animo ? CARAS[d._animo - 1] : '·'}<i>${d._alc === 'si' ? '🍺' : d._alc === 'no' ? '' : ''}</i></span>`; }).join('')}</div>
+    ${ins || '<div class="mini-nota">Con unos días más de chequeo te muestro qué mueve tu ánimo: alcohol, turnos, comida.</div>'}</div>`;
+}
+
+/* ───────── historia «Tu semana» ───────── */
+function storyWrapped() {
+  const fs = Array.from({ length: 7 }, (_, i) => fechaStr(i - 6)); const nomD = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+  const res = fs.map(f => ({ f, r: resumenDia(f) })); const act = fs.filter(f => hizoAlgo(f)).length; if (act < 2) return null;
+  const hechas = res.reduce((s, x) => s + x.r.hechas, 0); const prom = res.filter(x => x.r.total).reduce((s, x) => s + x.r.pct, 0) / Math.max(1, res.filter(x => x.r.total).length);
+  const mejor = res.reduce((a, b) => b.r.pct > a.r.pct ? b : a, res[0]);
+  const sl = [{ big: '🎬', kpi: hechas + ' misiones', h: 'Tus últimos 7 días', p: `${act}/7 días con registro · ${Math.round(prom * 100)}% de promedio` },
+    { big: '🏅', kpi: nomD[new Date(mejor.f + 'T12:00').getDay()], h: 'Tu mejor día', p: Math.round(mejor.r.pct * 100) + '% · ' + mejor.r.hechas + ' de ' + mejor.r.total + ' misiones' }];
+  const reg = fs.filter(f => (D.dias[f] || {})._alc); if (reg.length) { const no = reg.filter(f => D.dias[f]._alc === 'no').length; const lp = fs.filter(f => (D.dias[f] || {})._limpio === true).length; sl.push({ big: no === reg.length ? '🌿' : '🍃', kpi: no + '/' + reg.length, h: 'días sin alcohol', p: `${lp} ${lp === 1 ? 'día' : 'días'} totalmente limpio · racha sin alcohol: ${rachaSust(sinAlc)} ${rachaSust(sinAlc) === 1 ? 'día' : 'días'}` }); }
+  const con = fs.filter(f => comidasDe(f).length && f < hoyStr()); if (con.length) { const L = D.config.nutri.limite; const pr = con.reduce((s, f) => s + kcalDe(f), 0) / con.length; const dn = con.filter(f => kcalDe(f) <= limiteDe(f)).length; sl.push({ big: '🍽️', kpi: fmtN(pr) + ' kcal', h: 'promedio diario', p: `${dn}/${con.length} días dentro de tu límite de ${fmtN(L)}` }); }
+  const an = fs.map(f => (D.dias[f] || {})._animo).filter(Boolean); if (an.length >= 2) { const a = an.reduce((s, x) => s + x, 0) / an.length; sl.push({ big: CARAS[Math.round(a) - 1], kpi: a.toFixed(1).replace('.', ','), h: 'ánimo promedio', p: an.map(x => CARAS[x - 1]).join(' ') }); }
+  const hQ = D.habitos.find(x => x.tipo === 'qbank'); if (hQ) { const q = fs.reduce((s, f) => s + numQ((D.dias[f] || {})[hQ.id]), 0); if (q) sl.push({ big: '📚', kpi: q + ' preguntas', h: 'de banco esta semana', p: 'A ese ritmo: ' + fmtN(q / 7 * 30) + ' al mes' }); }
+  const rr = rachaRegistro(); sl.push({ big: '🔥', kpi: rr.n + ' días', h: 'de racha', p: 'Protectores: ' + ('🧊'.repeat(D.hielos || 0) || 'ninguno') + ' · sigue así, Doc' });
+  return { id: 'wrapped-' + fs[0], ico: '🎬', lbl: 'Tu semana', slides: sl };
+}
+
+/* ───────── modo enfoque (QBank) ───────── */
+let ENF = lsGet('md-enfoque', null), tEnf = null;
+const guardarEnf = () => lsSet('md-enfoque', ENF);
+function abrirEnfoque(id) {
+  if (ENF && !ENF.cerrado) return abrirEnfoqueGuardado();
+  const h = D.habitos.find(x => x.id === id); $('enfTit').textContent = '⏱ ' + (h ? h.nombre : 'Enfoque');
+  $('enfT').textContent = '25:00'; $('enfProg').style.strokeDashoffset = 0;
+  $('enfCuerpo').innerHTML = `<div class="enf-sub">¿Cuánto dura el bloque?</div><div class="enf-dur">${[15, 25, 45, 60].map(m => `<button class="${m === 25 ? 'on' : ''}" onclick="document.querySelectorAll('.enf-dur button').forEach(b=>b.classList.remove('on'));this.classList.add('on');$('enfT').textContent='${m}:00';haptic()" data-m="${m}">${m} min</button>`).join('')}</div>
+    <button class="btn grad" onclick="empezarEnfoque('${esc(id)}')">Empezar</button><div class="enf-sub" style="margin-top:10px">Suma cada pregunta con un toque. Al final se guardan solas en tu QBank. Te aviso por notificación cuando termine.</div>`;
+  $('enf').classList.add('on'); haptic();
+}
+function empezarEnfoque(id) {
+  const dur = +(document.querySelector('.enf-dur button.on')?.dataset.m || 25);
+  ENF = { id, ini: Date.now(), dur, n: 0 }; guardarEnf();
+  const d = dia(); d._enfFin = toHM((ahoraMin() + dur) % 1440); tocarDia(); guardar(); haptic(); pintarEnfoque();
+}
+function abrirEnfoqueGuardado() { if (!ENF) return; ENF.cerrado = false; guardarEnf(); $('enf').classList.add('on'); pintarEnfoque(); }
+function retomarEnfoque() { if (!ENF) return; if (Date.now() - ENF.ini > (ENF.dur + 240) * 6e4) { ENF = null; guardarEnf(); return; } if (!ENF.cerrado) abrirEnfoqueGuardado(); else renderExtras(); }
+function pintarEnfoque() {
+  clearInterval(tEnf); const h = D.habitos.find(x => x.id === ENF.id); $('enfTit').textContent = '⏱ ' + (h ? h.nombre : 'Enfoque');
+  $('enfCuerpo').innerHTML = `<div class="enf-n num" id="enfN">${ENF.n}</div><div class="enf-sub">preguntas en este bloque</div>
+    <div class="enf-btns"><button onclick="enfSumar(-1)">−1</button><button class="big" onclick="enfSumar(1)">+1</button><button onclick="enfSumar(5)">+5</button></div>
+    <button class="btn prim" onclick="terminarEnfoque()">Terminar y guardar</button><button class="btn peligro" onclick="descartarEnfoque()">Descartar bloque</button>`;
+  const tick = () => { if (!ENF) return clearInterval(tEnf); const rest = ENF.ini + ENF.dur * 6e4 - Date.now(); const r = Math.max(0, rest);
+    $('enfT').textContent = rest > 0 ? pad(Math.floor(r / 6e4)) + ':' + pad(Math.floor(r / 1000) % 60) : '¡Listo!';
+    $('enfProg').style.strokeDashoffset = 628.3 * (1 - r / (ENF.dur * 6e4));
+    if (rest <= 0 && !ENF.sono) { ENF.sono = true; guardarEnf(); haptic(); setTimeout(haptic, 250); confeti(); toast('⏱', 'Bloque terminado', 'Guarda tus ' + ENF.n + ' preguntas'); } };
+  tick(); tEnf = setInterval(tick, 1000);
+}
+function enfSumar(n) { ENF.n = Math.max(0, ENF.n + n); guardarEnf(); $('enfN').textContent = ENF.n; const el = $('enfN'); el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); haptic(); }
+function cerrarEnfoque() { $('enf').classList.remove('on'); clearInterval(tEnf); if (ENF && ENF.ini) { ENF.cerrado = true; guardarEnf(); } else ENF = null; renderExtras(); }
+function terminarEnfoque() {
+  const e = ENF; if (!e) return; const min = Math.min(e.dur, Math.round((Date.now() - e.ini) / 6e4)); const completo = Date.now() >= e.ini + e.dur * 6e4;
+  ENF = null; guardarEnf(); clearInterval(tEnf); $('enf').classList.remove('on');
+  const d = dia(); delete d._enfFin; d._enf = (d._enf || 0) + min; if (min >= 5) d._enfN = (d._enfN || 0) + 1;
+  if (completo) xpExtra(10, document.querySelector('.hero'), '⏱', 'Bloque completo · ' + min + ' min');
+  if (e.n) sumarQbank(e.id, e.n, null); else despues(true);
+}
+function descartarEnfoque() { if (!confirm('¿Descartar el bloque? No se guardan las preguntas.')) return; ENF = null; guardarEnf(); clearInterval(tEnf); $('enf').classList.remove('on'); const d = dia(); delete d._enfFin; tocarDia(); guardar(); render(); }
+
 iniciar();
 
 </script>
