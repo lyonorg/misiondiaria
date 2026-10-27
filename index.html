@@ -499,6 +499,20 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
 .insight .e{font-size:24px;width:36px;text-align:center}.insight b{display:block;font-size:14px}.insight small{color:var(--text2);font-size:12.5px}
 @media (min-width:560px){.grid-m{grid-template-columns:repeat(3,1fr)}}
 
+/* ═══════════ v4.2 ═══════════ */
+.undo{position:fixed;left:16px;right:16px;bottom:calc(var(--tab-h) + var(--safe-b) + 12px);z-index:60;max-width:588px;margin:0 auto;display:flex;align-items:center;gap:12px;
+  background:#1c1c1e;color:#fff;border-radius:16px;padding:12px 12px 12px 16px;box-shadow:0 10px 30px rgba(0,0,0,.35);transform:translateY(140%);opacity:0;transition:transform .45s var(--spring),opacity .25s;pointer-events:none}
+.undo.on{transform:none;opacity:1;pointer-events:auto}
+.undo span{flex:1;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.undo button{color:#ffd60a;font-weight:700;font-size:15px;padding:4px 6px}
+.turnos{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.turnos button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;border-radius:14px;background:var(--surface);border:.5px solid var(--line);font-size:22px;transition:transform .3s var(--spring)}
+.turnos button span{font-size:12px;font-weight:700;color:var(--text)}
+.turnos button:active{transform:scale(.9)}
+.turno-chip{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 14px;border-radius:20px;background:var(--surface);border:.5px solid var(--line);font-size:13.5px}
+.turno-chip span{color:var(--accent);font-weight:600;margin-left:4px}
+.aviso .at .turnos{width:100%}
+
 </style>
 </head>
 <body data-tema="oscuro" data-skin="aurora">
@@ -615,6 +629,12 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
     </div>
     <div class="nota">Cada misión tiene su propio aviso: hora fija, repetido cada X horas (ej. agua) o apagado. Se configura al editarla.</div>
 
+    <div class="grupo-tit">Turnos y sueño</div>
+    <div class="grupo">
+      <div class="item"><div class="ii">🕓</div><div class="tx"><b>Mi día termina a las</b><small>Lo que marques de madrugada cuenta para el día anterior</small></div><input type="time" id="finDia" onchange="setCfg('finDia',this.value)"></div>
+      <div class="item"><div class="ii">🌙</div><div class="tx"><b>Salgo de la guardia nocturna</b></div><input type="time" id="salidaNoche" onchange="setSuenoCfg('salidaNoche',this.value)"></div>
+      <div class="item"><div class="ii">😴</div><div class="tx"><b>Meta de sueño (horas)</b></div><input type="number" step="0.5" min="4" max="10" id="metaSueno" onchange="setSuenoCfg('meta',this.value)"></div>
+    </div>
     <div class="grupo-tit">Apariencia</div>
     <div class="grupo">
       <div class="item"><div class="ii">🌗</div><div class="tx"><b>Tema</b></div><select id="selTema" onchange="setCfg('tema',this.value)"><option value="auto">Automático</option><option value="oscuro">Oscuro</option><option value="claro">Claro</option></select></div>
@@ -672,6 +692,7 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
 </div>
 
 <div class="isla" id="isla"><div class="ti" id="islaIco"></div><div><b id="islaTit"></b><small id="islaSub"></small></div></div>
+<div class="undo" id="undo"><span id="undoTxt"></span><button onclick="deshacer()">Deshacer</button></div>
 <label id="haptic" class="sr" aria-hidden="true"><input type="checkbox" switch tabindex="-1"></label>
 <canvas id="confeti" hidden></canvas>
 
@@ -1007,7 +1028,7 @@ const RECOMPENSAS_DEFAULT=[
 <script>
 /* ═══════════ Misión Diaria v4 ═══════════ */
 'use strict';
-const VERSION = '4.1.0';
+const VERSION = '4.2.0';
 const API = 'https://bpwbkoobzkjkjtdfxtxx.supabase.co/functions/v1/md';
 const VAPID = 'BOpca9dq4j8pt-BLIKP708IW6b1zbFW4bhUgA4h8CFe4SqSh2ia7E30ZIRA3ER7hUMQ6gSfK_VnjXcM81WiYYco';
 const CLAVE = 'mision-diaria-v3', CLAVE_V2 = 'mision-diaria-v2', CLAVE_V1 = 'mision-diaria-v1';
@@ -1019,7 +1040,9 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
 const fechaDe = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-const fechaStr = off => { const d = new Date(); d.setDate(d.getDate() + off); return fechaDe(d); };
+const finDiaMin = () => { const v = (typeof D !== 'undefined' && D && D.config && D.config.finDia) || '04:00'; const [a, b] = v.split(':').map(Number); return (a || 0) * 60 + (b || 0); };
+const fechaStr = off => { const d = new Date(Date.now() - finDiaMin() * 60000); d.setDate(d.getDate() + off); return fechaDe(d); };
+const hoyDate = () => new Date(hoyStr() + 'T12:00');
 const hoyStr = () => fechaStr(0);
 const ahoraMin = () => { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); };
 const toMin = hm => { const [a, b] = String(hm || '').split(':').map(Number); return isNaN(a) ? -1 : a * 60 + (b || 0); };
@@ -1100,6 +1123,14 @@ function normalizar(x) {
   if (!x._mig.duolingo) {
     x._mig.duolingo = 1;
     if (!x.habitos.some(h => /duolingo/i.test(h.nombre))) { x.habitos.push(clone(EXTRA_LIB.duolingo)); x._nuevoDuo = true; }
+  }
+  c.finDia = c.finDia || '04:00';
+  c.sueno = Object.assign({ meta: 7.5, traslado: 30, salidaNoche: '07:00' }, c.sueno || {});
+  x.objetivos.champ = Object.assign({ q: 70, ej: 4, perf: 2, agua: 60 }, x.objetivos.champ || {});
+  if (!x._mig.v42) {
+    x._mig.v42 = 1;
+    for (const h of x.habitos) if (/bupropi|semaglut|tirzepat|metform|pastilla|medic/i.test(h.nombre + ' ' + (h.desc || '')) && h.rec && h.rec.modo !== 'off') h.rec.insistir = true;
+    if (!x.habitos.some(h => /dient/i.test(h.nombre))) { x.habitos.push(clone(EXTRA_LIB.dientes)); x._nuevoDientes = true; }
   }
   x._v = 4;
   return x;
@@ -1219,9 +1250,13 @@ function statsGlobales() {
   _statsCache = { totalMisiones, diasPerfectos, semanaPerfecta, maxRacha, racha: calcularRacha(), nivel: nivelDe(D.xp), xp: D.xp, tot, veces, maxDia, madrugador, nocturno, creadas: D.creadas, libAdds: D.libAdds, logrosN: D.logros.length, rachaHabito, canjes: D.canjes.length, diaCategorias: cats.size, guardiaPerfecta, finPerfecto, maxDiaMisiones, maxDiaMisionesPerfecto, rachaUso, seguidosPerfectos, principalesHechas, tempranero, trasnochador, kgBajados };
   _statsKey = key; return _statsCache;
 }
+function ajustarLogros() {
+  const L = LOGROS.find(l => l.id === 'metapeso'); const hP = D.habitos.find(x => x.id === 'peso');
+  if (L && hP && hP.pesoInicial && hP.metaPeso) { const kg = Math.max(.1, hP.pesoInicial - hP.metaPeso); L.desc = 'Llegaste a los ' + String(hP.metaPeso).replace('.', ',') + ' kg · leyenda'; L.f = s => s.kgBajados >= kg - 1e-9; }
+}
 function puntosG() { let g = 0; for (const l of LOGROS) if (D.logros.includes(l.id)) g += PTS[l.r]; return g; }
 function revisarLogros(silencioso) {
-  _statsCache = null; const s = statsGlobales(); let nuevos = 0;
+  ajustarLogros(); _statsCache = null; const s = statsGlobales(); let nuevos = 0;
   const pasar = lista => { for (const l of lista) { if (!D.logros.includes(l.id)) { let ok = false; try { ok = l.f(s); } catch {} if (ok) { D.logros.push(l.id); s.logrosN = D.logros.length; nuevos++; if (!silencioso) toast(l.ico, 'Logro desbloqueado · +' + PTS[l.r] + ' G', l.nom); } } } };
   pasar(LOGROS.filter(l => !l.meta)); pasar(LOGROS.filter(l => l.meta));
   if (nuevos && !silencioso) { confeti(); haptic(); }
@@ -1237,15 +1272,20 @@ function avisosDelDia() {
     out.push({ t: toMin(C.horaTarde), titulo: '☀️ Chequeo de la tarde', sub: 'Cómo vas a mitad del día' });
     out.push({ t: toMin(C.horaNoche), titulo: '🌙 Cierre del día', sub: 'Racha y lo que falta' });
   }
-  if (N.habitos !== false) for (const h of pend) {
-    const rec = h.rec || { modo: 'off' }; if (rec.modo === 'off') continue;
-    if (rec.modo === 'repetir') { const a = toMin(rec.desde || '08:00'), b = toMin(rec.hasta || '20:00'), st = Math.max(30, +rec.cada || 120); for (let t = a; t >= 0 && t <= b; t += st) out.push({ t, titulo: h.icono + ' ' + h.nombre, sub: 'Cada ' + fmtCada(st), hid: h.id }); }
-    else { const t = toMin(rec.hora || h.hora); if (t >= 0) out.push({ t, titulo: h.icono + ' ' + h.nombre, sub: h.desc || 'Si aún no la marcaste', hid: h.id }); }
-  }
-  const s = N.silencio; const enSil = m => { if (!s.on) return false; const a = toMin(s.desde), b = toMin(s.hasta); return a <= b ? m >= a && m < b : m >= a || m < b; };
+  if (N.habitos !== false) for (const h of pend) for (const x of tiemposMision(h)) out.push({ t: x.t, titulo: (x.ins ? '⏰ ' : '') + h.icono + ' ' + h.nombre, sub: x.ins ? 'Insistencia ' + x.ins + ' · si aún no la marcas' : x.sub, hid: h.id });
+  const s = N.silencio; const dz = d._dormir; const win = (m, a, b) => a <= b ? m >= a && m < b : m >= a || m < b;
+  const enSil = m => (s.on && win(m, toMin(s.desde), toMin(s.hasta))) || (dz && win(m, toMin(dz.desde), toMin(dz.hasta)));
   return out.filter(x => x.t >= 0 && !enSil(x.t)).sort((a, b) => a.t - b.t);
 }
 const fmtCada = m => m % 60 ? m + ' min' : (m / 60) + ' h';
+function tiemposMision(h) {
+  const rec = h.rec || { modo: 'off' }; const out = [];
+  if (rec.modo === 'repetir') { const a = toMin(rec.desde || '08:00'), b = toMin(rec.hasta || '20:00'), st = Math.max(30, +rec.cada || 120); for (let t = a; t >= 0 && t <= b; t += st) out.push({ t, sub: 'Cada ' + fmtCada(st) }); }
+  else if (rec.modo === 'varias') { for (const hm of rec.horas || []) { const t = toMin(hm); if (t >= 0) out.push({ t, sub: (rec.horas || []).join(' · ') }); } }
+  else if (rec.modo === 'hora') { const t = toMin(rec.hora || h.hora); if (t >= 0) out.push({ t, sub: h.desc || 'Si aún no la marcaste' }); }
+  if (rec.insistir && rec.modo !== 'repetir') { const base = [...out]; for (const b of base) for (let i = 1; i <= 2; i++) out.push({ t: (b.t + 20 * i) % 1440, ins: i }); }
+  return out;
+}
 
 /* ───────── sincronización (Supabase) ───────── */
 let SYNC = lsGet(K_SYNC, null);
@@ -1286,6 +1326,7 @@ async function bajar() {
   try {
     const h = await api('hello', { tz: tz() });
     if (h.status !== 200) throw new Error('hello ' + h.status);
+    if (h.subs === 0 && estadoPush() === 'granted') { lsSet('md-push-ok', ''); refrescarPush(); }
     if (h.rev > SYNC.rev) {
       const p = await api('pull');
       if (p.data) {
@@ -1381,7 +1422,7 @@ function frase(pct) {
   const fr = FRASES[g]; return { emoji: { dormida: '😴', animada: '😤', feliz: '😎', estrella: '🐐' }[g], txt: fr[(new Date().getDate() + Math.floor(pct * 10)) % fr.length] };
 }
 function renderSemana() {
-  const hoy = new Date(); const w = hoy.getDay(); const lunes = new Date(hoy); lunes.setDate(hoy.getDate() + (w === 0 ? -6 : 1 - w));
+  const hoy = hoyDate(); const w = hoy.getDay(); const lunes = new Date(hoy); lunes.setDate(hoy.getDate() + (w === 0 ? -6 : 1 - w));
   let h = '';
   for (let i = 0; i < 7; i++) { const d = new Date(lunes); d.setDate(lunes.getDate() + i); const f = fechaDe(d); const fut = f > hoyStr(); const si = !fut && hizoAlgo(f); const r = resumenDia(f); const perf = si && r.total && r.pct === 1;
     h += `<div class="d${si ? ' si' : ''}${perf ? ' perf' : ''}${f === hoyStr() ? ' hoy' : ''}${fut ? ' fut' : ''}"><div class="c">${perf ? '⭐' : si ? '🔥' : ''}</div>${'LMMJVSD'[i]}</div>`; }
@@ -1389,7 +1430,7 @@ function renderSemana() {
 }
 function abrirRacha() {
   const rr = rachaRegistro(); const best = Math.max(mejorRachaRegistro(), rr.n); haptic();
-  const hoy = new Date(); const y = hoy.getFullYear(), mo = hoy.getMonth(); const pri = new Date(y, mo, 1); const off = (pri.getDay() + 6) % 7; const dias = new Date(y, mo + 1, 0).getDate();
+  const hoy = hoyDate(); const y = hoy.getFullYear(), mo = hoy.getMonth(); const pri = new Date(y, mo, 1); const off = (pri.getDay() + 6) % 7; const dias = new Date(y, mo + 1, 0).getDate();
   let cal = 'LMMJVSD'.split('').map(x => `<span class="dn">${x}</span>`).join('') + '<i class="nada"></i>'.repeat(off);
   for (let dd = 1; dd <= dias; dd++) { const f = y + '-' + pad(mo + 1) + '-' + pad(dd); const si = f <= hoyStr() && hizoAlgo(f); const r = resumenDia(f); cal += `<i class="${si ? (r.total && r.pct === 1 ? 'perf' : 'si') : ''}${f === hoyStr() ? ' hoy' : ''}">${dd}</i>`; }
   const diasMes = Object.keys(D.dias).filter(f => f.startsWith(y + '-' + pad(mo + 1)) && hizoAlgo(f)).length;
@@ -1402,7 +1443,7 @@ function abrirRacha() {
 function renderCabecera() {
   const h = new Date().getHours();
   $('saludo').textContent = (h < 5 ? 'Buena guardia' : h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches') + ', Doc';
-  $('fechaHoy').textContent = new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
+  $('fechaHoy').textContent = hoyDate().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
   const nivel = nivelDe(D.xp), base = nivel > 1 ? umbral(nivel - 1) : 0, sig = umbral(nivel);
   $('nivelTxt').textContent = 'Nivel ' + nivel; $('rangoTxt').textContent = rangoDe(nivel);
   $('xpTxt').textContent = (D.xp - base) + ' / ' + (sig - base) + ' XP para el nivel ' + (nivel + 1);
@@ -1421,7 +1462,7 @@ function renderCabecera() {
 const CHK_SVG = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 function cardMision(h) {
   const e = estadoHabito(h, dia()); const id = esc(h.id);
-  const hora = h.rec?.modo === 'repetir' ? ' · <span class="hora">⏰ cada ' + fmtCada(+h.rec.cada || 120) + '</span>' : (h.hora ? ' · <span class="hora">' + esc(h.hora) + '</span>' : '');
+  const hora = h.rec?.modo === 'repetir' ? ' · <span class="hora">⏰ cada ' + fmtCada(+h.rec.cada || 120) + '</span>' : h.rec?.modo === 'varias' ? ' · <span class="hora">' + esc((h.rec.horas || []).join(' · ')) + '</span>' : (h.hora ? ' · <span class="hora">' + esc(h.hora) + '</span>' : '');
   let accion = '', det = '', extra = '';
   const xp = '+' + h.xp + ' XP';
   switch (h.tipo) {
@@ -1493,8 +1534,61 @@ function renderAvisos() {
   const st = estadoPush();
   if (st === 'instalar') h += `<div class="aviso accion" onclick="guiaInstalar()"><div class="ai">📲</div><div class="at"><b>Instálala para recibir avisos</b>Añádela a tu pantalla de inicio desde Safari.</div><span class="chev">›</span></div>`;
   else if (st === 'default') h += `<div class="aviso accion"><div class="ai">🔔</div><div class="at"><b>Activa tus recordatorios</b>Agua, skincare, medicamentos, QBank y resúmenes del día.</div><button class="pill prim" onclick="activarPush()">Activar</button></div>`;
+  h += tarjetaTurno();
+  if (D._nuevoDientes) h += `<div class="aviso"><div class="ai">🪥</div><div class="at"><b>Añadí «Cepillarme los dientes»</b>3 veces al día con aviso a las 08:00, 14:00 y 22:00. Ajústala si quieres.</div><button class="pill" onclick="delete D._nuevoDientes;guardar();render()">OK</button></div>`;
   if (D._nuevoDuo) h += `<div class="aviso"><div class="ai">🦉</div><div class="at"><b>Añadí Duolingo a tus misiones</b>Con aviso a las 18:00. Edítala o bórrala si no la quieres.</div><button class="pill" onclick="delete D._nuevoDuo;guardar();render()">OK</button></div>`;
   $('avisos').innerHTML = h;
+}
+
+/* ───────── turno del día y sueño post-guardia ───────── */
+const TURNOS = { manana: ['☀️', 'Mañana'], tarde: ['🌤️', 'Tarde'], noche: ['🌙', 'Noche'], libre: ['🏖️', 'Libre'] };
+const fmtDur = m => Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + pad(m % 60) : '');
+function minEntre(a, b) { const x = toMin(a), y = toMin(b); if (x < 0 || y < 0) return 0; return (y - x + 1440) % 1440; }
+function planSueno() {
+  const d = dia(); const g = d._guardia; if (!g) return null; const S = D.config.sueno;
+  const dormido = g.nada ? 0 : minEntre(g.desde, g.hasta) + (g.desde2 ? minEntre(g.desde2, g.hasta2) : 0);
+  const meta = Math.round(S.meta * 60); const falta = Math.max(0, meta - dormido);
+  let ini = toMin(S.salidaNoche) + (+S.traslado || 0) + 15; const ahora = ahoraMin(); if (ahora > ini && ahora < ini + 360) ini = ahora + 15;
+  let ciclos = Math.max(1, Math.round(falta / 90)); if (ciclos > 1 && ciclos * 90 > falta + 45) ciclos--; const sugerido = falta < 45 ? 0 : ciclos * 90;
+  return { dormido, falta, meta, ini: ini % 1440, fin: (ini + sugerido) % 1440, sugerido, ciclos };
+}
+function tarjetaTurno() {
+  const d = dia(); const t = d._turno; const ayer = (D.dias[fechaStr(-1)] || {})._turno;
+  let h = '';
+  if (!t) h += `<div class="aviso accion"><div class="ai">🩺</div><div class="at"><b>¿Qué turno tienes hoy?</b><div class="turnos">${Object.entries(TURNOS).map(([k, [e, n]]) => `<button onclick="setTurno('${k}')">${e}<span>${n}</span></button>`).join('')}</div></div></div>`;
+  if (ayer === 'noche' || d._guardia) {
+    const p = planSueno();
+    if (!p) h += `<div class="aviso accion" onclick="abrirSueno()"><div class="ai">😴</div><div class="at"><b>Saliste de guardia</b>¿Cuánto dormiste en la clínica? Te digo cuánto dormir en casa.</div><span class="chev">›</span></div>`;
+    else h += `<div class="aviso" onclick="abrirSueno()"><div class="ai">😴</div><div class="at"><b>${p.sugerido ? 'Duerme ' + fmtDur(p.sugerido) + ' · de ' + toHM(p.ini) + ' a ' + toHM(p.fin) : 'Ya dormiste lo suficiente'}</b>Dormiste ${fmtDur(p.dormido)} en la guardia · meta ${fmtDur(p.meta)}${d._dormir ? ' · avisos en silencio 🔕' : ''}</div><span class="chev">›</span></div>`;
+  } else if (t) h += `<div class="turno-chip" onclick="cambiarTurno()">${TURNOS[t][0]} Turno: <b>${TURNOS[t][1]}</b> <span>cambiar</span></div>`;
+  return h;
+}
+function setTurno(k) { const d = dia(); d._turno = k; tocarDia(); haptic(); guardar(); render(); toast(TURNOS[k][0], 'Turno: ' + TURNOS[k][1], k === 'noche' ? 'Mañana te ayudo con el sueño post-guardia' : k === 'libre' ? 'Disfruta, pero la racha no descansa 🔥' : ''); }
+function cambiarTurno() { const d = dia(); delete d._turno; tocarDia(); render(); }
+function abrirSueno() {
+  const g = dia()._guardia || {}; const S = D.config.sueno;
+  abrirSheet('Sueño post-guardia', `<div class="nota">Registra lo que dormiste durante el turno (puedes poner dos bloques). Te calculo lo que falta para llegar a tu meta de ${String(S.meta).replace('.', ',')} h.</div>
+    <div class="dos"><div class="campo"><label>Dormí desde</label><input id="sD1" type="time" value="${esc(g.desde || '02:00')}"></div><div class="campo"><label>Hasta</label><input id="sH1" type="time" value="${esc(g.hasta || '04:00')}"></div></div>
+    <div class="dos"><div class="campo"><label>2.º bloque (opcional)</label><input id="sD2" type="time" value="${esc(g.desde2 || '')}"></div><div class="campo"><label>Hasta</label><input id="sH2" type="time" value="${esc(g.hasta2 || '')}"></div></div>
+    <div class="dos"><div class="campo"><label>Salí de la guardia</label><input id="sSal" type="time" value="${esc(S.salidaNoche)}"></div><div class="campo"><label>Traslado (min)</label><input id="sTr" type="number" value="${S.traslado}"></div></div>
+    <button class="btn prim" onclick="guardarSueno(false)">Calcular</button><button class="btn" onclick="guardarSueno(true)">No dormí nada</button><div id="sRes"></div>`);
+  if (dia()._guardia) pintarPlan();
+}
+function guardarSueno(nada) {
+  const d = dia(); d._guardia = nada ? { nada: true } : { desde: val('sD1'), hasta: val('sH1'), desde2: val('sD2') && val('sH2') ? val('sD2') : '', hasta2: val('sD2') && val('sH2') ? val('sH2') : '' };
+  D.config.sueno.salidaNoche = val('sSal') || D.config.sueno.salidaNoche; D.config.sueno.traslado = Math.max(0, parseInt(val('sTr')) || 0);
+  tocarDia(); guardar(); render(); pintarPlan(); haptic();
+}
+function pintarPlan() {
+  const p = planSueno(); if (!p || !$('sRes')) return;
+  $('sRes').innerHTML = `<div class="card"><div class="racha-big" style="margin-bottom:8px"><span class="f">😴</span><div><b class="num" style="color:var(--accent)">${p.sugerido ? fmtDur(p.sugerido) : '¡Listo!'}</b><small>${p.sugerido ? 'De ' + toHM(p.ini) + ' a ' + toHM(p.fin) + ' · ≈ ' + p.ciclos + ' ciclo' + (p.ciclos > 1 ? 's' : '') + ' de 90 min' : 'Ya cubriste tu meta de sueño'}</small></div></div>
+    <div class="mini-nota">En la guardia: <b>${fmtDur(p.dormido)}</b> · te faltan <b>${fmtDur(p.falta)}</b> para ${fmtDur(p.meta)}. Redondeo a ciclos completos para que despiertes entre ciclos y no a la mitad. Si te quedas corto, una siesta de 20–30 min en la tarde ayuda sin dañar la noche.</div>
+    ${p.sugerido ? `<button class="btn ${dia()._dormir ? '' : 'grad'}" onclick="silenciarSueno()">${dia()._dormir ? '🔔 Reactivar avisos' : '🔕 Silenciar avisos mientras duermo'}</button>` : ''}</div>`;
+}
+function silenciarSueno() {
+  const d = dia(); const p = planSueno();
+  if (d._dormir) delete d._dormir; else d._dormir = { desde: toHM(p.ini), hasta: toHM(p.fin) };
+  tocarDia(); guardar(); render(); pintarPlan(); toast(d._dormir ? '🔕' : '🔔', d._dormir ? 'Avisos en silencio' : 'Avisos activos', d._dormir ? 'Hasta las ' + d._dormir.hasta : '');
 }
 
 /* delegación de eventos en tarjetas */
@@ -1540,19 +1634,31 @@ function darXP(h, el, motivo) {
   else if (motivo) toast(h.icono || '✦', motivo, '+' + h.xp + ' XP');
 }
 function quitarXP(h) { D.xp = Math.max(0, D.xp - h.xp); }
+let UNDO = null, tUndo = null;
+function pre(txt) { UNDO = { f: hoyStr(), d: clone(D.dias[hoyStr()] || {}), xp: D.xp, logros: [...D.logros], txt }; }
+function mostrarDeshacer() {
+  if (!UNDO) return; const u = $('undo'); $('undoTxt').textContent = UNDO.txt || 'Cambio guardado';
+  u.classList.add('on'); clearTimeout(tUndo); tUndo = setTimeout(() => { u.classList.remove('on'); UNDO = null; }, 4500);
+}
+function deshacer() {
+  if (!UNDO) return; D.dias[UNDO.f] = UNDO.d; D.dias[UNDO.f]._t = Date.now(); D.xp = UNDO.xp; D.logros = UNDO.logros; UNDO = null;
+  $('undo').classList.remove('on'); haptic(); guardar(); render(); toast('↩️', 'Deshecho');
+}
 function despues(eraPerfecto) {
-  tocarDia(); const r = resumenDia(hoyStr());
+  tocarDia(); mostrarDeshacer(); const r = resumenDia(hoyStr());
   if (!eraPerfecto && r.total > 0 && r.pct === 1) { setTimeout(() => { confeti(); toast('🎉', '¡Día perfecto!', 'Completaste todas tus misiones'); }, 350); }
   calcularMetaAgua(); revisarLogros(); guardar(); render();
 }
 const perfecto = () => { const r = resumenDia(hoyStr()); return r.total > 0 && r.pct === 1; };
 function toggleCheck(id, el) {
+  pre('✓ ' + (D.habitos.find(x => x.id === id)?.nombre || ''));
   const d = dia(), h = D.habitos.find(x => x.id === id), antes = estadoHabito(h, d).hecha, pf = perfecto();
   d[id] = !antes;
   if (!antes) { el?.classList.add('on', 'pop'); darXP(h, el); } else { quitarXP(h); haptic(); }
   setTimeout(() => despues(pf), antes ? 0 : 260);
 }
 function sumar(id, delta, el) {
+  pre((delta > 0 ? '+1 ' : '−1 ') + (D.habitos.find(x => x.id === id)?.nombre || ''));
   const d = dia(), h = D.habitos.find(x => x.id === id), antes = estadoHabito(h, d).hecha, pf = perfecto();
   d[id] = Math.max(0, (typeof d[id] === 'number' ? d[id] : 0) + delta); const ahora = estadoHabito(h, d).hecha;
   if (!antes && ahora) darXP(h, el, '¡Meta de ' + h.nombre.toLowerCase() + '!'); else { haptic(); if (delta > 0) marcarHoraActividad(); }
@@ -1560,6 +1666,7 @@ function sumar(id, delta, el) {
   despues(pf);
 }
 function sumarQbank(id, delta, el) {
+  pre('QBank actualizado');
   const d = dia(), h = D.habitos.find(x => x.id === id), antes = estadoHabito(h, d).hecha, pf = perfecto();
   const o = d[id] && typeof d[id] === 'object' ? d[id] : { n: numQ(d[id]) }; o.n = Math.max(0, (o.n || 0) + delta); d[id] = o;
   const ahora = estadoHabito(h, d).hecha;
@@ -1568,6 +1675,7 @@ function sumarQbank(id, delta, el) {
   despues(pf);
 }
 function toggleSub(id, idx, el) {
+  pre('Paso marcado');
   const d = dia(), h = D.habitos.find(x => x.id === id), pf = perfecto(); if (!Array.isArray(d[id])) d[id] = [];
   const antes = estadoHabito(h, d).hecha; const p = d[id].indexOf(idx); if (p >= 0) d[id].splice(p, 1); else d[id].push(idx);
   const ahora = estadoHabito(h, d).hecha;
@@ -1611,12 +1719,13 @@ function abrirValor(id) {
   setTimeout(() => $('fVal')?.focus(), 350);
 }
 function guardarValor(id) {
+  pre('Registro guardado');
   const h = D.habitos.find(x => x.id === id), d = dia(), antes = estadoHabito(h, d).hecha, pf = perfecto();
   if (h.tipo === 'nota') d[id] = { ok: true, t: val('fVal') || 'Hecho' };
   else { const n = parseFloat(val('fVal').replace(',', '.')); if (isNaN(n)) return toast('⚠️', 'Escribe un número'); d[id] = n; }
   cerrarSheet(); if (!antes) darXP(h, $('m-' + id)?.querySelector('.pill'), h.nombre); despues(pf);
 }
-function borrarValor(id) { const h = D.habitos.find(x => x.id === id), d = dia(); if (estadoHabito(h, d).hecha) quitarXP(h); delete d[id]; cerrarSheet(); despues(true); }
+function borrarValor(id) { pre('Registro borrado'); const h = D.habitos.find(x => x.id === id), d = dia(); if (estadoHabito(h, d).hecha) quitarXP(h); delete d[id]; cerrarSheet(); despues(true); }
 
 /* lista de pasos en hoja */
 function abrirLista(id) {
@@ -1636,6 +1745,7 @@ function abrirQbank(id) {
     <button class="btn prim" onclick="guardarQbank('${esc(id)}')">Guardar sesión</button>`);
 }
 function guardarQbank(id) {
+  pre('Sesión de QBank guardada');
   const h = D.habitos.find(x => x.id === id), d = dia(), antes = estadoHabito(h, d).hecha, pf = perfecto();
   const a = val('qA'); d[id] = { n: parseInt(val('qN')) || 0, a: a === '' ? null : Math.max(0, Math.min(100, parseInt(a))), t: val('qT') };
   const ahora = estadoHabito(h, d).hecha; cerrarSheet();
@@ -1662,7 +1772,9 @@ function abrirHabito(id) {
     <div class="campo"><label>Descripción (opcional)</label><input id="fDesc" value="${esc(h.desc || '')}"></div>
     <div class="campo"><label>Días · ninguno marcado = todos los días</label><div class="dias7" id="fDias">${[1, 2, 3, 4, 5, 6, 0].map(i => `<button class="${h.dias.includes(i) ? 'on' : ''}" data-d="${i}" onclick="this.classList.toggle('on')">${DIAS_L[i]}</button>`).join('')}</div></div>
     <div class="grupo-tit" style="margin-left:4px">Recordatorio push</div>
-    <div class="campo"><select id="fRec" onchange="recCambio()"><option value="off">Sin aviso</option><option value="hora">A una hora fija</option><option value="repetir">Repetir durante el día</option></select></div>
+    <div class="campo"><select id="fRec" onchange="recCambio()"><option value="off">Sin aviso</option><option value="hora">A una hora fija</option><option value="varias">Varias horas fijas</option><option value="repetir">Repetir durante el día</option></select></div>
+    <div class="campo" id="fVariasC"><label>Horas (ej. 08:00, 14:00, 22:00)</label><input id="fVarias" value="${esc((h.rec.horas || []).join(', '))}" placeholder="08:00, 14:00, 22:00" inputmode="numeric"></div>
+    <div class="item" id="fInsC" style="padding:6px 4px 14px"><div class="tx"><b>Insistir hasta que la marque</b><small>2 avisos extra, cada 20 min</small></div><label class="sw"><input type="checkbox" id="fIns" ${h.rec.insistir ? 'checked' : ''}><span></span></label></div>
     <div class="campo" id="fHoraC"><label>Hora</label><input id="fHora" type="time" value="${esc(h.rec.hora || h.hora || '')}"></div>
     <div class="tres" id="fRepC"><div class="campo"><label>Cada</label><select id="fCada">${[30, 60, 90, 120, 180, 240].map(m => `<option value="${m}" ${+h.rec.cada === m || (!h.rec.cada && m === 120) ? 'selected' : ''}>${fmtCada(m)}</option>`).join('')}</select></div>
       <div class="campo"><label>Desde</label><input id="fDesde" type="time" value="${esc(h.rec.desde || '08:00')}"></div><div class="campo"><label>Hasta</label><input id="fHasta" type="time" value="${esc(h.rec.hasta || '20:00')}"></div></div>
@@ -1676,19 +1788,21 @@ function abrirHabito(id) {
 }
 function elegirEmoji(b) { document.querySelectorAll('#fEmojis button').forEach(x => x.classList.remove('on')); b.classList.add('on'); $('fIco').value = b.textContent; haptic(); }
 function tipoCambio() { const t = $('fTipo').value; $('fMetaC').hidden = !['contador', 'qbank'].includes(t); $('fUniC').hidden = !['contador', 'registro'].includes(t); $('fMetaRow').hidden = $('fMetaC').hidden && $('fUniC').hidden; $('fPasosC').hidden = t !== 'lista'; }
-function recCambio() { const m = $('fRec').value; $('fHoraC').hidden = m !== 'hora'; $('fRepC').hidden = m !== 'repetir'; }
+function recCambio() { const m = $('fRec').value; $('fHoraC').hidden = m !== 'hora'; $('fRepC').hidden = m !== 'repetir'; $('fVariasC').hidden = m !== 'varias'; $('fInsC').hidden = !['hora', 'varias'].includes(m); }
 function guardarHabito() {
   const nombre = val('fNom'); if (!nombre) return toast('✏️', 'Ponle un nombre');
   const modo = $('fRec').value; const hora = val('fHora');
   if (modo === 'hora' && !hora) return toast('⏰', 'Elige la hora del aviso');
+  const horas = val('fVarias').split(/[ ,;]+/).map(x => x.trim()).filter(x => /^\d{1,2}:\d{2}$/.test(x)).map(x => x.padStart(5, '0')).sort();
+  if (modo === 'varias' && !horas.length) return toast('⏰', 'Escribe al menos una hora', 'Ej: 08:00, 14:00, 22:00');
   const datos = {
     nombre, icono: val('fIco') || '✨', cat: val('fCat'), desc: val('fDesc'), tipo: $('fTipo').value,
     meta: Math.max(1, parseInt(val('fMeta')) || 1), unidad: val('fUni'),
     subitems: val('fPasos').split('\n').map(s => s.trim()).filter(Boolean),
     xp: Math.max(1, parseInt(val('fXP')) || 10), dias: [...document.querySelectorAll('#fDias button.on')].map(b => +b.dataset.d),
     prioridad: $('fPrio').value, campana: $('fCamp').value || null,
-    hora: modo === 'hora' ? hora : (modo === 'repetir' ? '' : hora),
-    rec: modo === 'hora' ? { modo: 'hora', hora } : modo === 'repetir' ? { modo: 'repetir', cada: +$('fCada').value, desde: val('fDesde') || '08:00', hasta: val('fHasta') || '20:00' } : { modo: 'off' },
+    hora: modo === 'hora' ? hora : modo === 'varias' ? horas[0] : (modo === 'repetir' ? '' : hora),
+    rec: modo === 'hora' ? { modo: 'hora', hora, insistir: $('fIns').checked } : modo === 'varias' ? { modo: 'varias', horas, insistir: $('fIns').checked } : modo === 'repetir' ? { modo: 'repetir', cada: +$('fCada').value, desde: val('fDesde') || '08:00', hasta: val('fHasta') || '20:00' } : { modo: 'off' },
   };
   if (datos.tipo === 'lista' && !datos.subitems.length) datos.subitems = ['Paso 1'];
   if (edH.id) Object.assign(D.habitos.find(x => x.id === edH.id), datos);
@@ -1701,6 +1815,7 @@ function eliminarHabito(id) { if (!confirm('¿Eliminar esta misión? Su historia
 /* biblioteca */
 const EXTRA_LIB = {
   duolingo: { id: 'duolingo', nombre: 'Duolingo', icono: '🦉', tipo: 'check', xp: 10, cat: 'Estudio', desc: 'Lección del día · no pierdas la racha', hora: '18:00', rec: { modo: 'hora', hora: '18:00' } },
+  dientes: { id: 'dientes', nombre: 'Cepillarme los dientes', icono: '🪥', tipo: 'contador', meta: 3, unidad: 'veces', xp: 10, cat: 'Salud', desc: 'Mañana, tarde y noche', hora: '08:00', rec: { modo: 'varias', horas: ['08:00', '14:00', '22:00'] } },
   chats: { id: 'responder_chats', nombre: 'Responder chats pendientes', icono: '💬', tipo: 'check', xp: 10, cat: 'Mente', desc: 'WhatsApp e Instagram · nadie queda en visto', hora: '13:00', rec: { modo: 'repetir', cada: 240, desde: '09:00', hasta: '21:00' } },
 };
 function bibliotecaLista() { const m = new Map(); for (const b of [...Object.values(EXTRA_LIB), ...BIBLIOTECA]) if (!m.has(b.id)) m.set(b.id, b); return [...m.values()]; }
@@ -1718,7 +1833,7 @@ function agregarLib(id, btn) {
 }
 function abrirMisMisiones() {
   const tipos = { check: 'Sí/no', contador: 'Contador', qbank: 'QBank', lista: 'Lista', nota: 'Apunte', registro: 'Registro' };
-  const fila = h => `<div class="item tap" onclick="abrirHabito('${esc(h.id)}')"><div class="ii">${esc(h.icono)}</div><div class="tx"><b>${esc(h.nombre)}${h.archivada ? ' · pausada' : ''}</b><small>${tipos[h.tipo] || ''}${h.rec?.modo === 'hora' ? ' · 🔔 ' + esc(h.rec.hora || h.hora) : h.rec?.modo === 'repetir' ? ' · 🔁 cada ' + fmtCada(+h.rec.cada) : ''}${h.dias?.length ? ' · ' + h.dias.map(i => DIAS_L[i]).join('') : ''}</small></div><span class="chev">›</span></div>`;
+  const fila = h => `<div class="item tap" onclick="abrirHabito('${esc(h.id)}')"><div class="ii">${esc(h.icono)}</div><div class="tx"><b>${esc(h.nombre)}${h.archivada ? ' · pausada' : ''}</b><small>${tipos[h.tipo] || ''}${h.rec?.modo === 'hora' ? ' · 🔔 ' + esc(h.rec.hora || h.hora) : h.rec?.modo === 'varias' ? ' · 🔔 ' + esc((h.rec.horas || []).join(' ')) : h.rec?.modo === 'repetir' ? ' · 🔁 cada ' + fmtCada(+h.rec.cada) : ''}${h.rec?.insistir ? ' · insiste' : ''}${h.dias?.length ? ' · ' + h.dias.map(i => DIAS_L[i]).join('') : ''}</small></div><span class="chev">›</span></div>`;
   abrirSheet('Mis misiones', `<div class="grupo">${D.habitos.map(fila).join('') || '<div class="item">Sin misiones</div>'}</div><button class="btn prim" onclick="cerrarSheet();setTimeout(abrirHabito,300)">＋ Nueva misión</button>`);
 }
 
@@ -1748,11 +1863,15 @@ function abrirObjetivos() {
     <div class="dos"><div class="campo"><label>⚖️ Peso inicial (kg)</label><input id="oIni" type="number" step="0.1" value="${hP?.pesoInicial ?? 85}"></div><div class="campo"><label>🎯 Peso meta (kg)</label><input id="oMeta" type="number" step="0.1" value="${hP?.metaPeso ?? 72.5}"></div></div>
     <div class="campo"><label>📅 Fecha límite del peso</label><input id="oFecha" type="date" value="${esc(o.fechaPesoLim || new Date().getFullYear() + '-12-31')}"></div>
     <div class="dos"><div class="campo"><label>📚 Preguntas totales</label><input id="oQ" type="number" step="100" value="${o.qbankTotal || 5000}"></div><div class="campo"><label>📅 Fecha del examen</label><input id="oQF" type="date" value="${esc(o.fechaQbank || '')}"></div></div>
+    <div class="grupo-tit" style="margin-left:4px">Champions semanal</div>
+    <div class="dos"><div class="campo"><label>📚 Preguntas / semana</label><input id="oCq" type="number" value="${o.champ.q}"></div><div class="campo"><label>🏋️ Entrenamientos</label><input id="oCe" type="number" value="${o.champ.ej}"></div></div>
+    <div class="dos"><div class="campo"><label>💯 Días perfectos</label><input id="oCp" type="number" value="${o.champ.perf}"></div><div class="campo"><label>💧 Vasos de agua</label><input id="oCa" type="number" value="${o.champ.agua}"></div></div>
     <button class="btn prim" onclick="guardarObjetivos()">Guardar objetivos</button>`);
 }
 function guardarObjetivos() {
   const hP = D.habitos.find(x => x.id === 'peso'); if (hP) { hP.pesoInicial = parseFloat(val('oIni')) || 85; hP.metaPeso = parseFloat(val('oMeta')) || 72.5; }
   D.objetivos.fechaPesoLim = val('oFecha'); D.objetivos.qbankTotal = parseInt(val('oQ')) || 5000; D.objetivos.fechaQbank = val('oQF');
+  D.objetivos.champ = { q: Math.max(1, parseInt(val('oCq')) || 70), ej: Math.max(1, parseInt(val('oCe')) || 4), perf: Math.max(1, parseInt(val('oCp')) || 2), agua: Math.max(1, parseInt(val('oCa')) || 60) };
   cerrarSheet(); guardar(); render(); toast('🎯', 'Objetivos guardados', 'Predicciones recalculadas');
 }
 
@@ -1784,7 +1903,7 @@ function irA(v) {
 
 function renderAgenda() {
   const act = D.habitos.filter(h => aplicaHoy(h)); const d = dia(); const m = ahoraMin();
-  const con = act.filter(h => h.rec?.modo !== 'repetir' && (h.rec?.hora || h.hora)).map(h => ({ h, t: toMin(h.rec?.hora || h.hora) })).sort((a, b) => a.t - b.t);
+  const con = act.filter(h => !['repetir', 'varias'].includes(h.rec?.modo) && (h.rec?.hora || h.hora)).map(h => ({ h, t: toMin(h.rec?.hora || h.hora) })).sort((a, b) => a.t - b.t);
   let html = '', puesto = false;
   for (const { h, t } of con) {
     if (!puesto && t >= m) { html += `<div class="ahora"><span>${toHM(m)}</span></div>`; puesto = true; }
@@ -1851,12 +1970,12 @@ function renderPeso() {
     <circle cx="${X(pts.length - 1)}" cy="${Y(pts.at(-1).v)}" r="4.5" fill="var(--accent)" stroke="var(--bg)" stroke-width="2"/>`;
   $('pesoRango').textContent = pts[0].v + ' → ' + pts.at(-1).v + ' kg';
 }
-function inicioSemana() { const d = new Date(); const w = d.getDay(); d.setDate(d.getDate() + (w === 0 ? -6 : 1 - w)); d.setHours(0, 0, 0, 0); return d; }
+function inicioSemana() { const d = hoyDate(); const w = d.getDay(); d.setDate(d.getDate() + (w === 0 ? -6 : 1 - w)); d.setHours(0, 0, 0, 0); return d; }
 function datosChampions() {
   const ini = inicioSemana(); const fs = []; for (let i = 0; i < 7; i++) { const d = new Date(ini); d.setDate(d.getDate() + i); fs.push(fechaDe(d)); }
   let q = 0, ej = 0, perf = 0, agua = 0; const hEj = D.habitos.find(x => x.id === 'ejercicio'); const hQ = D.habitos.find(x => x.tipo === 'qbank');
   for (const f of fs) { const dd = D.dias[f]; if (!dd) continue; if (hQ) q += numQ(dd[hQ.id]); if (hEj && estadoHabito(hEj, dd).hecha) ej++; const r = resumenDia(f); if (r.total && r.pct === 1) perf++; agua += typeof dd.agua === 'number' ? dd.agua : 0; }
-  const objs = [{ n: '📚 70+ preguntas de banco', ok: q >= 70, v: q + '/70' }, { n: '🏋️ 4 entrenamientos', ok: ej >= 4, v: ej + '/4' }, { n: '💯 2 días perfectos', ok: perf >= 2, v: perf + '/2' }, { n: '💧 60 vasos de agua', ok: agua >= 60, v: agua + '/60' }];
+  const M = D.objetivos.champ; const objs = [{ n: '📚 ' + M.q + '+ preguntas de banco', ok: q >= M.q, v: q + '/' + M.q }, { n: '🏋️ ' + M.ej + ' entrenamientos', ok: ej >= M.ej, v: ej + '/' + M.ej }, { n: '💯 ' + M.perf + ' días perfectos', ok: perf >= M.perf, v: perf + '/' + M.perf }, { n: '💧 ' + M.agua + ' vasos de agua', ok: agua >= M.agua, v: agua + '/' + M.agua }];
   const clave = 'champ-' + fechaDe(ini); return { ini, objs, clave, cumplidos: objs.filter(o => o.ok).length, reclamado: D.canjes.some(c => c.clave === clave) };
 }
 function renderChampions() {
@@ -1919,11 +2038,13 @@ function renderAjustes() {
   const C = D.config; $('horaManana').value = C.horaManana; $('horaTarde').value = C.horaTarde; $('horaNoche').value = C.horaNoche;
   $('swResumenes').checked = C.notif.resumenes !== false; $('swHabitos').checked = C.notif.habitos !== false;
   $('swSilencio').checked = !!C.notif.silencio.on; $('silDesde').value = C.notif.silencio.desde; $('silHasta').value = C.notif.silencio.hasta;
+  $('finDia').value = C.finDia; $('metaSueno').value = C.sueno.meta; $('salidaNoche').value = C.sueno.salidaNoche;
   $('selTema').value = C.tema; $('selAcento').value = C.acento; $('selVista').value = C.vistaHoy || 'cuadricula'; $('swHechasAbajo').checked = !!C.hechasAbajo;
   const hP = D.habitos.find(x => x.id === 'peso'); $('resObjetivos').textContent = (hP ? hP.metaPeso + ' kg · ' : '') + (D.objetivos.qbankTotal || 5000) + ' preguntas';
   $('resCampanas').textContent = D.campanas.length + ' activas'; $('resMisiones').textContent = D.habitos.length + ' misiones · ' + D.habitos.filter(h => h.rec?.modo && h.rec.modo !== 'off').length + ' con aviso';
   pintarNotif(); setSync(syncState); $('versionTxt').textContent = 'Misión Diaria ' + VERSION + ' · hecha para Doc 🌸';
 }
+function setSuenoCfg(k, v) { D.config.sueno[k] = k === 'meta' ? Math.max(4, Math.min(10, parseFloat(v) || 7.5)) : v; guardar(); }
 function setCfg(k, v) { D.config[k] = v; if (k === 'tema' || k === 'acento') aplicarTema(); guardar(); render(); }
 function setNotif(k, v) { D.config.notif[k] = v; guardar(); toast('🔔', v ? 'Activado' : 'Desactivado'); }
 function setSilencio(k, v) { D.config.notif.silencio[k] = v; guardar(); }
