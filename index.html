@@ -1110,7 +1110,7 @@ const RECOMPENSAS_DEFAULT=[
 <script>
 /* ═══════════ Misión Diaria v4 ═══════════ */
 'use strict';
-const VERSION = '4.3.1';
+const VERSION = '4.3.2';
 const API = 'https://bpwbkoobzkjkjtdfxtxx.supabase.co/functions/v1/md';
 const VAPID = 'BOpca9dq4j8pt-BLIKP708IW6b1zbFW4bhUgA4h8CFe4SqSh2ia7E30ZIRA3ER7hUMQ6gSfK_VnjXcM81WiYYco';
 const CLAVE = 'mision-diaria-v3', CLAVE_V2 = 'mision-diaria-v2', CLAVE_V1 = 'mision-diaria-v1';
@@ -1634,7 +1634,7 @@ function planSueno() {
   const d = dia(); const g = d._guardia; if (!g) return null; const S = D.config.sueno;
   const dormido = g.nada ? 0 : minEntre(g.desde, g.hasta) + (g.desde2 ? minEntre(g.desde2, g.hasta2) : 0);
   const meta = Math.round(S.meta * 60); const falta = Math.max(0, meta - dormido);
-  let ini = toMin(S.salidaNoche) + (+S.traslado || 0) + 15; const ahora = ahoraMin(); if (ahora > ini && ahora < ini + 360) ini = ahora + 15;
+  let ini = g.ini != null ? g.ini : toMin(S.salidaNoche) + (+S.traslado || 0) + 15; const ahora = ahoraMin(); if (g.ini == null && ahora > ini && ahora < ini + 360) ini = ahora + 15;
   let ciclos = Math.max(1, Math.round(falta / 90)); if (ciclos > 1 && ciclos * 90 > falta + 45) ciclos--; const sugerido = falta < 45 ? 0 : ciclos * 90;
   return { dormido, falta, meta, ini: ini % 1440, fin: (ini + sugerido) % 1440, sugerido, ciclos };
 }
@@ -1642,11 +1642,13 @@ function tarjetaTurno() {
   const d = dia(); const t = d._turno; const ayer = (D.dias[fechaStr(-1)] || {})._turno;
   let h = '';
   if (!t) h += `<div class="aviso accion"><div class="ai">🩺</div><div class="at"><b>¿Qué turno tienes hoy?</b><div class="turnos">${Object.entries(TURNOS).map(([k, [e, n]]) => `<button onclick="setTurno('${k}')">${e}<span>${n}</span></button>`).join('')}</div></div></div>`;
-  if (ayer === 'noche' || d._guardia) {
-    const p = planSueno();
+  const pS = planSueno(); const suenoListo = d._suenoOk || (pS && !pS.sugerido) || (pS && pS.sugerido && d._guardia.ini != null && ahoraMin() >= pS.fin && ahoraMin() < pS.fin + 600);
+  if ((ayer === 'noche' || d._guardia) && !suenoListo) {
+    const p = pS;
     if (!p) h += `<div class="aviso accion" onclick="abrirSueno()"><div class="ai">😴</div><div class="at"><b>Saliste de guardia</b>¿Cuánto dormiste en la clínica? Te digo cuánto dormir en casa.</div><span class="chev">›</span></div>`;
-    else h += `<div class="aviso" onclick="abrirSueno()"><div class="ai">😴</div><div class="at"><b>${p.sugerido ? 'Duerme ' + fmtDur(p.sugerido) + ' · de ' + toHM(p.ini) + ' a ' + toHM(p.fin) : 'Ya dormiste lo suficiente'}</b>Dormiste ${fmtDur(p.dormido)} en la guardia · meta ${fmtDur(p.meta)}${d._dormir ? ' · avisos en silencio 🔕' : ''}</div><span class="chev">›</span></div>`;
-  } else if (t) h += `<div class="turno-chip" onclick="cambiarTurno()">${TURNOS[t][0]} Turno: <b>${TURNOS[t][1]}</b> <span>cambiar</span></div>`;
+    else h += `<div class="aviso" onclick="abrirSueno()"><div class="ai">😴</div><div class="at"><b>Duerme ${fmtDur(p.sugerido)} · de ${toHM(p.ini)} a ${toHM(p.fin)}</b>Dormiste ${fmtDur(p.dormido)} en la guardia · meta ${fmtDur(p.meta)}${d._dormir ? ' · avisos en silencio 🔕' : ''}</div><span class="chev">›</span></div>`;
+  }
+  if (t && !((ayer === 'noche' || d._guardia) && !suenoListo)) h += `<div class="turno-chip" onclick="cambiarTurno()">${TURNOS[t][0]} Turno: <b>${TURNOS[t][1]}</b> <span>cambiar</span></div>`;
   return h;
 }
 function setTurno(k) { const d = dia(); d._turno = k; tocarDia(); haptic(); guardar(); render(); toast(TURNOS[k][0], 'Turno: ' + TURNOS[k][1], k === 'noche' ? 'Mañana te ayudo con el sueño post-guardia' : k === 'libre' ? 'Disfruta, pero la racha no descansa 🔥' : ''); }
@@ -1663,13 +1665,16 @@ function abrirSueno() {
 function guardarSueno(nada) {
   const d = dia(); d._guardia = nada ? { nada: true } : { desde: val('sD1'), hasta: val('sH1'), desde2: val('sD2') && val('sH2') ? val('sD2') : '', hasta2: val('sD2') && val('sH2') ? val('sH2') : '' };
   D.config.sueno.salidaNoche = val('sSal') || D.config.sueno.salidaNoche; D.config.sueno.traslado = Math.max(0, parseInt(val('sTr')) || 0);
+  const p0 = planSueno(); if (p0) { d._guardia.ini = p0.ini; if (!p0.sugerido) { d._suenoOk = true; setTimeout(() => toast('✅', 'Meta de sueño cumplida', 'Dormiste ' + fmtDur(p0.dormido) + ' · nada pendiente'), 300); } else delete d._suenoOk; }
   tocarDia(); guardar(); render(); pintarPlan(); haptic();
 }
 function pintarPlan() {
   const p = planSueno(); if (!p || !$('sRes')) return;
   $('sRes').innerHTML = `<div class="card"><div class="racha-big" style="margin-bottom:8px"><span class="f">😴</span><div><b class="num" style="color:var(--accent)">${p.sugerido ? fmtDur(p.sugerido) : '¡Listo!'}</b><small>${p.sugerido ? 'De ' + toHM(p.ini) + ' a ' + toHM(p.fin) + ' · ≈ ' + p.ciclos + ' ciclo' + (p.ciclos > 1 ? 's' : '') + ' de 90 min' : 'Ya cubriste tu meta de sueño'}</small></div></div>
     <div class="mini-nota">En la guardia: <b>${fmtDur(p.dormido)}</b> · te faltan <b>${fmtDur(p.falta)}</b> para ${fmtDur(p.meta)}. Redondeo a ciclos completos para que despiertes entre ciclos y no a la mitad. Si te quedas corto, una siesta de 20–30 min en la tarde ayuda sin dañar la noche.</div>
-    ${p.sugerido ? `<button class="btn ${dia()._dormir ? '' : 'grad'}" onclick="silenciarSueno()">${dia()._dormir ? '🔔 Reactivar avisos' : '🔕 Silenciar avisos mientras duermo'}</button>` : ''}</div>`;
+    ${p.sugerido ? `<button class="btn ${dia()._dormir ? '' : 'grad'}" onclick="silenciarSueno()">${dia()._dormir ? '🔔 Reactivar avisos' : '🔕 Silenciar avisos mientras duermo'}</button><button class="btn" onclick="suenoHecho()">✅ Ya dormí · cerrar</button>` : `<button class="btn prim" onclick="cerrarSheet()">Listo</button>`}</div>`;
+}
+function suenoHecho() { const d = dia(); d._suenoOk = true; tocarDia(); guardar(); cerrarSheet(); render(); toast('✅', 'Sueño registrado', 'Buen descanso, Doc');
 }
 function silenciarSueno() {
   const d = dia(); const p = planSueno();
@@ -1798,20 +1803,21 @@ function cerrarSheet() { $('velo').classList.remove('on'); $('sheet').classList.
   asa.addEventListener('touchend', () => { s.style.transition = ''; if (dy > 90) cerrarSheet(); else s.style.transform = ''; y0 = null; dy = 0; });
 })();
 const val = id => ($(id)?.value ?? '').trim();
+const numv = id => parseFloat(val(id).replace(/\s/g, '').replace(',', '.'));
 
 /* valor / nota */
 function abrirValor(id) {
   const h = D.habitos.find(x => x.id === id); const v = dia()[id]; const nota = h.tipo === 'nota';
   abrirSheet(h.icono + ' ' + h.nombre, nota
     ? `<div class="campo"><label>${esc(h.desc || '¿Qué hiciste?')}</label><textarea id="fVal" placeholder="Ej: 30 min cardio + pesas">${esc(v && v.t ? v.t : '')}</textarea></div><button class="btn prim" onclick="guardarValor('${esc(id)}')">Guardar</button>${v && v.ok ? `<button class="btn peligro" onclick="borrarValor('${esc(id)}')">Desmarcar</button>` : ''}`
-    : `<div class="campo"><label>Valor (${esc(h.unidad || 'número')})</label><input id="fVal" type="number" step="0.1" inputmode="decimal" value="${typeof v === 'number' ? v : ''}"></div><button class="btn prim" onclick="guardarValor('${esc(id)}')">Guardar</button>${typeof v === 'number' ? `<button class="btn peligro" onclick="borrarValor('${esc(id)}')">Borrar registro de hoy</button>` : ''}`);
+    : `<div class="campo"><label>Valor (${esc(h.unidad || 'número')})</label><input id="fVal" type="text" inputmode="decimal" autocomplete="off" value="${typeof v === 'number' ? v : ''}"></div><button class="btn prim" onclick="guardarValor('${esc(id)}')">Guardar</button>${typeof v === 'number' ? `<button class="btn peligro" onclick="borrarValor('${esc(id)}')">Borrar registro de hoy</button>` : ''}`);
   setTimeout(() => $('fVal')?.focus(), 350);
 }
 function guardarValor(id) {
   pre('Registro guardado');
   const h = D.habitos.find(x => x.id === id), d = dia(), antes = estadoHabito(h, d).hecha, pf = perfecto();
   if (h.tipo === 'nota') d[id] = { ok: true, t: val('fVal') || 'Hecho' };
-  else { const n = parseFloat(val('fVal').replace(',', '.')); if (isNaN(n)) return toast('⚠️', 'Escribe un número'); d[id] = n; }
+  else { const n = numv('fVal'); if (isNaN(n)) return toast('⚠️', 'Escribe un número', 'Ej: 84,6'); d[id] = n; }
   cerrarSheet(); if (!antes) darXP(h, $('m-' + id)?.querySelector('.pill'), h.nombre); despues(pf);
   if (h.id === 'peso' || /kg/i.test(h.unidad || '')) setTimeout(recalcAuto, 900);
 }
@@ -1950,7 +1956,7 @@ function eliminarCampana(id) { if (!confirm('¿Eliminar la campaña? Sus misione
 function abrirObjetivos() {
   const hP = D.habitos.find(x => x.id === 'peso'); const o = D.objetivos;
   abrirSheet('Objetivos del año', `
-    <div class="dos"><div class="campo"><label>⚖️ Peso inicial (kg)</label><input id="oIni" type="number" step="0.1" value="${hP?.pesoInicial ?? 85}"></div><div class="campo"><label>🎯 Peso meta (kg)</label><input id="oMeta" type="number" step="0.1" value="${hP?.metaPeso ?? 72.5}"></div></div>
+    <div class="dos"><div class="campo"><label>⚖️ Peso inicial (kg)</label><input id="oIni" type="text" inputmode="decimal" autocomplete="off" value="${hP?.pesoInicial ?? 85}"></div><div class="campo"><label>🎯 Peso meta (kg)</label><input id="oMeta" type="text" inputmode="decimal" autocomplete="off" value="${hP?.metaPeso ?? 72.5}"></div></div>
     <div class="campo"><label>📅 Fecha límite del peso</label><input id="oFecha" type="date" value="${esc(o.fechaPesoLim || new Date().getFullYear() + '-12-31')}"></div>
     <div class="dos"><div class="campo"><label>📚 Preguntas totales</label><input id="oQ" type="number" step="100" value="${o.qbankTotal || 5000}"></div><div class="campo"><label>📅 Fecha del examen</label><input id="oQF" type="date" value="${esc(o.fechaQbank || '')}"></div></div>
     <div class="grupo-tit" style="margin-left:4px">Champions semanal</div>
@@ -1959,7 +1965,7 @@ function abrirObjetivos() {
     <button class="btn prim" onclick="guardarObjetivos()">Guardar objetivos</button>`);
 }
 function guardarObjetivos() {
-  const hP = D.habitos.find(x => x.id === 'peso'); if (hP) { hP.pesoInicial = parseFloat(val('oIni')) || 85; hP.metaPeso = parseFloat(val('oMeta')) || 72.5; }
+  const hP = D.habitos.find(x => x.id === 'peso'); if (hP) { hP.pesoInicial = numv('oIni') || 85; hP.metaPeso = numv('oMeta') || 72.5; }
   D.objetivos.fechaPesoLim = val('oFecha'); D.objetivos.qbankTotal = parseInt(val('oQ')) || 5000; D.objetivos.fechaQbank = val('oQF');
   D.objetivos.champ = { q: Math.max(1, parseInt(val('oCq')) || 70), ej: Math.max(1, parseInt(val('oCe')) || 4), perf: Math.max(1, parseInt(val('oCp')) || 2), agua: Math.max(1, parseInt(val('oCa')) || 60) };
   cerrarSheet(); guardar(); render(); toast('🎯', 'Objetivos guardados', 'Predicciones recalculadas');
@@ -2433,7 +2439,7 @@ function abrirLimite() {
   const N = D.config.nutri; const P = pesoActual();
   abrirSheet('🍽️ Calorías y ayuno', `
     <div class="nota">Calculo tu gasto con Mifflin-St Jeor × actividad y le resto el déficit. Si ya tienes un número de tu nutricionista, escríbelo directo abajo.</div>
-    <div class="dos"><div class="campo"><label>Peso (kg)</label><input id="lP" type="number" step="0.1" value="${P}" oninput="calcLimite()"></div><div class="campo"><label>Estatura (cm)</label><input id="lA" type="number" value="${N.alt}" oninput="calcLimite()"></div></div>
+    <div class="dos"><div class="campo"><label>Peso (kg)</label><input id="lP" type="text" inputmode="decimal" autocomplete="off" value="${P}" oninput="calcLimite()"></div><div class="campo"><label>Estatura (cm)</label><input id="lA" type="number" value="${N.alt}" oninput="calcLimite()"></div></div>
     <div class="dos"><div class="campo"><label>Edad</label><input id="lE" type="number" value="${N.edad}" oninput="calcLimite()"></div><div class="campo"><label>Sexo</label><select id="lS" onchange="calcLimite()"><option value="H"${N.sexo === 'H' ? ' selected' : ''}>Hombre</option><option value="M"${N.sexo === 'M' ? ' selected' : ''}>Mujer</option></select></div></div>
     <div class="campo"><label>Actividad</label><select id="lAct" onchange="calcLimite()">${[[1.2, 'Sedentario (sin ejercicio)'], [1.375, 'Ligera · 1–3 días de gym'], [1.55, 'Moderada · 3–5 días'], [1.725, 'Alta · 6–7 días']].map(([v, t]) => `<option value="${v}"${+N.act === v ? ' selected' : ''}>${t}</option>`).join('')}</select></div>
     <div class="campo"><label>Déficit</label><select id="lDef" onchange="calcLimite()">${[[300, 'Suave · −300 kcal (~0,3 kg/sem)'], [500, 'Estándar · −500 kcal (~0,5 kg/sem)'], [750, 'Agresivo · −750 kcal (~0,7 kg/sem)']].map(([v, t]) => `<option value="${v}"${+N.def === v ? ' selected' : ''}>${t}</option>`).join('')}</select></div>
@@ -2449,7 +2455,7 @@ function abrirLimite() {
   calcLimite(!!N.limite);
 }
 function calcLimite(noTocar) {
-  const P = +val('lP'), A = +val('lA'), E = +val('lE'), S = val('lS'), act = +val('lAct'), def = +val('lDef');
+  const P = numv('lP'), A = +val('lA'), E = +val('lE'), S = val('lS'), act = +val('lAct'), def = +val('lDef');
   if (!P || !A || !E) return;
   const { tmb, tdee, piso, lim, prot } = calcMifflin(P, A, E, S, act, def);
   $('lRes').innerHTML = `Basal ≈ <b>${fmtN(tmb)}</b> · gasto diario ≈ <b>${fmtN(tdee)}</b> kcal → límite sugerido <b>${fmtN(lim)}</b> kcal${lim === piso ? ' (no bajo de ' + piso + ' por seguridad)' : ''}`;
