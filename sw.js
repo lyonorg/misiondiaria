@@ -1,5 +1,5 @@
 /* Misión Diaria · service worker v4 */
-const CACHE = 'md-v4.3.2';
+const CACHE = 'md-v4.3.3';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/badge-72.png'];
 
 self.addEventListener('install', e => {

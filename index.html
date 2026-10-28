@@ -1110,7 +1110,7 @@ const RECOMPENSAS_DEFAULT=[
 <script>
 /* ═══════════ Misión Diaria v4 ═══════════ */
 'use strict';
-const VERSION = '4.3.2';
+const VERSION = '4.3.3';
 const API = 'https://bpwbkoobzkjkjtdfxtxx.supabase.co/functions/v1/md';
 const VAPID = 'BOpca9dq4j8pt-BLIKP708IW6b1zbFW4bhUgA4h8CFe4SqSh2ia7E30ZIRA3ER7hUMQ6gSfK_VnjXcM81WiYYco';
 const CLAVE = 'mision-diaria-v3', CLAVE_V2 = 'mision-diaria-v2', CLAVE_V1 = 'mision-diaria-v1';
@@ -1595,8 +1595,8 @@ function renderHoy() {
   for (const c of D.campanas) {
     const ms = activas.filter(h => h.campana === c.id); if (!ms.length) continue;
     const hechas = ms.filter(h => estadoHabito(h, d).hecha).length; const pct = Math.round(hechas / ms.length * 100);
-    html += grid ? `<div class="sec-camp"><span class="ico">${esc(c.icono)}</span><div class="tt"><b>${esc(c.nombre)}</b><small>${esc(c.metaTexto || '')}</small></div><span class="cnt num">${hechas}/${ms.length}</span></div>`
-      : `<div class="camp"><div class="fila"><div class="ico">${esc(c.icono)}</div><div><div class="tit">${esc(c.nombre)}</div><div class="meta">${esc(c.metaTexto || '')}</div></div><div class="cnt num">${hechas}/${ms.length}</div></div><div class="barra"><i style="width:${pct}%"></i></div>${c.lema ? `<div class="lema">${esc(c.lema)}</div>` : ''}</div>`;
+    html += grid ? `<div class="sec-camp"><span class="ico">${esc(c.icono)}</span><div class="tt"><b>${esc(c.nombre)}</b><small>${esc(metaCamp(c))}</small></div><span class="cnt num">${hechas}/${ms.length}</span></div>`
+      : `<div class="camp"><div class="fila"><div class="ico">${esc(c.icono)}</div><div><div class="tit">${esc(c.nombre)}</div><div class="meta">${esc(metaCamp(c))}</div></div><div class="cnt num">${hechas}/${ms.length}</div></div><div class="barra"><i style="width:${pct}%"></i></div>${c.lema ? `<div class="lema">${esc(c.lema)}</div>` : ''}</div>`;
     html += pinta(orden(ms));
   }
   const otras = activas.filter(h => !h.campana || !D.campanas.some(c => c.id === h.campana));
@@ -2215,7 +2215,7 @@ function storiesDatos() {
   const rr = rachaRegistro(); out.push({ id: 'racha', ico: '🔥', lbl: 'Racha', mini: rr.n, slides: [{ big: '🔥', kpi: rr.n + (rr.n === 1 ? ' día' : ' días'), h: rr.hoy ? 'Racha viva' : 'Racha en juego', p: (rr.hoy ? 'Hoy ya cuenta. ' : 'Marca al menos una misión hoy. ') + 'Mejor racha: ' + Math.max(mejorRachaRegistro(), rr.n) + ' días.' }] });
   for (const c of D.campanas) {
     const ms = D.habitos.filter(h => h.campana === c.id && aplicaHoy(h)); if (!ms.length) continue; const hc = ms.filter(h => estadoHabito(h, d).hecha).length;
-    const sl = [{ big: c.icono, h: c.nombre, kpi: hc + '/' + ms.length, p: esc(c.metaTexto || '') + (c.lema ? '<br><i>' + esc(c.lema) + '</i>' : '') }];
+    const sl = [{ big: c.icono, h: c.nombre, kpi: hc + '/' + ms.length, p: esc(metaCamp(c)) + (c.lema ? '<br><i>' + esc(c.lema) + '</i>' : '') }];
     if (c.id === 'residencia') { const hQ = D.habitos.find(x => x.tipo === 'qbank'); if (hQ) { const t = s.tot(hQ.id); sl.push({ big: '📚', kpi: t.toLocaleString('es-CO'), h: 'preguntas acumuladas', p: 'de ' + (D.objetivos.qbankTotal || 5000).toLocaleString('es-CO') + ' · hoy ' + numQ(d[hQ.id]) + '/' + hQ.meta }); } }
     if (c.id === 'peso') { const hP = D.habitos.find(x => x.id === 'peso'); const regs = Object.keys(D.dias).sort().map(f => D.dias[f].peso).filter(v => typeof v === 'number'); if (hP && regs.length) sl.push({ big: '⚖️', kpi: regs.at(-1) + ' kg', h: 'Último registro', p: 'Meta ' + hP.metaPeso + ' kg · faltan ' + Math.max(0, regs.at(-1) - hP.metaPeso).toFixed(1) + ' kg' }); }
     out.push({ id: 'c-' + c.id, ico: c.icono, lbl: c.nombre.split(' ').slice(0, 2).join(' '), mini: hc + '/' + ms.length, slides: sl });
@@ -2651,6 +2651,17 @@ function terminarEnfoque() {
   if (e.n) sumarQbank(e.id, e.n, null); else despues(true);
 }
 function descartarEnfoque() { if (!confirm('¿Descartar el bloque? No se guardan las preguntas.')) return; ENF = null; guardarEnf(); clearInterval(tEnf); $('enf').classList.remove('on'); const d = dia(); delete d._enfFin; tocarDia(); guardar(); render(); }
+
+/* texto vivo de la campaña de peso */
+const kgTxt = n => String(Math.round(n * 10) / 10).replace('.', ',');
+function ultimoPeso() { const hP = D.habitos.find(x => x.id === 'peso'); if (!hP) return null; for (const f of Object.keys(D.dias).sort().reverse()) { const v = D.dias[f][hP.id]; if (typeof v === 'number') return v; } return null; }
+function metaCamp(c) {
+  const hP = D.habitos.find(x => x.id === 'peso');
+  if (c.id !== 'peso' || !hP || !hP.metaPeso) return c.metaTexto || '';
+  const act = ultimoPeso(); if (act == null) return c.metaTexto || '';
+  const ini = hP.pesoInicial || act, falta = act - hP.metaPeso, dif = act - ini;
+  return 'Hoy ' + kgTxt(act) + ' kg · ' + (falta > 0 ? 'faltan ' + kgTxt(falta) + ' kg' : '¡meta lograda!') + (dif > 0.05 ? ' · +' + kgTxt(dif) + ' sobre el inicio' : dif < -0.05 ? ' · −' + kgTxt(-dif) + ' desde ' + kgTxt(ini) : '');
+}
 
 iniciar();
 
