@@ -1110,7 +1110,7 @@ const RECOMPENSAS_DEFAULT=[
 <script>
 /* ═══════════ Misión Diaria v4 ═══════════ */
 'use strict';
-const VERSION = '4.3.3';
+const VERSION = '4.3.4';
 const API = 'https://bpwbkoobzkjkjtdfxtxx.supabase.co/functions/v1/md';
 const VAPID = 'BOpca9dq4j8pt-BLIKP708IW6b1zbFW4bhUgA4h8CFe4SqSh2ia7E30ZIRA3ER7hUMQ6gSfK_VnjXcM81WiYYco';
 const CLAVE = 'mision-diaria-v3', CLAVE_V2 = 'mision-diaria-v2', CLAVE_V1 = 'mision-diaria-v1';
@@ -1956,8 +1956,8 @@ function eliminarCampana(id) { if (!confirm('¿Eliminar la campaña? Sus misione
 function abrirObjetivos() {
   const hP = D.habitos.find(x => x.id === 'peso'); const o = D.objetivos;
   abrirSheet('Objetivos del año', `
-    <div class="dos"><div class="campo"><label>⚖️ Peso inicial (kg)</label><input id="oIni" type="text" inputmode="decimal" autocomplete="off" value="${hP?.pesoInicial ?? 85}"></div><div class="campo"><label>🎯 Peso meta (kg)</label><input id="oMeta" type="text" inputmode="decimal" autocomplete="off" value="${hP?.metaPeso ?? 72.5}"></div></div>
-    <div class="campo"><label>📅 Fecha límite del peso</label><input id="oFecha" type="date" value="${esc(o.fechaPesoLim || new Date().getFullYear() + '-12-31')}"></div>
+    <div class="dos"><div class="campo"><label>⚖️ Peso inicial (kg)</label><input id="oIni" type="text" inputmode="decimal" autocomplete="off" value="${kgTxt(hP?.pesoInicial ?? 85)}"></div><div class="campo"><label>🎯 Peso meta (kg)</label><input id="oMeta" type="text" inputmode="decimal" autocomplete="off" value="${kgTxt(hP?.metaPeso ?? 72.5)}"></div></div>
+    <div class="campo"><label>📅 Fecha límite del peso</label><input id="oFecha" type="date" value="${esc(o.fechaPesoLim || new Date().getFullYear() + '-12-31')}"></div>${(() => { const f = fechasSanas(Math.max(0, (ultimoPeso() ?? hP?.pesoInicial ?? 85) - (hP?.metaPeso ?? 72.5))); return f ? `<div class="mini-nota" style="margin:-4px 4px 12px">🩺 Ritmo sano: entre <b>${fmtF(f.rapida)}</b> (1 kg/sem) y <b>${fmtF(f.lenta)}</b> (0,5 kg/sem). Con tu déficit actual: <b>${fmtF(f.tuya)}</b>. <button class="link" style="color:var(--accent);font-weight:700" onclick="$('oFecha').value='${fechaDe(f.tuya)}';haptic()">Usar esta</button></div>` : ''; })()}
     <div class="dos"><div class="campo"><label>📚 Preguntas totales</label><input id="oQ" type="number" step="100" value="${o.qbankTotal || 5000}"></div><div class="campo"><label>📅 Fecha del examen</label><input id="oQF" type="date" value="${esc(o.fechaQbank || '')}"></div></div>
     <div class="grupo-tit" style="margin-left:4px">Champions semanal</div>
     <div class="dos"><div class="campo"><label>📚 Preguntas / semana</label><input id="oCq" type="number" value="${o.champ.q}"></div><div class="campo"><label>🏋️ Entrenamientos</label><input id="oCe" type="number" value="${o.champ.ej}"></div></div>
@@ -2097,8 +2097,8 @@ function renderMetas() {
       else pred = `<div class="pred">📊 Peso estable últimamente.</div>`;
     } else pred = `<div class="pred">📊 ${3 - regs.length} registros más y te predigo la fecha de llegada.</div>`;
     html += `<div class="card"><h3>⚖️ Meta de peso <button class="link" style="color:var(--accent);font-weight:600" onclick="abrirObjetivos()">Editar</button></h3>
-      <div class="meta-big"><b class="num">${act}</b><span>kg → ${meta} kg</span></div><div class="pbar"><i style="width:${pct}%"></i></div>
-      <div class="mini-nota">Perdidos ${perd.toFixed(1)} kg · faltan ${faltan.toFixed(1)} · ritmo necesario ${ritmo.toFixed(2)} kg/sem hasta el ${fin.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })}</div>${pred}</div>`;
+      <div class="meta-big"><b class="num">${kgTxt(act)}</b><span>kg → ${kgTxt(meta)} kg</span></div><div class="pbar"><i style="width:${pct}%"></i></div>
+      <div class="mini-nota">Perdidos ${kgTxt(perd)} kg · faltan ${kgTxt(faltan)} · ritmo necesario ${ritmo.toFixed(2).replace('.', ',')} kg/sem hasta el ${fin.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })}</div>${pred}${htmlFechaSana(faltan, ritmo)}</div>`;
   }
   const hQ = D.habitos.find(x => x.tipo === 'qbank');
   if (hQ) {
@@ -2661,6 +2661,19 @@ function metaCamp(c) {
   const act = ultimoPeso(); if (act == null) return c.metaTexto || '';
   const ini = hP.pesoInicial || act, falta = act - hP.metaPeso, dif = act - ini;
   return 'Hoy ' + kgTxt(act) + ' kg · ' + (falta > 0 ? 'faltan ' + kgTxt(falta) + ' kg' : '¡meta lograda!') + (dif > 0.05 ? ' · +' + kgTxt(dif) + ' sobre el inicio' : dif < -0.05 ? ' · −' + kgTxt(-dif) + ' desde ' + kgTxt(ini) : '');
+}
+
+/* fecha sugerida a ritmo sano */
+const fmtF = d => d.toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
+function fechasSanas(faltan) {
+  if (!(faltan > 0.1)) return null; const def = +D.config.nutri.def || 500; const kgSem = Math.max(0.25, def * 7 / 7700);
+  const en = sem => { const d = new Date(); d.setDate(d.getDate() + Math.ceil(sem * 7)); return d; };
+  return { rapida: en(faltan / 1), lenta: en(faltan / 0.5), tuya: en(faltan / kgSem), kgSem };
+}
+function htmlFechaSana(faltan, ritmo) {
+  const f = fechasSanas(faltan); if (!f) return '';
+  const alerta = ritmo > 1;
+  return `<div class="pred ${alerta ? 'alerta' : 'ok'}">🩺 <b>Fecha sugerida a ritmo sano: ${fmtF(f.tuya)}</b><br><span style="font-size:12px;opacity:.85">Con tu déficit de ${D.config.nutri.def || 500} kcal (~${String(f.kgSem.toFixed(2)).replace('.', ',')} kg/sem) · rango sano ${fmtF(f.rapida)} – ${fmtF(f.lenta)}${alerta ? ' · tu fecha actual exige ' + ritmo.toFixed(2).replace('.', ',') + ' kg/sem' : ''}</span></div>`;
 }
 
 iniciar();
