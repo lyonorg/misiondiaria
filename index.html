@@ -1110,7 +1110,7 @@ const RECOMPENSAS_DEFAULT=[
 <script>
 /* ═══════════ Misión Diaria v4 ═══════════ */
 'use strict';
-const VERSION = '4.3.0';
+const VERSION = '4.3.1';
 const API = 'https://bpwbkoobzkjkjtdfxtxx.supabase.co/functions/v1/md';
 const VAPID = 'BOpca9dq4j8pt-BLIKP708IW6b1zbFW4bhUgA4h8CFe4SqSh2ia7E30ZIRA3ER7hUMQ6gSfK_VnjXcM81WiYYco';
 const CLAVE = 'mision-diaria-v3', CLAVE_V2 = 'mision-diaria-v2', CLAVE_V1 = 'mision-diaria-v1';
@@ -1813,6 +1813,7 @@ function guardarValor(id) {
   if (h.tipo === 'nota') d[id] = { ok: true, t: val('fVal') || 'Hecho' };
   else { const n = parseFloat(val('fVal').replace(',', '.')); if (isNaN(n)) return toast('⚠️', 'Escribe un número'); d[id] = n; }
   cerrarSheet(); if (!antes) darXP(h, $('m-' + id)?.querySelector('.pill'), h.nombre); despues(pf);
+  if (h.id === 'peso' || /kg/i.test(h.unidad || '')) setTimeout(recalcAuto, 900);
 }
 function borrarValor(id) { pre('Registro borrado'); const h = D.habitos.find(x => x.id === id), d = dia(); if (estadoHabito(h, d).hecha) quitarXP(h); delete d[id]; cerrarSheet(); despues(true); }
 
@@ -2287,7 +2288,7 @@ function normalizarV43(x) {
   const c = x.config;
   c.nutri = Object.assign(clone(NUTRI_DEF), c.nutri || {}); c.nutri.ventana = Object.assign(clone(NUTRI_DEF.ventana), c.nutri.ventana || {});
   if (!Array.isArray(c.nutri.comidas) || !c.nutri.comidas.length) c.nutri.comidas = clone(NUTRI_DEF.comidas);
-  c.checkin = c.checkin || '21:30';
+  c.checkin = c.checkin || '21:30'; if (c.nutri.auto === undefined) c.nutri.auto = true;
   if (!c.chequeoDesde) c.chequeoDesde = fechaStr(0);
   x.hielos = typeof x.hielos === 'number' ? x.hielos : 1; // uno de regalo para empezar
 }
@@ -2420,6 +2421,13 @@ function guardarComida(tipo, idx) {
 function borrarComida(idx) { pre('Comida borrada'); const d = dia(); d._kcal.splice(idx, 1); cerrarSheet(); despues(true); }
 
 /* límite: Mifflin-St Jeor − déficit */
+function calcMifflin(P, A, E, S, act, def) { const tmb = 10 * P + 6.25 * A - 5 * E + (S === 'M' ? -161 : 5); const tdee = tmb * act; const piso = S === 'M' ? 1200 : 1500; return { tmb, tdee, piso, lim: Math.max(piso, Math.round((tdee - def) / 50) * 50), prot: Math.round(P * 1.6 / 5) * 5 }; }
+function recalcAuto() {
+  const N = D.config.nutri; if (!N.limite || !N.auto) return;
+  const r = calcMifflin(pesoActual(), N.alt, N.edad, N.sexo, +N.act, +N.def); if (r.lim === N.limite && r.prot === N.prot) return;
+  const antes = N.limite; N.limite = r.lim; N.prot = r.prot; guardar(); render();
+  toast('🍽️', 'Nuevo límite: ' + fmtN(r.lim) + ' kcal', (r.lim < antes ? 'Bajaste de peso, tu gasto también bajó' : 'Ajustado a tu peso') + ' · proteína ' + r.prot + ' g');
+}
 function pesoActual() { for (const f of Object.keys(D.dias).sort().reverse()) { const v = D.dias[f].peso; if (typeof v === 'number') return v; } return D.habitos.find(x => x.id === 'peso')?.pesoInicial || 85; }
 function abrirLimite() {
   const N = D.config.nutri; const P = pesoActual();
@@ -2435,22 +2443,22 @@ function abrirLimite() {
     <div class="dos"><div class="campo"><label>Abre</label><input id="lV1" type="time" value="${N.ventana.desde}"></div><div class="campo"><label>Cierra</label><input id="lV2" type="time" value="${N.ventana.hasta}"></div></div>
     <div class="grupo-tit">Tus 3 tiempos (con aviso si no lo registras)</div>
     ${N.comidas.map((c, i) => `<div class="dos"><div class="campo"><label>${c.ico} Nombre</label><input id="lCn${i}" value="${esc(c.n)}"></div><div class="campo"><label>Hora</label><input id="lCh${i}" type="time" value="${c.h}"></div></div>`).join('')}
-    <div class="grupo"><div class="item"><div class="ii">🔔</div><div class="tx"><b>Avisarme a la hora de cada comida</b><small>Solo si aún no la registraste</small></div><label class="sw"><input type="checkbox" id="lAv" ${N.avisos !== false ? 'checked' : ''}><span></span></label></div></div>
+    <div class="grupo"><div class="item"><div class="ii">⚖️</div><div class="tx"><b>Recalcular solo cuando registre mi peso</b><small>El límite y la proteína se ajustan a cada nuevo peso. Apágalo si usas un número fijo de tu nutricionista.</small></div><label class="sw"><input type="checkbox" id="lAuto" ${N.auto !== false ? 'checked' : ''}><span></span></label></div>
+    <div class="item"><div class="ii">🔔</div><div class="tx"><b>Avisarme a la hora de cada comida</b><small>Solo si aún no la registraste</small></div><label class="sw"><input type="checkbox" id="lAv" ${N.avisos !== false ? 'checked' : ''}><span></span></label></div></div>
     <button class="btn prim" onclick="guardarLimite()">Guardar</button>`);
   calcLimite(!!N.limite);
 }
 function calcLimite(noTocar) {
   const P = +val('lP'), A = +val('lA'), E = +val('lE'), S = val('lS'), act = +val('lAct'), def = +val('lDef');
   if (!P || !A || !E) return;
-  const tmb = 10 * P + 6.25 * A - 5 * E + (S === 'M' ? -161 : 5); const tdee = tmb * act; const piso = S === 'M' ? 1200 : 1500;
-  const lim = Math.max(piso, Math.round((tdee - def) / 50) * 50);
+  const { tmb, tdee, piso, lim, prot } = calcMifflin(P, A, E, S, act, def);
   $('lRes').innerHTML = `Basal ≈ <b>${fmtN(tmb)}</b> · gasto diario ≈ <b>${fmtN(tdee)}</b> kcal → límite sugerido <b>${fmtN(lim)}</b> kcal${lim === piso ? ' (no bajo de ' + piso + ' por seguridad)' : ''}`;
-  if (!noTocar) { $('lLim').value = lim; $('lProt').value = Math.round(P * 1.6 / 5) * 5; }
+  if (!noTocar) { $('lLim').value = lim; $('lProt').value = prot; }
 }
 function guardarLimite() {
   const N = D.config.nutri; const lim = Math.round(+val('lLim'));
   if (!lim || lim < 800 || lim > 5000) return toast('⚠️', 'Revisa el límite', 'Entre 800 y 5000 kcal');
-  Object.assign(N, { limite: lim, prot: Math.max(0, +val('lProt') || N.prot), alt: +val('lA') || N.alt, edad: +val('lE') || N.edad, sexo: val('lS') || 'H', act: +val('lAct'), def: +val('lDef'), avisos: $('lAv').checked });
+  Object.assign(N, { limite: lim, prot: Math.max(0, +val('lProt') || N.prot), alt: +val('lA') || N.alt, edad: +val('lE') || N.edad, sexo: val('lS') || 'H', act: +val('lAct'), def: +val('lDef'), avisos: $('lAv').checked, auto: $('lAuto').checked });
   N.ventana = { desde: val('lV1') || '12:00', hasta: val('lV2') || '20:00' };
   N.comidas.forEach((c, i) => { c.n = val('lCn' + i) || c.n; c.h = val('lCh' + i) || c.h; });
   const d = dia(); if (d._kcal && d._kcal.length) d._lim = lim;
