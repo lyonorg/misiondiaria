@@ -598,6 +598,19 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
 .comp b{display:block;font-size:19px;font-weight:800;margin-top:4px;letter-spacing:-.5px}.comp small{font-size:11px;color:var(--text3);font-weight:600}
 .comp .dl{position:absolute;right:10px;top:9px;font-weight:900;font-size:15px;color:var(--text3)}.comp .dl.up{color:var(--ok)}.comp .dl.down{color:var(--bad)}
 #gastosProg .cons b{white-space:nowrap}#gastosProg .cons{grid-template-columns:28px 1fr 1.1fr auto}
+/* ───── v4.5 ───── */
+.g-acc{grid-template-columns:1fr auto auto}.g-acc .btn:only-child{grid-column:auto}
+.pg{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:.5px solid var(--line)}.pg:first-of-type{border-top:0}
+.pg .e{font-size:22px}.pg .tx{flex:1}.pg b{display:block;font-size:14.5px}.pg small{font-size:12px;color:var(--text2)}
+.pg.hoy small{color:var(--warn);font-weight:700}.pg.venc small{color:var(--bad);font-weight:700}
+.pagos{border-color:color-mix(in srgb,var(--warn) 40%,var(--line))}
+.mk-add{display:flex;gap:8px;margin-bottom:12px}.mk-add input{flex:1;padding:13px 14px;border-radius:13px;border:.5px solid var(--line);background:var(--surface);font-size:16px;color:var(--text);outline:none}
+.mk-add .pill{font-size:20px;padding:0 16px}
+.mk-x{margin-left:auto;font-size:22px;color:var(--text3);width:32px;height:32px}
+.paso.item.on .ptx{text-decoration:line-through;color:var(--text3)}
+.sec-camp.prox{opacity:.85}.prox-l .item{padding:10px 14px}.prox-l .tx b{font-size:14px}
+.pasos-atajo{padding-left:20px;margin:6px 0 14px;font-size:13.5px;line-height:1.55;color:var(--text2)}.pasos-atajo li{margin-bottom:8px}.pasos-atajo b{color:var(--text)}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--surface2);padding:1px 5px;border-radius:5px;color:var(--text);word-break:break-all}
 
 </style>
 </head>
@@ -734,6 +747,9 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
     <div class="grupo-tit">Comidas y chequeo</div>
     <div class="grupo">
       <div class="item tap" onclick="abrirLimite()"><div class="ii">🍽️</div><div class="tx"><b>Calorías, proteína y ayuno</b><small id="resNutri"></small></div><span class="chev">›</span></div>
+      <div class="item tap" onclick="abrirPagos()"><div class="ii">💳</div><div class="tx"><b>Pagos y fechas fijas</b><small>Tarjeta, cooperativa, suscripciones · con aviso</small></div><span class="chev">›</span></div>
+      <div class="item tap" onclick="abrirMercado()"><div class="ii">🛒</div><div class="tx"><b>Lista de mercado</b></div><span class="chev">›</span></div>
+      <div class="item tap" onclick="abrirAtajo()"><div class="ii">⚡</div><div class="tx"><b>Atajo de Siri</b><small>Registrar gastos y comidas sin abrir la app</small></div><span class="chev">›</span></div>
       <div class="item tap" onclick="abrirPresupuesto()"><div class="ii">💸</div><div class="tx"><b>Presupuesto mensual</b><small>Opcional · para la tarjeta de gastos</small></div><span class="chev">›</span></div>
       <div class="item"><div class="ii">🩺</div><div class="tx"><b>Aviso del chequeo nocturno</b><small>Alcohol, sustancias y ánimo · solo si no lo llenaste</small></div><input type="time" id="checkinHora" onchange="setCfg('checkin',this.value)"></div>
     </div>
@@ -1136,7 +1152,7 @@ const RECOMPENSAS_DEFAULT=[
 <script>
 /* ═══════════ Misión Diaria v4 ═══════════ */
 'use strict';
-const VERSION = '4.4.0';
+const VERSION = '4.5.0';
 const API = 'https://bpwbkoobzkjkjtdfxtxx.supabase.co/functions/v1/md';
 const VAPID = 'BOpca9dq4j8pt-BLIKP708IW6b1zbFW4bhUgA4h8CFe4SqSh2ia7E30ZIRA3ER7hUMQ6gSfK_VnjXcM81WiYYco';
 const CLAVE = 'mision-diaria-v3', CLAVE_V2 = 'mision-diaria-v2', CLAVE_V1 = 'mision-diaria-v1';
@@ -1276,7 +1292,9 @@ function fusionar(a, b) {
   for (const k of keys) {
     const da = (a.dias || {})[k], db = (b.dias || {})[k];
     if (!da) dias[k] = db; else if (!db) dias[k] = da;
-    else dias[k] = (da._t || 0) === (db._t || 0) ? (nuevo === a ? da : db) : ((da._t || 0) > (db._t || 0) ? da : db);
+    else { const g = (da._t || 0) === (db._t || 0) ? (nuevo === a ? da : db) : ((da._t || 0) > (db._t || 0) ? da : db); const o = g === da ? db : da; const r2 = clone(g);
+      for (const kk of ['_gastos', '_kcal']) { const ts = new Set((r2[kk] || []).map(x => x.ts)); const extra = (o[kk] || []).filter(x => x.rapido && !ts.has(x.ts)); if (extra.length) r2[kk] = [...(r2[kk] || []), ...extra].sort((x, y) => x.ts - y.ts); }
+      dias[k] = r2; }
   }
   r.dias = dias;
   r.logros = [...new Set([...(a.logros || []), ...(b.logros || [])])];
@@ -1633,7 +1651,7 @@ function renderHoy() {
   }
   if (!activas.length) html = '<div class="vacio"><div class="e">🌱</div>No tienes misiones para hoy.<br>Crea una o actívala desde la biblioteca.</div>';
   const abiertas = [...document.querySelectorAll('#listaMisiones .m.abierta')].map(x => x.dataset.h);
-  $('listaMisiones').innerHTML = html;
+  $('listaMisiones').innerHTML = html + htmlProximas();
   abiertas.forEach(h => document.querySelector(`#listaMisiones .m[data-h="${CSS.escape(h)}"]`)?.classList.add('abierta'));
   renderStories(); renderProxima(); renderAvisos(); seguro('extras', renderExtras);
 }
@@ -1647,6 +1665,7 @@ function renderAvisos() {
   if (st === 'instalar') h += `<div class="aviso accion" onclick="guiaInstalar()"><div class="ai">📲</div><div class="at"><b>Instálala para recibir avisos</b>Añádela a tu pantalla de inicio desde Safari.</div><span class="chev">›</span></div>`;
   else if (st === 'default') h += `<div class="aviso accion"><div class="ai">🔔</div><div class="at"><b>Activa tus recordatorios</b>Agua, skincare, medicamentos, QBank y resúmenes del día.</div><button class="pill prim" onclick="activarPush()">Activar</button></div>`;
   h += tarjetaTurno();
+  if (D._nuevoSema) h += `<div class="aviso"><div class="ai">💉</div><div class="at"><b>Añadí Semaglutide</b>Semanal · domingo 09:00 con aviso insistente. Mantén presionada para cambiar día u hora.</div><button class="pill" onclick="delete D._nuevoSema;guardar();render()">OK</button></div>`;
   if (D._nuevoDientes) h += `<div class="aviso"><div class="ai">🪥</div><div class="at"><b>Añadí «Cepillarme los dientes»</b>3 veces al día con aviso a las 08:00, 14:00 y 22:00. Ajústala si quieres.</div><button class="pill" onclick="delete D._nuevoDientes;guardar();render()">OK</button></div>`;
   if (D._nuevoDuo) h += `<div class="aviso"><div class="ai">🦉</div><div class="at"><b>Añadí Duolingo a tus misiones</b>Con aviso a las 18:00. Edítala o bórrala si no la quieres.</div><button class="pill" onclick="delete D._nuevoDuo;guardar();render()">OK</button></div>`;
   $('avisos').innerHTML = h;
@@ -2546,7 +2565,7 @@ function cardChequeo() {
 /* ───────── Hoy: tarjetas extra + anillos ───────── */
 function renderExtras() {
   const e = ENF && !ENF.cerrado ? `<div class="aviso accion" onclick="abrirEnfoqueGuardado()"><div class="ai">⏱</div><div class="at"><b>Bloque de enfoque en curso</b>${ENF.n} preguntas · termina ${(t => pad(t.getHours()) + ':' + pad(t.getMinutes()))(new Date(ENF.ini + ENF.dur * 6e4))}</div><span class="chev">›</span></div>` : '';
-  $('extras').innerHTML = e + cardNutri() + cardGastos() + cardChequeo();
+  $('extras').innerHTML = e + cardPagos() + cardNutri() + cardGastos() + cardChequeo();
 }
 function pintarAnillos() {
   const f = hoyStr(); const r = resumenDia(f); const L = limiteDe(f); const k = kcalDe(f);
@@ -2559,6 +2578,7 @@ function avisosExtra(d) {
   const out = []; const N = D.config.nutri; const cs = d._kcal || [];
   if (N.avisos !== false && N.limite) for (const c of N.comidas) if (!cs.some(x => x.k === c.k)) out.push({ t: toMin(c.h), titulo: c.ico + ' ' + c.n, sub: 'Registra las calorías' });
   if (!d._alc || !d._animo) out.push({ t: toMin(D.config.checkin), titulo: '🩺 Chequeo del día', sub: 'Alcohol, sustancias y ánimo' });
+  for (const { p: pg, d: dd } of (typeof pagosPendientes === 'function' ? pagosPendientes() : [])) if (dd === 0 || dd === (+pg.antes || 0)) out.push({ t: toMin(D.config.horaManana) + 30, titulo: '💳 ' + pg.n, sub: dd === 0 ? 'Vence hoy' : 'Vence en ' + dd + ' días' });
   if (d._enfFin) out.push({ t: toMin(d._enfFin), titulo: '⏱ Fin del bloque de enfoque', sub: 'Registra tus preguntas' });
   return out;
 }
@@ -2713,6 +2733,7 @@ const totalG = f => gastosDe(f).reduce((s, g) => s + (+g.m || 0), 0);
 const registroG = f => { const d = D.dias[f] || {}; return !!(gastosDe(f).length || d._sinGasto); };
 function normalizarV44(x) {
   x.config.dinero = Object.assign({ presupuesto: null }, x.config.dinero || {});
+  normalizarV45(x);
   if (!x._mig.v44) { x._mig.v44 = 1; for (const h of x.habitos) if (/ahorr/i.test(h.nombre) && h.prioridad !== 'principal') h.prioridad = 'opcional'; }
 }
 function parseMonto(s) { s = String(s || '').toLowerCase().replace(/\s|\$/g, ''); const k = /k$/.test(s) || /mil$/.test(s); s = s.replace(/k$|mil$/, ''); let n = parseFloat(s.replace(/\./g, '').replace(',', '.')); if (isNaN(n)) return 0; return Math.round(k ? n * 1000 : n); }
@@ -2725,7 +2746,7 @@ function cardGastos() {
     ${P ? `<div class="pbar n-bar g-bar${mes > P ? ' over' : ''}"><i style="width:${Math.min(100, mes / P * 100)}%"></i></div>` : ''}
     <div class="g-top"><b class="num">${fmtCOP(t)}</b>${D.dias[f]?._sinGasto && !gs.length ? '<span class="g-cero">✓ Día sin gastos</span>' : ''}</div>
     ${gs.length ? `<div class="g-lista">${gs.map((g, i) => { const c = catG(g.c); return `<button onclick="abrirGasto(${i})"><span>${c[1]}</span>${esc(g.n || c[2])}<b>${fmtCOP(g.m)}</b></button>`; }).join('')}</div>` : ''}
-    <div class="g-acc"><button class="btn prim" onclick="abrirGasto()">＋ Gasté</button>${gs.length ? '' : `<button class="btn" onclick="sinGasto()">${D.dias[f]?._sinGasto ? 'Deshacer' : 'Hoy no gasté'}</button>`}</div></div>`;
+    <div class="g-acc"><button class="btn prim" onclick="abrirGasto()">＋ Gasté</button>${gs.length ? '' : `<button class="btn" onclick="sinGasto()">${D.dias[f]?._sinGasto ? 'Deshacer' : 'Hoy no gasté'}</button>`}<button class="btn" onclick="abrirMercado()">🛒${D.mercado.filter(x => !x.ok).length ? ' ' + D.mercado.filter(x => !x.ok).length : ''}</button></div></div>`;
 }
 function abrirGasto(idx) {
   const e = idx != null ? gastosDe(hoyStr())[idx] : null; window._catG = e ? e.c : (window._catG || 'comida');
@@ -2844,6 +2865,101 @@ LOGROS.push(
   { id: 'reto1', ico: '🏁', nom: 'Primer reto', desc: 'Cumple un reto semanal o mensual', r: 'comun', f: () => D.canjes.some(c => String(c.clave || '').startsWith('reto-')) },
   { id: 'retomes', ico: '🗓️', nom: 'Mes de retos', desc: 'Cumple 4 retos en un mismo mes', r: 'epico', f: () => { const m = {}; for (const c of D.canjes) { const k = String(c.clave || ''); if (k.startsWith('reto-') && k.includes('-M')) { const p = k.split('-M')[1]; m[p] = (m[p] || 0) + 1; } } return Object.values(m).some(v => v >= 4); } }
 );
+
+/* ═══════════ v4.5 · pagos fijos, lista de mercado, atajo de Siri, próximas de la semana ═══════════ */
+function normalizarV45(x) {
+  x.pagos = Array.isArray(x.pagos) ? x.pagos : []; x.mercado = Array.isArray(x.mercado) ? x.mercado : [];
+  if (!x._mig.v45) {
+    x._mig.v45 = 1;
+    if (!x.habitos.some(h => /semaglut|tirzepat|ozempic|wegovy|mounjaro/i.test(h.nombre))) { const s = DEFAULTS.find(h => h.id === 'semaglutide'); if (s) { const c = clone(s); c.dias = [0]; delete c.diaSemana; c.rec = { modo: 'hora', hora: '09:00', insistir: true }; x.habitos.push(c); x._nuevoSema = true; } }
+  }
+}
+const mesAct = () => hoyStr().slice(0, 7);
+function diaPago(p, mes) { const [y, m] = mes.split('-').map(Number); const n = new Date(y, m, 0).getDate(); return mes + '-' + pad(Math.min(n, Math.max(1, +p.dia || 1))); }
+const pagado = (p, mes = mesAct()) => !!(p.pagado && p.pagado[mes]);
+function diasHasta(f) { return Math.round((new Date(f + 'T12:00') - hoyDate()) / 864e5); }
+function pagosPendientes() { return D.pagos.filter(p => !pagado(p)).map(p => ({ p, f: diaPago(p, mesAct()), d: diasHasta(diaPago(p, mesAct())) })).filter(x => x.d <= (+x.p.antes || 2)).sort((a, b) => a.d - b.d); }
+function cardPagos() {
+  const pen = pagosPendientes(); if (!pen.length) return '';
+  return `<div class="card pagos"><div class="n-cab"><b>💳 Pagos</b><small>${D.pagos.filter(p => pagado(p)).length}/${D.pagos.length} este mes</small></div>
+    ${pen.map(({ p, d }) => `<div class="pg${d < 0 ? ' venc' : d === 0 ? ' hoy' : ''}"><span class="e">${esc(p.ico || '💳')}</span><div class="tx"><b>${esc(p.n)}</b><small>${d < 0 ? 'Vencido hace ' + (-d) + (d === -1 ? ' día' : ' días') : d === 0 ? 'Vence hoy' : 'En ' + d + (d === 1 ? ' día' : ' días')}${p.monto ? ' · ' + fmtCOP(p.monto) : ''}</small></div><button class="pill prim" onclick="pagar('${esc(p.id)}',this)">Pagado</button></div>`).join('')}</div>`;
+}
+function pagar(id, el) {
+  const p = D.pagos.find(x => x.id === id); if (!p) return; pre('💳 ' + p.n + ' pagado');
+  p.pagado = p.pagado || {}; p.pagado[mesAct()] = Date.now();
+  if (p.monto && p.gasto !== false) { const d = dia(); if (!Array.isArray(d._gastos)) d._gastos = []; delete d._sinGasto; d._gastos.push({ m: +p.monto, c: p.cat || 'deudas', n: p.n, ts: Date.now(), pago: p.id }); }
+  xpExtra(10, el, '💳', p.n + ' pagado ✓'); despues(true);
+}
+function abrirPagos() {
+  abrirSheet('💳 Pagos y fechas fijas', `<div class="nota">Tarjeta, cooperativa, suscripciones, servicios… Te aviso unos días antes y el día que vence. Al marcar «Pagado» se registra solo en tus gastos.</div>
+    ${D.pagos.length ? `<div class="grupo">${[...D.pagos].sort((a, b) => a.dia - b.dia).map(p => `<div class="item tap" onclick="editarPago('${esc(p.id)}')"><div class="ii">${esc(p.ico || '💳')}</div><div class="tx"><b>${esc(p.n)}</b><small>Día ${p.dia} de cada mes${p.monto ? ' · ' + fmtCOP(p.monto) : ''} · ${pagado(p) ? '✓ pagado este mes' : 'pendiente'}</small></div><span class="chev">›</span></div>`).join('')}</div>` : ''}
+    <button class="btn prim" onclick="editarPago()">＋ Agregar pago</button>`);
+}
+function editarPago(id) {
+  const p = id ? D.pagos.find(x => x.id === id) : { n: '', ico: '💳', dia: 5, monto: '', cat: 'deudas', antes: 2 };
+  abrirSheet(id ? 'Editar pago' : 'Nuevo pago', `
+    <div class="dos"><div class="campo"><label>Nombre</label><input id="pN" value="${esc(p.n)}" placeholder="Tarjeta, Netflix, cooperativa…"></div><div class="campo"><label>Ícono</label><input id="pI" value="${esc(p.ico)}" maxlength="4"></div></div>
+    <div class="dos"><div class="campo"><label>Día del mes</label><input id="pD" type="number" inputmode="numeric" min="1" max="31" value="${p.dia}"></div><div class="campo"><label>Monto (opcional)</label><input id="pM" type="text" inputmode="decimal" value="${p.monto ? (+p.monto).toLocaleString('es-CO') : ''}" oninput="fmtInputMonto(this)" placeholder="$ 0"></div></div>
+    <div class="dos"><div class="campo"><label>Categoría del gasto</label><select id="pC">${CATS_G.map(([k, i, n]) => `<option value="${k}"${p.cat === k ? ' selected' : ''}>${i} ${n}</option>`).join('')}</select></div><div class="campo"><label>Avisar días antes</label><select id="pA">${[0, 1, 2, 3, 5, 7].map(n => `<option value="${n}"${+p.antes === n ? ' selected' : ''}>${n ? n + (n === 1 ? ' día' : ' días') : 'Solo el día'}</option>`).join('')}</select></div></div>
+    <button class="btn prim" onclick="guardarPago('${id || ''}')">Guardar</button>${id ? `${pagado(p) ? `<button class="btn" onclick="desmarcarPago('${id}')">Desmarcar pago de este mes</button>` : ''}<button class="btn peligro" onclick="borrarPago('${id}')">Eliminar</button>` : ''}`);
+}
+function guardarPago(id) {
+  const n = val('pN'); if (!n) return toast('✏️', 'Ponle un nombre');
+  const d = { n, ico: val('pI') || '💳', dia: Math.max(1, Math.min(31, parseInt(val('pD')) || 1)), monto: parseMonto(val('pM')) || null, cat: $('pC').value, antes: +$('pA').value };
+  if (id) Object.assign(D.pagos.find(x => x.id === id), d); else D.pagos.push({ id: 'p' + Date.now(), ...d, pagado: {} });
+  guardar(); render(); abrirPagos(); toast(d.ico, id ? 'Pago actualizado' : 'Pago agregado', 'Día ' + d.dia + ' de cada mes');
+}
+function desmarcarPago(id) { const p = D.pagos.find(x => x.id === id); delete p.pagado[mesAct()]; guardar(); render(); abrirPagos(); }
+function borrarPago(id) { if (!confirm('¿Eliminar este pago fijo?')) return; D.pagos = D.pagos.filter(x => x.id !== id); guardar(); render(); abrirPagos(); }
+
+/* ───────── lista de mercado ───────── */
+function abrirMercado() {
+  const L = D.mercado; const hechos = L.filter(x => x.ok).length;
+  abrirSheet('🛒 Lista de mercado', `
+    <div class="mk-add"><input id="mkI" placeholder="Agregar… (puedes poner varios separados por coma)" onkeydown="if(event.key==='Enter')agregarMercado()"><button class="pill prim" onclick="agregarMercado()">＋</button></div>
+    ${L.length ? `<div class="grupo">${L.map(x => `<div class="paso item${x.ok ? ' on' : ''}" style="padding:13px" onclick="toggleMercado('${x.id}')"><span class="sc">${CHK_SVG}</span><span class="ptx" style="font-size:16px;flex:1">${esc(x.n)}</span><button class="mk-x" onclick="event.stopPropagation();quitarMercado('${x.id}')">×</button></div>`).join('')}</div>` : '<div class="nota" style="text-align:center">Lista vacía. Agrega lo que falta en casa.</div>'}
+    ${L.length ? `<button class="btn" onclick="compartirMercado()">📤 Compartir lista</button>` : ''}
+    ${hechos ? `<div class="campo" style="margin-top:12px"><label>¿Cuánto pagaste por lo marcado (${hechos})?</label><input id="mkM" class="g-monto" type="text" inputmode="decimal" placeholder="$ 0" oninput="fmtInputMonto(this)"></div><button class="btn prim" onclick="pagarMercado()">🧾 Pagué · pasar a gastos</button>` : ''}`);
+}
+function agregarMercado() { const t = val('mkI'); if (!t) return; for (const n of t.split(',').map(s => s.trim()).filter(Boolean)) D.mercado.push({ id: 'k' + Date.now() + Math.random().toString(36).slice(2, 5), n, ok: false }); guardar(); haptic(); abrirMercado(); setTimeout(() => $('mkI')?.focus(), 50); }
+function toggleMercado(id) { const x = D.mercado.find(i => i.id === id); x.ok = !x.ok; guardar(); haptic(); abrirMercado(); }
+function quitarMercado(id) { D.mercado = D.mercado.filter(i => i.id !== id); guardar(); abrirMercado(); }
+function compartirMercado() { const t = '🛒 Mercado\n' + D.mercado.filter(x => !x.ok).map(x => '• ' + x.n).join('\n'); if (navigator.share) navigator.share({ text: t }).catch(() => {}); else { navigator.clipboard?.writeText(t); toast('📋', 'Lista copiada'); } }
+function pagarMercado() {
+  const m = parseMonto(val('mkM')); if (!m) return toast('⚠️', 'Escribe cuánto pagaste');
+  const items = D.mercado.filter(x => x.ok); pre('🛒 Mercado pagado'); const d = dia(); if (!Array.isArray(d._gastos)) d._gastos = []; delete d._sinGasto;
+  d._gastos.push({ m, c: 'mercado', n: 'Mercado · ' + items.length + (items.length === 1 ? ' producto' : ' productos'), ts: Date.now() });
+  D.mercado = D.mercado.filter(x => !x.ok); cerrarSheet(); marcarHabitoGastos(d); toast('🛒', fmtCOP(m) + ' en mercado', 'Quedan ' + D.mercado.length + ' en la lista'); despues(true);
+}
+
+/* ───────── misiones de otros días de la semana ───────── */
+function htmlProximas() {
+  const nomD = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']; const hoyW = hoyDate().getDay();
+  const xs = D.habitos.filter(h => !h.archivada && Array.isArray(h.dias) && h.dias.length && !aplicaHoy(h)).map(h => { const off = Math.min(...h.dias.map(d => (d - hoyW + 7) % 7 || 7)); return { h, off, w: (hoyW + off) % 7 }; }).sort((a, b) => a.off - b.off);
+  if (!xs.length) return '';
+  return `<div class="sec-camp prox"><span class="ico">🗓️</span><div class="tt"><b>Esta semana</b><small>Misiones que no tocan hoy</small></div></div>
+    <div class="grupo prox-l">${xs.map(({ h, off, w }) => `<div class="item tap" onclick="abrirHabito('${esc(h.id)}')"><div class="ii">${esc(h.icono)}</div><div class="tx"><b>${esc(h.nombre)}</b><small>${off === 1 ? 'Mañana' : 'El ' + nomD[w]}${h.rec?.hora || h.hora ? ' · ' + esc(h.rec?.hora || h.hora) : ''}</small></div><span class="chev">›</span></div>`).join('')}</div>`;
+}
+
+/* ───────── atajo de Siri (registro sin abrir la app) ───────── */
+function abrirAtajo() {
+  const k = SYNC && SYNC.key ? SYNC.key : '';
+  const body = JSON.stringify({ action: 'quick', key: k, tipo: 'gasto', m: '[Monto]', c: '[Categoría]', n: '[Detalle]' });
+  abrirSheet('⚡ Atajo de Siri', `<div class="nota">Registra un gasto con la voz («Oye Siri, gasté») o tocando dos veces la espalda del iPhone, sin abrir la app. Se arma una sola vez en la app <b>Atajos</b> (5 min).</div>
+    <ol class="pasos-atajo">
+      <li>Atajos → <b>＋</b> → nombre: <b>Gasté</b>.</li>
+      <li>Acción <b>Solicitar entrada</b> · tipo Número · pregunta «¿Cuánto?».</li>
+      <li>Acción <b>Elegir de la lista</b> con: <span class="mono">${CATS_G.map(c => c[0]).join(', ')}</span></li>
+      <li>Acción <b>Solicitar entrada</b> · Texto · «¿En qué?» (opcional).</li>
+      <li>Acción <b>Obtener contenido de URL</b>:<br>URL: <span class="mono">${API}</span><br>Método <b>POST</b> · Cuerpo <b>JSON</b> con estos campos:<br>
+        <span class="mono">action</span> = quick · <span class="mono">key</span> = tu código · <span class="mono">tipo</span> = gasto · <span class="mono">m</span> = (Entrada 1) · <span class="mono">c</span> = (Elemento elegido) · <span class="mono">n</span> = (Entrada 2)</li>
+      <li>Opcional: Ajustes del iPhone → Accesibilidad → Tocar → <b>Toque atrás</b> → doble toque → Gasté.</li>
+    </ol>
+    <div class="campo"><label>Tu código (para el campo key)</label><input readonly value="${esc(k)}" onclick="this.select()"></div>
+    <button class="btn" onclick="navigator.clipboard?.writeText('${esc(k)}').then(()=>toast('📋','Código copiado'))">📋 Copiar código</button>
+    <button class="btn" onclick="navigator.clipboard?.writeText('${API}').then(()=>toast('📋','URL copiada'))">📋 Copiar URL</button>
+    <div class="nota">También sirve para comidas: <span class="mono">tipo</span> = comida, <span class="mono">kcal</span>, <span class="mono">p</span> (proteína) y <span class="mono">k</span> = comida · snack · batido. El código es como una contraseña: no lo compartas.</div>`);
+}
 
 iniciar();
 
