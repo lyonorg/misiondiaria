@@ -611,13 +611,14 @@ canvas#confeti{position:fixed;inset:0;z-index:99;pointer-events:none}
 .sec-camp.prox{opacity:.85}.prox-l .item{padding:10px 14px}.prox-l .tx b{font-size:14px}
 .pasos-atajo{padding-left:20px;margin:6px 0 14px;font-size:13.5px;line-height:1.55;color:var(--text2)}.pasos-atajo li{margin-bottom:8px}.pasos-atajo b{color:var(--text)}
 .mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--surface2);padding:1px 5px;border-radius:5px;color:var(--text);word-break:break-all}
+.wordmark .by{display:block;font-size:11px;font-weight:650;letter-spacing:.2px;margin-top:1px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}.wordmark>span:last-child{line-height:1.05}
 
 </style>
 </head>
 <body data-tema="oscuro" data-skin="aurora">
 
 <header class="topbar" id="topbar">
-  <div class="wordmark"><span class="dot"></span>Misión Diaria</div>
+  <div class="wordmark"><span class="dot"></span><span>Misión Diaria<small class="by">by Michael Pianda</small></span></div>
   <button class="icon-btn" id="btnSync" aria-label="Sincronización" onclick="irA('ajustes');setTimeout(()=>$('grpSync')?.scrollIntoView({behavior:'smooth',block:'center'}),120)">
     <svg viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 0 1-.5-8.97A6 6 0 0 1 18 8.5a4 4 0 0 1-.5 9.5H7z"/></svg><span class="sync-dot" id="syncDot"></span>
   </button>
